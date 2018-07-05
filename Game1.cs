@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using TurnBasedFeest.Entities;
 
 namespace TurnBasedFeest
 {
@@ -11,6 +12,9 @@ namespace TurnBasedFeest
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        SpriteFont font;
+
+        Player player;
         
         public Game1()
         {
@@ -26,7 +30,7 @@ namespace TurnBasedFeest
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            player = new Player();
 
             base.Initialize();
         }
@@ -39,8 +43,9 @@ namespace TurnBasedFeest
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            font = Content.Load<SpriteFont>("Fonts/default");
 
-            // TODO: use this.Content to load your game content here
+            player.Initialize(100, GraphicsDevice);
         }
 
         /// <summary>
@@ -59,10 +64,7 @@ namespace TurnBasedFeest
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
-            // TODO: Add your update logic here
+            player.Update();
 
             base.Update(gameTime);
         }
@@ -73,10 +75,12 @@ namespace TurnBasedFeest
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);            
+            spriteBatch.Begin();
 
-            // TODO: Add your drawing code here
+            player.Draw(spriteBatch, font);
 
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }
