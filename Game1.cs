@@ -14,7 +14,7 @@ namespace TurnBasedFeest
         SpriteBatch spriteBatch;
         SpriteFont font;
 
-        Player player;
+        Entity player;
         
         public Game1()
         {
@@ -30,7 +30,7 @@ namespace TurnBasedFeest
         /// </summary>
         protected override void Initialize()
         {
-            player = new Player();
+            player = new Entity();
 
             base.Initialize();
         }
