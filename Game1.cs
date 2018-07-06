@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
 using TurnBasedFeest.Entities;
 
 namespace TurnBasedFeest
@@ -13,10 +15,14 @@ namespace TurnBasedFeest
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         SpriteFont font;
+        KeyboardState oldKeyState;
+        KeyboardState newKeyState;
 
         Entity player;
         Entity enemy;
-        
+        List<Entity> entities = new List<Entity>();
+        List<Entity>.Enumerator entityEnum;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -33,6 +39,10 @@ namespace TurnBasedFeest
         {
             player = new Entity();
             enemy = new Entity();
+            entities.Add(player);
+            entities.Add(enemy);
+            entityEnum = entities.GetEnumerator();
+            entityEnum.MoveNext();
 
             base.Initialize();
         }
@@ -68,6 +78,36 @@ namespace TurnBasedFeest
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            oldKeyState = newKeyState;
+            newKeyState = Keyboard.GetState();
+
+            if (entityEnum.Current.moveRemaining)
+            {
+                // TODO: do not hardcode target
+                Entity target = entities.Find(x => x.name != entityEnum.Current.name);
+
+                if (oldKeyState.IsKeyDown(Keys.Enter) && newKeyState.IsKeyUp(Keys.Enter)){
+                    target.entityCurrentHealth -= 10;
+                    entityEnum.Current.moveRemaining = false;
+
+                }
+                if (oldKeyState.IsKeyDown(Keys.RightShift) && newKeyState.IsKeyUp(Keys.RightShift))
+                {
+                    entityEnum.Current.entityCurrentHealth += 10;
+                    entityEnum.Current.moveRemaining = false;
+                }
+            }
+            else if (!entityEnum.MoveNext())
+            {
+                foreach (Entity e in entities)
+                {
+                    e.moveRemaining = true;
+                }
+
+                entityEnum = entities.GetEnumerator();
+                entityEnum.MoveNext();
+            }
+
             player.Update();
             enemy.Update();
 
