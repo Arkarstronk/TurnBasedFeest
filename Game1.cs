@@ -15,6 +15,7 @@ namespace TurnBasedFeest
         SpriteFont font;
 
         Entity player;
+        Entity enemy;
         
         public Game1()
         {
@@ -31,6 +32,7 @@ namespace TurnBasedFeest
         protected override void Initialize()
         {
             player = new Entity();
+            enemy = new Entity();
 
             base.Initialize();
         }
@@ -45,7 +47,9 @@ namespace TurnBasedFeest
             spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("Fonts/default");
 
-            player.Initialize(100, GraphicsDevice);
+            // TODO: do not hardcode positions
+            player.Initialize("player", new Vector2(100,100), 100, GraphicsDevice);
+            enemy.Initialize("Enemy", new Vector2(600, 100), 100, GraphicsDevice);
         }
 
         /// <summary>
@@ -65,6 +69,7 @@ namespace TurnBasedFeest
         protected override void Update(GameTime gameTime)
         {
             player.Update();
+            enemy.Update();
 
             base.Update(gameTime);
         }
@@ -79,6 +84,7 @@ namespace TurnBasedFeest
             spriteBatch.Begin();
 
             player.Draw(spriteBatch, font);
+            enemy.Draw(spriteBatch, font);
 
             spriteBatch.End();
             base.Draw(gameTime);
