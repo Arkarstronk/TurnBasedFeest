@@ -19,7 +19,7 @@ namespace TurnBasedFeest
             entityEnum.MoveNext();
         }
 
-        public void endFight()
+        public void EndFight()
         {
             ongoingBattle = false;
         }
@@ -60,7 +60,7 @@ namespace TurnBasedFeest
 
                 if(entity.entityCurrentHealth <= 0)
                 {
-                    endFight();
+                    EndFight();
                 }
             }
         }

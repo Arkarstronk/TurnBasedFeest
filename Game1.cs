@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
 using TurnBasedFeest.Entities;
+using TurnBasedFeest.Utilities;
 
 namespace TurnBasedFeest
 {
@@ -15,9 +15,7 @@ namespace TurnBasedFeest
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         SpriteFont font;
-        KeyboardState oldKeyState;
-        KeyboardState newKeyState;
-
+        Input input;  
         TurnSystem turnSystem;
 
         public Game1()
@@ -34,8 +32,8 @@ namespace TurnBasedFeest
         /// </summary>
         protected override void Initialize()
         {
+            input = new Input();
             turnSystem = new TurnSystem();
-
             base.Initialize();
         }
 
@@ -45,7 +43,6 @@ namespace TurnBasedFeest
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("Fonts/default");
         }
@@ -66,8 +63,7 @@ namespace TurnBasedFeest
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            oldKeyState = newKeyState;
-            newKeyState = Keyboard.GetState();
+            input.Update();
 
             if (!turnSystem.ongoingBattle)
             {
@@ -78,11 +74,11 @@ namespace TurnBasedFeest
             }
 
             string command = "";
-            if (oldKeyState.IsKeyDown(Keys.Enter) && newKeyState.IsKeyUp(Keys.Enter))
+            if (input.Released(Keys.Enter))
             {
                 command = "attack";
             }
-            else if (oldKeyState.IsKeyDown(Keys.LeftShift) && newKeyState.IsKeyUp(Keys.LeftShift))
+            else if (input.Released(Keys.RightShift))
             {
                 command = "defend";
             }
