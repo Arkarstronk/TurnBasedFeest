@@ -44,6 +44,10 @@
   <ItemGroup>
     <Compile Include="Actor\Actor.cs" />
     <Compile Include="Actor\Health.cs" />
+    <Compile Include="Actions\IAction.cs" />
+	<Compile Include="Actions\ActionHeal.cs" />
+	<Compile Include="Actions\ActionAttack.cs" />
+	<Compile Include="Actions\ActionNothing.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
