@@ -47,7 +47,7 @@
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TurnSystem.cs" />
+    <Compile Include="BattleSystem.cs" />
     <Compile Include="Utilities\Input.cs" />
   </ItemGroup>
   <ItemGroup>

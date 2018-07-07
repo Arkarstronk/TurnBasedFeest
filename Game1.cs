@@ -15,7 +15,7 @@ namespace TurnBasedFeest
         SpriteBatch spriteBatch;
         SpriteFont font;
         Input input;  
-        TurnSystem turnSystem;
+        BattleSystem battleSystem;
 
         public Game1()
         {
@@ -32,7 +32,7 @@ namespace TurnBasedFeest
         protected override void Initialize()
         {
             input = new Input();
-            turnSystem = new TurnSystem();
+            battleSystem = new BattleSystem();
             base.Initialize();
         }
 
@@ -64,15 +64,15 @@ namespace TurnBasedFeest
         {
             input.Update();
 
-            if (!turnSystem.ongoingBattle)
+            if (!battleSystem.ongoingBattle)
             {
-                turnSystem.InitializeFight(new List<Actor> {
+                battleSystem.InitializeFight(new List<Actor> {
                     new Actor("player", new Vector2(100, 100), 100, GraphicsDevice),
                     new Actor("Enemy", new Vector2(600, 100), 100, GraphicsDevice)
                 });
             }
 
-            turnSystem.Update(input);           
+            battleSystem.Update(input);           
 
             base.Update(gameTime);
         }
@@ -86,7 +86,7 @@ namespace TurnBasedFeest
             GraphicsDevice.Clear(Color.Black);            
             spriteBatch.Begin();
 
-            turnSystem.Draw(spriteBatch, font);
+            battleSystem.Draw(spriteBatch, font);
 
             spriteBatch.End();
             base.Draw(gameTime);

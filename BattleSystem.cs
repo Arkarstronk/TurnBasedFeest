@@ -6,7 +6,7 @@ using TurnBasedFeest.Utilities;
 
 namespace TurnBasedFeest
 {
-    class TurnSystem
+    class BattleSystem
     {
         public bool ongoingBattle;
         List<Actor> actors = new List<Actor>();
