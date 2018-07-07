@@ -7,6 +7,7 @@ using TurnBasedFeest.Ui;
 using static TurnBasedFeest.Ui.ListChoiceUi;
 using System;
 using System.Linq;
+using TurnBasedFeest.Actions;
 
 namespace TurnBasedFeest
 {
@@ -16,7 +17,7 @@ namespace TurnBasedFeest
         List<Actor> actors = new List<Actor>();
         List<Actor>.Enumerator actorEnum;
         ListChoiceUi playerChoiceUi;
-        Dictionary<string, Action<Actor>> options;
+        Dictionary<string, IAction> options;
 
         public void InitializeFight(List<Actor> actors)
         {
@@ -25,10 +26,11 @@ namespace TurnBasedFeest
             actorEnum = this.actors.GetEnumerator();
             actorEnum.MoveNext();
             playerChoiceUi = new ListChoiceUi();
-            options = new Dictionary<string, Action<Actor>>
+            options = new Dictionary<string, IAction>
             {
-                {"attack", (target) => {target.health.actorCurrentHealth -= 10;}},
-                {"rest", (target) => {target.health.actorCurrentHealth += 10;}}
+                { "attack", new ActionAttack() },
+                { "heal", new ActionHeal() },
+                { "defend", new ActionNothing() }
             };
         }
 
@@ -51,7 +53,7 @@ namespace TurnBasedFeest
                     playerChoiceUi.Update(input);
                     break;
                 case state.Done:
-                    options[playerChoiceUi.getChoice()].Invoke(target);
+                    options[playerChoiceUi.getChoice()].Execute(currentActor, target);
                     currentActor.moveRemaining = false;
                     break;
             }
