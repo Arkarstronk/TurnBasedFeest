@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TurnBasedFeest.Actors;
 using TurnBasedFeest.Utilities;
 using TurnBasedFeest.Ui;
-using static TurnBasedFeest.Ui.ListChoiceUi;
+using static TurnBasedFeest.Ui.BattleUI;
 using System;
 using System.Linq;
 using TurnBasedFeest.Actions;
@@ -16,8 +16,8 @@ namespace TurnBasedFeest
         public bool ongoingBattle;
         List<Actor> actors = new List<Actor>();
         List<Actor>.Enumerator actorEnum;
-        ListChoiceUi playerChoiceUi;
-        Dictionary<string, IAction> options;
+        BattleUI playerChoiceUi;
+        List<IAction> options;
 
         public void InitializeFight(List<Actor> actors)
         {
@@ -25,12 +25,10 @@ namespace TurnBasedFeest
             this.actors = actors;
             actorEnum = this.actors.GetEnumerator();
             actorEnum.MoveNext();
-            playerChoiceUi = new ListChoiceUi();
-            options = new Dictionary<string, IAction>
+            playerChoiceUi = new BattleUI();
+            options = new List<IAction>
             {
-                { "attack", new ActionAttack() },
-                { "heal", new ActionHeal() },
-                { "defend", new ActionNothing() }
+                new ActionAttack() , new ActionHeal(), new ActionNothing()
             };
         }
 
@@ -42,18 +40,20 @@ namespace TurnBasedFeest
         public void Update(Input input)
         {
             Actor currentActor = getCurrentActor();
-            Actor target = actors.Find(x => x.name != actorEnum.Current.name);
 
             switch (playerChoiceUi.currentState)
             {
-                case state.Notused:
-                    playerChoiceUi.PromptUser(options.Keys.ToList());
+                case state.Start:
+                    playerChoiceUi.initialize(options, actors);
                     break;
-                case state.Used:
+                case state.Action:
                     playerChoiceUi.Update(input);
                     break;
-                case state.Done:
-                    options[playerChoiceUi.getChoice()].Execute(currentActor, target);
+                case state.Target:
+                    playerChoiceUi.Update(input);
+                    break;
+                case state.Finish:
+                    playerChoiceUi.GetChosenAction().Execute(currentActor, playerChoiceUi.GetChosenActor());
                     currentActor.moveRemaining = false;
                     break;
             }
@@ -67,8 +67,6 @@ namespace TurnBasedFeest
                     EndFight();
                 }
             }
-
-            playerChoiceUi.Update(input);
         }
 
         public void Draw(SpriteBatch spritebatch, SpriteFont font)
@@ -77,6 +75,8 @@ namespace TurnBasedFeest
             {
                 actor.Draw(spritebatch, font);
             }
+
+            playerChoiceUi.Draw(font, spritebatch);
         }
 
         private Actor getCurrentActor()

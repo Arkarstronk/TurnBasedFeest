@@ -28,6 +28,11 @@ namespace TurnBasedFeest.Actions
         {
             throw new NotImplementedException();
         }
+
+        public override string ToString()
+        {
+            return "Attack";
+        }
     }
 
     class ActionResultAttack : IActionResult

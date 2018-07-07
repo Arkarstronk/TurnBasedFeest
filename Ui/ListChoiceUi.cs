@@ -1,52 +1,129 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework.Input;
 using TurnBasedFeest.Utilities;
+using TurnBasedFeest.Actors;
+using TurnBasedFeest.Actions;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace TurnBasedFeest.Ui
 {
-    class ListChoiceUi
+    class BattleUI
     {
         public enum state
         {
-            Notused,
-            Used,
-            Done,
+            Start,
+            Action,
+            Target,
+            Finish,
         }
         public state currentState;
-        string choice;
-        private List<string> choices;
+        private List<IAction> choices;
+        private List<Actor> targets;
+        private int choiceIndex;
+        private int targetIndex;
 
-
-        public ListChoiceUi()
+        public BattleUI()
         {
-            currentState = state.Notused;
+            currentState = state.Start;            
         }
 
-        public void PromptUser(List<string> choices)
+        public void initialize(List<IAction> actions, List<Actor> actors)
         {
-            currentState = state.Used;
-            this.choices = choices;
+            targets = actors;
+            this.choices = actions;
+            choiceIndex = 0;
+            targetIndex = 0;
+            currentState = state.Action;
         }
 
         public void Update(Input input)
         {
-            if (input.Released(Keys.Enter))
+            switch (currentState)
             {
-                choice = choices[0];
-                currentState = state.Done;
+                case state.Action:
+                    choiceIndex += Navigation(input);
+
+                    if (input.Released(Keys.Enter))
+                    {
+                        currentState = state.Target;
+                    }
+
+                    break;
+                case state.Target:
+                    targetIndex += Navigation(input);
+
+                    if (input.Released(Keys.Enter))
+                    {
+                        currentState = state.Finish;
+                    }
+                    break;
             }
-            if (input.Released(Keys.RightShift))
+
+            CheckIndexBounds();
+        }
+
+        public IAction GetChosenAction()
+        {
+            currentState = state.Start;
+            return choices[choiceIndex];
+        }
+
+        public Actor GetChosenActor()
+        {
+            return targets[targetIndex];
+        }
+
+        public void Draw(SpriteFont font, SpriteBatch spritebatch)
+        {
+            for (int i = 0; i < choices.Count; i++)
             {
-                choice = choices[1];
-                currentState = state.Done;
+                spritebatch.DrawString(font, choices[i].ToString(), new Vector2(200, 200) + new Vector2(0, 20 * i), (i == choiceIndex ? Color.Yellow : Color.White));
+            }
+
+            if(currentState == state.Target)
+            {
+                for (int i = 0; i < targets.Count; i++)
+                {
+                    spritebatch.DrawString(font, targets[i].name, new Vector2(250, 200) + new Vector2(0, 20 * i), (i == targetIndex ? Color.Yellow : Color.White));
+                }
+            }
+            
+        }
+
+        public int Navigation(Input input)
+        {
+            if (input.Released(Keys.Down))
+            {
+                return 1;
+            }
+            if (input.Released(Keys.Up))
+            {
+                return -1;
+            }
+
+            return 0;
+        }
+
+        public void CheckIndexBounds()
+        {
+            if (targetIndex < 0)
+            {
+                targetIndex = targets.Count - 1;
+            }
+            if (targetIndex > targets.Count - 1)
+            {
+                targetIndex = 0;
+            }
+            if (choiceIndex < 0)
+            {
+                choiceIndex = choices.Count - 1;
+            }
+            if (choiceIndex > choices.Count - 1)
+            {
+                choiceIndex = 0;
             }
         }
 
-        public string getChoice()
-        {
-            currentState = state.Notused;
-            return choice;
-        }
     }
 }

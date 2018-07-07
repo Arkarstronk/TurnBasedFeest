@@ -27,6 +27,11 @@ namespace TurnBasedFeest.Actions
         {
             throw new NotImplementedException();
         }
+
+        public override string ToString()
+        {
+            return "Heal";
+        }
     }
 
     class ActionResultHeal : IActionResult
