@@ -67,7 +67,7 @@ namespace TurnBasedFeest
             if (!battleSystem.ongoingBattle)
             {
                 battleSystem.InitializeFight(new List<Actor> {
-                    new Actor("player", new Vector2(100, 100), 100, GraphicsDevice),
+                    new Actor("Player", new Vector2(100, 100), 100, GraphicsDevice),
                     new Actor("Enemy", new Vector2(600, 100), 100, GraphicsDevice)
                 });
             }

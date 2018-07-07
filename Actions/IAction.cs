@@ -20,6 +20,7 @@ namespace TurnBasedFeest.Actions
         // Needed methods for action animations.
         void Update(GameTime gameTime);
         void Draw(GameTime gameTime);
+        string GetName();
     }
 
     interface IActionResult

@@ -27,7 +27,7 @@ namespace TurnBasedFeest.Actions
             throw new NotImplementedException();
         }
 
-        public override string ToString()
+        public string GetName()
         {
             return "Defend";
         }

@@ -8,6 +8,7 @@ using static TurnBasedFeest.Ui.BattleUI;
 using System;
 using System.Linq;
 using TurnBasedFeest.Actions;
+using Microsoft.Xna.Framework;
 
 namespace TurnBasedFeest
 {
@@ -77,6 +78,8 @@ namespace TurnBasedFeest
             }
 
             playerChoiceUi.Draw(font, spritebatch);
+
+            spritebatch.DrawString(font, ">", getCurrentActor().position - new Vector2(35, 0), Color.White);
         }
 
         private Actor getCurrentActor()

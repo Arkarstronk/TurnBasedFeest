@@ -6,7 +6,7 @@ namespace TurnBasedFeest.Actors
     class Actor
     {
         public string name;
-        private Vector2 position;
+        public Vector2 position;
         public Health health;
         public bool moveRemaining;
 

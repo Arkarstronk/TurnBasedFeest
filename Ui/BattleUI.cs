@@ -57,9 +57,12 @@ namespace TurnBasedFeest.Ui
                     {
                         currentState = state.Finish;
                     }
+                    if (input.Released(Keys.Back))
+                    {
+                        currentState = state.Action;
+                    }
                     break;
             }
-
             CheckIndexBounds();
         }
 
@@ -78,14 +81,14 @@ namespace TurnBasedFeest.Ui
         {
             for (int i = 0; i < choices.Count; i++)
             {
-                spritebatch.DrawString(font, choices[i].ToString(), new Vector2(200, 200) + new Vector2(0, 20 * i), (i == choiceIndex ? Color.Yellow : Color.White));
+                spritebatch.DrawString(font, choices[i].GetName(), new Vector2(200, 200) + new Vector2(0, 20 * i), (i == choiceIndex ? Color.Yellow : Color.White));
             }
 
             if(currentState == state.Target)
             {
                 for (int i = 0; i < targets.Count; i++)
                 {
-                    spritebatch.DrawString(font, targets[i].name, new Vector2(250, 200) + new Vector2(0, 20 * i), (i == targetIndex ? Color.Yellow : Color.White));
+                    spritebatch.DrawString(font, targets[i].name, new Vector2(275, 200) + new Vector2(0, 20 * i), (i == targetIndex ? Color.Yellow : Color.White));
                 }
             }
             
