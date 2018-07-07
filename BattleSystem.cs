@@ -3,6 +3,10 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using TurnBasedFeest.Actors;
 using TurnBasedFeest.Utilities;
+using TurnBasedFeest.Ui;
+using static TurnBasedFeest.Ui.ListChoiceUi;
+using System;
+using System.Linq;
 
 namespace TurnBasedFeest
 {
@@ -11,6 +15,8 @@ namespace TurnBasedFeest
         public bool ongoingBattle;
         List<Actor> actors = new List<Actor>();
         List<Actor>.Enumerator actorEnum;
+        ListChoiceUi playerChoiceUi;
+        Dictionary<string, Action<Actor>> options;
 
         public void InitializeFight(List<Actor> actors)
         {
@@ -18,6 +24,12 @@ namespace TurnBasedFeest
             this.actors = actors;
             actorEnum = this.actors.GetEnumerator();
             actorEnum.MoveNext();
+            playerChoiceUi = new ListChoiceUi();
+            options = new Dictionary<string, Action<Actor>>
+            {
+                {"attack", (target) => {target.health.actorCurrentHealth -= 10;}},
+                {"rest", (target) => {target.health.actorCurrentHealth += 10;}}
+            };
         }
 
         public void EndFight()
@@ -27,22 +39,49 @@ namespace TurnBasedFeest
 
         public void Update(Input input)
         {
+            Actor currentActor = getCurrentActor();
+            Actor target = actors.Find(x => x.name != actorEnum.Current.name);
+
+            switch (playerChoiceUi.currentState)
+            {
+                case state.Notused:
+                    playerChoiceUi.PromptUser(options.Keys.ToList());
+                    break;
+                case state.Used:
+                    playerChoiceUi.Update(input);
+                    break;
+                case state.Done:
+                    options[playerChoiceUi.getChoice()].Invoke(target);
+                    currentActor.moveRemaining = false;
+                    break;
+            }
+            
+            foreach (Actor actor in actors)
+            {
+                actor.Update();
+
+                if(actor.health.actorCurrentHealth <= 0)
+                {
+                    EndFight();
+                }
+            }
+
+            playerChoiceUi.Update(input);
+        }
+
+        public void Draw(SpriteBatch spritebatch, SpriteFont font)
+        {
+            foreach (Actor actor in actors)
+            {
+                actor.Draw(spritebatch, font);
+            }
+        }
+
+        private Actor getCurrentActor()
+        {
             if (actorEnum.Current.moveRemaining)
             {
-                // TODO: do not hardcode target
-                Actor target = actors.Find(x => x.name != actorEnum.Current.name);
-
-                if (input.Released(Keys.Enter))
-                {
-                    target.health.actorCurrentHealth -= 10;
-                    actorEnum.Current.moveRemaining = false;
-
-                }
-                if (input.Released(Keys.RightShift))
-                {
-                    actorEnum.Current.health.actorCurrentHealth += 10;
-                    actorEnum.Current.moveRemaining = false;
-                }
+                return actorEnum.Current;
             }
             else if (!actorEnum.MoveNext())
             {
@@ -55,23 +94,7 @@ namespace TurnBasedFeest
                 actorEnum.MoveNext();
             }
 
-            foreach(Actor actor in actors)
-            {
-                actor.Update();
-
-                if(actor.health.actorCurrentHealth <= 0)
-                {
-                    EndFight();
-                }
-            }
-        }
-
-        public void Draw(SpriteBatch spritebatch, SpriteFont font)
-        {
-            foreach (Actor actor in actors)
-            {
-                actor.Draw(spritebatch, font);
-            }
+            return actorEnum.Current;
         }
     }
 }
