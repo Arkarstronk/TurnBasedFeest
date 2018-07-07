@@ -18,10 +18,7 @@ namespace TurnBasedFeest
         KeyboardState oldKeyState;
         KeyboardState newKeyState;
 
-        Entity player;
-        Entity enemy;
-        List<Entity> entities = new List<Entity>();
-        List<Entity>.Enumerator entityEnum;
+        TurnSystem turnSystem;
 
         public Game1()
         {
@@ -37,12 +34,7 @@ namespace TurnBasedFeest
         /// </summary>
         protected override void Initialize()
         {
-            player = new Entity();
-            enemy = new Entity();
-            entities.Add(player);
-            entities.Add(enemy);
-            entityEnum = entities.GetEnumerator();
-            entityEnum.MoveNext();
+            turnSystem = new TurnSystem();
 
             base.Initialize();
         }
@@ -56,10 +48,6 @@ namespace TurnBasedFeest
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("Fonts/default");
-
-            // TODO: do not hardcode positions
-            player.Initialize("player", new Vector2(100,100), 100, GraphicsDevice);
-            enemy.Initialize("Enemy", new Vector2(600, 100), 100, GraphicsDevice);
         }
 
         /// <summary>
@@ -81,35 +69,25 @@ namespace TurnBasedFeest
             oldKeyState = newKeyState;
             newKeyState = Keyboard.GetState();
 
-            if (entityEnum.Current.moveRemaining)
+            if (!turnSystem.ongoingBattle)
             {
-                // TODO: do not hardcode target
-                Entity target = entities.Find(x => x.name != entityEnum.Current.name);
-
-                if (oldKeyState.IsKeyDown(Keys.Enter) && newKeyState.IsKeyUp(Keys.Enter)){
-                    target.entityCurrentHealth -= 10;
-                    entityEnum.Current.moveRemaining = false;
-
-                }
-                if (oldKeyState.IsKeyDown(Keys.RightShift) && newKeyState.IsKeyUp(Keys.RightShift))
-                {
-                    entityEnum.Current.entityCurrentHealth += 10;
-                    entityEnum.Current.moveRemaining = false;
-                }
-            }
-            else if (!entityEnum.MoveNext())
-            {
-                foreach (Entity e in entities)
-                {
-                    e.moveRemaining = true;
-                }
-
-                entityEnum = entities.GetEnumerator();
-                entityEnum.MoveNext();
+                turnSystem.InitializeFight(new List<Entity> {
+                    new Entity("player", new Vector2(100, 100), 100, GraphicsDevice),
+                    new Entity("Enemy", new Vector2(600, 100), 100, GraphicsDevice)
+                });
             }
 
-            player.Update();
-            enemy.Update();
+            string command = "";
+            if (oldKeyState.IsKeyDown(Keys.Enter) && newKeyState.IsKeyUp(Keys.Enter))
+            {
+                command = "attack";
+            }
+            else if (oldKeyState.IsKeyDown(Keys.LeftShift) && newKeyState.IsKeyUp(Keys.LeftShift))
+            {
+                command = "defend";
+            }
+
+            turnSystem.Update(command);           
 
             base.Update(gameTime);
         }
@@ -123,8 +101,7 @@ namespace TurnBasedFeest
             GraphicsDevice.Clear(Color.Black);            
             spriteBatch.Begin();
 
-            player.Draw(spriteBatch, font);
-            enemy.Draw(spriteBatch, font);
+            turnSystem.Draw(spriteBatch, font);
 
             spriteBatch.End();
             base.Draw(gameTime);

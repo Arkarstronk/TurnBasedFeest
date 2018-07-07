@@ -15,7 +15,7 @@ namespace TurnBasedFeest.Entities
 
         public bool moveRemaining;
 
-        public void Initialize(string name, Vector2 position, int maxHealth, GraphicsDevice device)
+        public Entity(string name, Vector2 position, int maxHealth, GraphicsDevice device)
         {
             this.name = name;
             this.position = position;
