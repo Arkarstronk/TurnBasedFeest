@@ -33,13 +33,13 @@ namespace TurnBasedFeest
 
                 if (command == "attack")
                 {
-                    target.entityCurrentHealth -= 10;
+                    target.health.entityCurrentHealth -= 10;
                     entityEnum.Current.moveRemaining = false;
 
                 }
                 if (command == "defend")
                 {
-                    entityEnum.Current.entityCurrentHealth += 10;
+                    entityEnum.Current.health.entityCurrentHealth += 10;
                     entityEnum.Current.moveRemaining = false;
                 }
             }
@@ -58,7 +58,7 @@ namespace TurnBasedFeest
             {
                 entity.Update();
 
-                if(entity.entityCurrentHealth <= 0)
+                if(entity.health.entityCurrentHealth <= 0)
                 {
                     EndFight();
                 }
