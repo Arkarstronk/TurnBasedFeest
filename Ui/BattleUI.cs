@@ -18,10 +18,10 @@ namespace TurnBasedFeest.Ui
             Finish,
         }
         public state currentState;
-        private List<IAction> choices;
-        private List<Actor> targets;
-        private int choiceIndex;
-        private int targetIndex;
+        private List<IAction> actions;
+        private List<Actor> actors;
+        private int actionIndex;
+        private int actorIndex;
 
         public BattleUI()
         {
@@ -30,10 +30,10 @@ namespace TurnBasedFeest.Ui
 
         public void initialize(List<IAction> actions, List<Actor> actors)
         {
-            targets = actors;
-            this.choices = actions;
-            choiceIndex = 0;
-            targetIndex = 0;
+            this.actors = actors;
+            this.actions = actions;
+            actionIndex = 0;
+            actorIndex = 0;
             currentState = state.Action;
         }
 
@@ -42,16 +42,15 @@ namespace TurnBasedFeest.Ui
             switch (currentState)
             {
                 case state.Action:
-                    choiceIndex += Navigation(input);
+                    actionIndex += Navigation(input);
 
                     if (input.Released(Keys.Enter))
                     {
                         currentState = state.Target;
                     }
-
                     break;
                 case state.Target:
-                    targetIndex += Navigation(input);
+                    actorIndex += Navigation(input);
 
                     if (input.Released(Keys.Enter))
                     {
@@ -69,29 +68,28 @@ namespace TurnBasedFeest.Ui
         public IAction GetChosenAction()
         {
             currentState = state.Start;
-            return choices[choiceIndex];
+            return actions[actionIndex];
         }
 
         public Actor GetChosenActor()
         {
-            return targets[targetIndex];
+            return actors[actorIndex];
         }
 
         public void Draw(SpriteFont font, SpriteBatch spritebatch)
         {
-            for (int i = 0; i < choices.Count; i++)
+            for (int i = 0; i < actions.Count; i++)
             {
-                spritebatch.DrawString(font, choices[i].GetName(), new Vector2(200, 200) + new Vector2(0, 20 * i), (i == choiceIndex ? Color.Yellow : Color.White));
+                spritebatch.DrawString(font, actions[i].GetName(), new Vector2(200, 200) + new Vector2(0, 20 * i), (i == actionIndex ? Color.Yellow : Color.White));
             }
 
             if(currentState == state.Target)
             {
-                for (int i = 0; i < targets.Count; i++)
+                for (int i = 0; i < actors.Count; i++)
                 {
-                    spritebatch.DrawString(font, targets[i].name, new Vector2(275, 200) + new Vector2(0, 20 * i), (i == targetIndex ? Color.Yellow : Color.White));
+                    spritebatch.DrawString(font, actors[i].name, new Vector2(275, 200) + new Vector2(0, 20 * i), (i == actorIndex ? Color.Yellow : Color.White));
                 }
-            }
-            
+            }            
         }
 
         public int Navigation(Input input)
@@ -104,27 +102,26 @@ namespace TurnBasedFeest.Ui
             {
                 return -1;
             }
-
             return 0;
         }
 
         public void CheckIndexBounds()
         {
-            if (targetIndex < 0)
+            if (actorIndex < 0)
             {
-                targetIndex = targets.Count - 1;
+                actorIndex = actors.Count - 1;
             }
-            if (targetIndex > targets.Count - 1)
+            if (actorIndex > actors.Count - 1)
             {
-                targetIndex = 0;
+                actorIndex = 0;
             }
-            if (choiceIndex < 0)
+            if (actionIndex < 0)
             {
-                choiceIndex = choices.Count - 1;
+                actionIndex = actions.Count - 1;
             }
-            if (choiceIndex > choices.Count - 1)
+            if (actionIndex > actions.Count - 1)
             {
-                choiceIndex = 0;
+                actionIndex = 0;
             }
         }
 

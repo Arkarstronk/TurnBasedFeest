@@ -1,13 +1,9 @@
-﻿using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using TurnBasedFeest.Actors;
 using TurnBasedFeest.Utilities;
 using TurnBasedFeest.Ui;
 using static TurnBasedFeest.Ui.BattleUI;
-using System;
-using System.Linq;
-using TurnBasedFeest.Actions;
 using Microsoft.Xna.Framework;
 
 namespace TurnBasedFeest
@@ -18,7 +14,6 @@ namespace TurnBasedFeest
         List<Actor> actors = new List<Actor>();
         List<Actor>.Enumerator actorEnum;
         BattleUI playerChoiceUi;
-        List<IAction> options;
 
         public void InitializeFight(List<Actor> actors)
         {
@@ -27,10 +22,6 @@ namespace TurnBasedFeest
             actorEnum = this.actors.GetEnumerator();
             actorEnum.MoveNext();
             playerChoiceUi = new BattleUI();
-            options = new List<IAction>
-            {
-                new ActionAttack() , new ActionHeal(), new ActionNothing()
-            };
         }
 
         public void EndFight()
@@ -45,7 +36,7 @@ namespace TurnBasedFeest
             switch (playerChoiceUi.currentState)
             {
                 case state.Start:
-                    playerChoiceUi.initialize(options, actors);
+                    playerChoiceUi.initialize(currentActor.actions, actors);
                     break;
                 case state.Action:
                     playerChoiceUi.Update(input);
@@ -90,15 +81,14 @@ namespace TurnBasedFeest
             }
             else if (!actorEnum.MoveNext())
             {
-                foreach (Actor e in actors)
+                foreach (Actor actor in actors)
                 {
-                    e.moveRemaining = true;
+                    actor.moveRemaining = true;
                 }
 
                 actorEnum = actors.GetEnumerator();
                 actorEnum.MoveNext();
             }
-
             return actorEnum.Current;
         }
     }
