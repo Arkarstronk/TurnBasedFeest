@@ -1,22 +1,23 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using TurnBasedFeest.Entities;
+using TurnBasedFeest.Actors;
+using TurnBasedFeest.Utilities;
 
 namespace TurnBasedFeest
 {
     class TurnSystem
     {
         public bool ongoingBattle;
-        List<Entity> entities = new List<Entity>();
-        List<Entity>.Enumerator entityEnum;
+        List<Actor> actors = new List<Actor>();
+        List<Actor>.Enumerator actorEnum;
 
-        public void InitializeFight(List<Entity> entities)
+        public void InitializeFight(List<Actor> actors)
         {
             ongoingBattle = true;
-            this.entities = entities;
-            entityEnum = this.entities.GetEnumerator();
-            entityEnum.MoveNext();
+            this.actors = actors;
+            actorEnum = this.actors.GetEnumerator();
+            actorEnum.MoveNext();
         }
 
         public void EndFight()
@@ -24,41 +25,41 @@ namespace TurnBasedFeest
             ongoingBattle = false;
         }
 
-        public void Update(string command)
+        public void Update(Input input)
         {
-            if (entityEnum.Current.moveRemaining)
+            if (actorEnum.Current.moveRemaining)
             {
                 // TODO: do not hardcode target
-                Entity target = entities.Find(x => x.name != entityEnum.Current.name);
+                Actor target = actors.Find(x => x.name != actorEnum.Current.name);
 
-                if (command == "attack")
+                if (input.Released(Keys.Enter))
                 {
-                    target.health.entityCurrentHealth -= 10;
-                    entityEnum.Current.moveRemaining = false;
+                    target.health.actorCurrentHealth -= 10;
+                    actorEnum.Current.moveRemaining = false;
 
                 }
-                if (command == "defend")
+                if (input.Released(Keys.RightShift))
                 {
-                    entityEnum.Current.health.entityCurrentHealth += 10;
-                    entityEnum.Current.moveRemaining = false;
+                    actorEnum.Current.health.actorCurrentHealth += 10;
+                    actorEnum.Current.moveRemaining = false;
                 }
             }
-            else if (!entityEnum.MoveNext())
+            else if (!actorEnum.MoveNext())
             {
-                foreach (Entity e in entities)
+                foreach (Actor e in actors)
                 {
                     e.moveRemaining = true;
                 }
 
-                entityEnum = entities.GetEnumerator();
-                entityEnum.MoveNext();
+                actorEnum = actors.GetEnumerator();
+                actorEnum.MoveNext();
             }
 
-            foreach(Entity entity in entities)
+            foreach(Actor actor in actors)
             {
-                entity.Update();
+                actor.Update();
 
-                if(entity.health.entityCurrentHealth <= 0)
+                if(actor.health.actorCurrentHealth <= 0)
                 {
                     EndFight();
                 }
@@ -67,9 +68,9 @@ namespace TurnBasedFeest
 
         public void Draw(SpriteBatch spritebatch, SpriteFont font)
         {
-            foreach (Entity entity in entities)
+            foreach (Actor actor in actors)
             {
-                entity.Draw(spritebatch, font);
+                actor.Draw(spritebatch, font);
             }
         }
     }

@@ -1,16 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace TurnBasedFeest.Entities
+namespace TurnBasedFeest.Actors
 {
-    class Entity
+    class Actor
     {
         public string name;
         private Vector2 position;
         public Health health;
         public bool moveRemaining;
 
-        public Entity(string name, Vector2 position, int maxHealth, GraphicsDevice device)
+        public Actor(string name, Vector2 position, int maxHealth, GraphicsDevice device)
         {
             this.name = name;
             this.position = position;

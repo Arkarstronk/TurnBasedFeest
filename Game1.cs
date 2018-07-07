@@ -1,8 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using TurnBasedFeest.Entities;
+using TurnBasedFeest.Actors;
 using TurnBasedFeest.Utilities;
 
 namespace TurnBasedFeest
@@ -67,23 +66,13 @@ namespace TurnBasedFeest
 
             if (!turnSystem.ongoingBattle)
             {
-                turnSystem.InitializeFight(new List<Entity> {
-                    new Entity("player", new Vector2(100, 100), 100, GraphicsDevice),
-                    new Entity("Enemy", new Vector2(600, 100), 100, GraphicsDevice)
+                turnSystem.InitializeFight(new List<Actor> {
+                    new Actor("player", new Vector2(100, 100), 100, GraphicsDevice),
+                    new Actor("Enemy", new Vector2(600, 100), 100, GraphicsDevice)
                 });
             }
 
-            string command = "";
-            if (input.Released(Keys.Enter))
-            {
-                command = "attack";
-            }
-            else if (input.Released(Keys.RightShift))
-            {
-                command = "defend";
-            }
-
-            turnSystem.Update(command);           
+            turnSystem.Update(input);           
 
             base.Update(gameTime);
         }
