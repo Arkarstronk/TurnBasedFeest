@@ -28,6 +28,11 @@ namespace TurnBasedFeest.Actions
         {
             throw new NotImplementedException();
         }
+
+        public string GetName()
+        {
+            return "Attack";
+        }
     }
 
     class ActionResultAttack : IActionResult

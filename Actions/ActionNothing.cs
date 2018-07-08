@@ -26,6 +26,11 @@ namespace TurnBasedFeest.Actions
         {
             throw new NotImplementedException();
         }
+
+        public string GetName()
+        {
+            return "Defend";
+        }
     }
 
     class ActionResultNothing : IActionResult{}

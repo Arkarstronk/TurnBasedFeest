@@ -27,6 +27,11 @@ namespace TurnBasedFeest.Actions
         {
             throw new NotImplementedException();
         }
+
+        public string GetName()
+        {
+            return "Heal";
+        }
     }
 
     class ActionResultHeal : IActionResult
