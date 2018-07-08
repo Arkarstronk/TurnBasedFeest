@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using TurnBasedFeest.Actors;
 using TurnBasedFeest.Utilities;
-using TurnBasedFeest.UI;
-using static TurnBasedFeest.UI.BattleUI;
 using Microsoft.Xna.Framework;
 using TurnBasedFeest.Actors.Behaviours;
+using TurnBasedFeest.Actions;
 
 namespace TurnBasedFeest
 {
@@ -27,10 +26,11 @@ namespace TurnBasedFeest
 
         public void Update(Input input)
         {
+            // If a behaviour is determined
             if(currentActor.turnBehaviour.DetermineBehaviour(input, actors, currentActor))
             {
-                ITurnResult result = currentActor.turnBehaviour.GetTurnResult();
-                result.Preform(currentActor);
+                ITurnResult turnResult = currentActor.turnBehaviour.GetTurnResult();
+                IActionResult actionResult = turnResult.Preform(currentActor);
                 currentActor = getNextActor();
             }
             

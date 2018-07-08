@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TurnBasedFeest.Actions;
 using TurnBasedFeest.Utilities;
 
 namespace TurnBasedFeest.Actors.Behaviours
@@ -17,6 +18,6 @@ namespace TurnBasedFeest.Actors.Behaviours
 
     interface ITurnResult
     {
-        void Preform(Actor preformer);
+        IActionResult Preform(Actor preformer);
     }
 }
