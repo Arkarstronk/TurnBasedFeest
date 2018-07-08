@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TurnBasedFeest.Actions;
-using TurnBasedFeest.Ui;
+using TurnBasedFeest.UI;
 using TurnBasedFeest.Utilities;
-using static TurnBasedFeest.Ui.BattleUI;
+using static TurnBasedFeest.UI.BattleUI;
 
 namespace TurnBasedFeest.Actors.Behaviours
 {
@@ -53,18 +53,18 @@ namespace TurnBasedFeest.Actors.Behaviours
 
     class PlayerTurnResult : ITurnResult
     {
-        IAction playerTurnResultAction;
+        IAction resultAction;
         Actor targetActor;
 
         public PlayerTurnResult(IAction action, Actor target)
         {
-            playerTurnResultAction = action;
+            this.resultAction = action;
             targetActor = target;
         }
 
         public void Preform(Actor preformer)
         {
-            playerTurnResultAction.Execute(preformer, targetActor);
+            resultAction.Execute(preformer, targetActor);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using TurnBasedFeest.Actions;
 using TurnBasedFeest.Actors;
@@ -18,6 +19,7 @@ namespace TurnBasedFeest
         SpriteFont font;
         Input input;  
         BattleSystem battleSystem;
+        public static Random rnd = new Random();
 
         public Game1()
         {
@@ -70,7 +72,7 @@ namespace TurnBasedFeest
             {
                 battleSystem.InitializeFight(new List<Actor> {
                     new Actor("Player", new Vector2(100, 100), 100, new List<IAction> { new ActionAttack() , new ActionHeal(), new ActionNothing() }, GraphicsDevice, new PlayerTurnBehaviour()),
-                    new Actor("Enemy", new Vector2(600, 100), 100, new List<IAction> { new ActionAttack() , new ActionNothing() }, GraphicsDevice, new PlayerTurnBehaviour())
+                    new Actor("Enemy", new Vector2(600, 100), 100, new List<IAction> { new ActionAttack() , new ActionNothing() }, GraphicsDevice, new RandomEnemyTurnBehaviour())
                 });
             }
 

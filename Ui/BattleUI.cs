@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using TurnBasedFeest.Actors.Behaviours;
 
-namespace TurnBasedFeest.Ui
+namespace TurnBasedFeest.UI
 {
     class BattleUI
     {

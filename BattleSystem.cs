@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using TurnBasedFeest.Actors;
 using TurnBasedFeest.Utilities;
-using TurnBasedFeest.Ui;
-using static TurnBasedFeest.Ui.BattleUI;
+using TurnBasedFeest.UI;
+using static TurnBasedFeest.UI.BattleUI;
 using Microsoft.Xna.Framework;
 using TurnBasedFeest.Actors.Behaviours;
 
