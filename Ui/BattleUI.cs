@@ -29,12 +29,16 @@ namespace TurnBasedFeest.UI
             currentState = state.Start;            
         }
 
-        public void initialize(List<IAction> actions, List<Actor> actors)
+        public void initialize()
+        {
+            actionIndex = 0;
+            actorIndex = 0;
+        }
+
+        public void startTurn(List<IAction> actions, List<Actor> actors)
         {
             this.actors = actors;
-            this.actions = actions;
-            //actionIndex = 0;
-            //actorIndex = 0;
+            this.actions = actions;           
             currentState = state.Action;
         }
 

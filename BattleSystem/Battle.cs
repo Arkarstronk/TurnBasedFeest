@@ -19,6 +19,7 @@ namespace TurnBasedFeest.BattleSystem
         public void InitializeFight(List<Actor> actors)
         {
             this.actors = actors;
+            this.actors.ForEach(x => x.turnBehaviour.Initialize());
             actorEnum = this.actors.GetEnumerator();
             actorEnum.MoveNext();
             currentActor = actorEnum.Current;

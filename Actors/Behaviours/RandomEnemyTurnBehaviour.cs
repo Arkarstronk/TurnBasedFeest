@@ -11,6 +11,11 @@ namespace TurnBasedFeest.Actors.Behaviours
     {
         RandomEnemyTurnResult result;
 
+        public void Initialize()
+        {
+
+        }
+
         public bool DetermineBehaviour(Input input, List<Actor> actors, Actor currentActor)
         {
             IAction randomAction = currentActor.actions[Game1.rnd.Next(currentActor.actions.Count)];

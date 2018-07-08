@@ -11,6 +11,7 @@ namespace TurnBasedFeest.Actors.Behaviours
 {
     interface ITurnBehaviour
     {
+        void Initialize();
         bool DetermineBehaviour(Input input, List<Actor> actors, Actor currentActor);
         ITurnResult GetTurnResult();
         void Draw(SpriteFont font, SpriteBatch spritebatch);

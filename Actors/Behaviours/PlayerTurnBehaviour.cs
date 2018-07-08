@@ -20,12 +20,17 @@ namespace TurnBasedFeest.Actors.Behaviours
             playerUI = new BattleUI();
         }
 
+        public void Initialize()
+        {
+            playerUI.initialize();
+        }
+
         public bool DetermineBehaviour(Input input, List<Actor> actors, Actor currentActor)
         {
             switch (playerUI.currentState)
             {
                 case state.Start:
-                    playerUI.initialize(currentActor.actions, actors);
+                    playerUI.startTurn(currentActor.actions, actors);
                     break;
                 case state.Action:
                     playerUI.Update(input);
