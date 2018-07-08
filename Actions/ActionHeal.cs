@@ -20,22 +20,21 @@ namespace TurnBasedFeest.Actions
             this.source = source;
             this.target = target;
             heal = 20;
-            targetHP = (source.health.actorCurrentHealth + heal > source.health.actorMaxHealth) ? source.health.actorMaxHealth : (source.health.actorCurrentHealth + heal);
+            targetHP = (source.health.actorCurrentHealth + heal >= source.health.actorMaxHealth) ? source.health.actorMaxHealth : (source.health.actorCurrentHealth + heal);
         }
 
-        public IActionResult Execute()
+        public IActionResult Update()
         {
-            source.health.actorCurrentHealth += (int)((targetHP - target.health.actorCurrentHealth) * 0.1f);
-
             if (source.health.actorCurrentHealth == targetHP)
             {
                 return new ActionResultHeal(true, heal);
             }
             else
             {
+                source.health.actorCurrentHealth += 1;
                 return new ActionResultHeal(false, heal);
             }
-
+            
         }
         public string GetName()
         {

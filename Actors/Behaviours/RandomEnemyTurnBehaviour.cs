@@ -21,7 +21,7 @@ namespace TurnBasedFeest.Actors.Behaviours
             IAction randomAction = currentActor.actions[Game1.rnd.Next(currentActor.actions.Count)];
             List<Actor> possibleTargets = actors.FindAll(x => x.turnBehaviour.GetType() == typeof(PlayerTurnBehaviour));
             Actor randomActor = possibleTargets[Game1.rnd.Next(possibleTargets.Count)];
-            result = new RandomEnemyTurnResult(randomAction, randomActor);
+            result = new RandomEnemyTurnResult(randomAction, randomActor, currentActor);
             return true;
         }        
 
@@ -39,21 +39,23 @@ namespace TurnBasedFeest.Actors.Behaviours
     {
         IAction resultAction;
         Actor targetActor;
+        Actor sourceActor;
 
-        public RandomEnemyTurnResult(IAction action, Actor target)
+        public RandomEnemyTurnResult(IAction action, Actor target, Actor source)
         {
             this.resultAction = action;
+            sourceActor = source;
             targetActor = target;
         }
 
-        public void Initialize(Actor source)
+        public void Initialize()
         {
-            resultAction.Initialize(source, targetActor);
+            resultAction.Initialize(sourceActor, targetActor);
         }
 
-        public IActionResult Preform()
+        public IActionResult Update()
         {
-            return resultAction.Execute();
+            return resultAction.Update();
         }
     }
 }

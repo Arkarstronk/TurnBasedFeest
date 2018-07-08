@@ -10,15 +10,8 @@ namespace TurnBasedFeest.Actions
 {
     interface IAction
     {
-        /// <summary>
-        /// Execute the action,
-        /// Returns IActionResult that contains relevant data regarding the executed action.
-        /// </summary>
-        /// <returns></returns>
-        IActionResult Execute();
-
         void Initialize(Actor source, Actor target);
-        
+        IActionResult Update();        
         string GetName();
     }
 

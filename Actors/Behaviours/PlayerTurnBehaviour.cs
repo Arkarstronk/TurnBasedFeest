@@ -30,7 +30,7 @@ namespace TurnBasedFeest.Actors.Behaviours
             switch (playerUI.currentState)
             {
                 case state.Start:
-                    playerUI.startTurn(currentActor.actions, actors);
+                    playerUI.startTurn(currentActor, actors);
                     break;
                 case state.Action:
                     playerUI.Update(input);
@@ -60,21 +60,23 @@ namespace TurnBasedFeest.Actors.Behaviours
     {
         IAction resultAction;
         Actor targetActor;
+        Actor sourceActor;
 
-        public PlayerTurnResult(IAction action, Actor target)
+        public PlayerTurnResult(IAction action, Actor target, Actor source)
         {
             this.resultAction = action;
+            this.sourceActor = source;
             targetActor = target;
         }
 
-        public void Initialize(Actor source)
+        public void Initialize()
         {
-            resultAction.Initialize(source, targetActor);
+            resultAction.Initialize(sourceActor, targetActor);
         }
 
-        public IActionResult Preform()
+        public IActionResult Update()
         {
-            return resultAction.Execute();
+            return resultAction.Update();
         }
     }
 }

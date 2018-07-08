@@ -19,7 +19,7 @@ namespace TurnBasedFeest.Actors.Behaviours
 
     interface ITurnResult
     {
-        void Initialize(Actor source);
-        IActionResult Preform();
+        void Initialize();
+        IActionResult Update();
     }
 }

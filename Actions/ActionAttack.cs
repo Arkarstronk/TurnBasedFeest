@@ -21,19 +21,18 @@ namespace TurnBasedFeest.Actions
             this.source = source;
             this.target = target;
             damage = 20;
-            targetHP = (target.health.actorCurrentHealth - damage < 0) ? 0 : (target.health.actorCurrentHealth - damage);
+            targetHP = (target.health.actorCurrentHealth - damage <= 0) ? 0 : (target.health.actorCurrentHealth - damage);
         }
 
-        public IActionResult Execute()
+        public IActionResult Update()
         {
-            target.health.actorCurrentHealth -= (int) ((target.health.actorCurrentHealth - targetHP) * 0.1f);
-
             if(target.health.actorCurrentHealth == targetHP)
             {
                 return new ActionResultAttack(true, damage);
             }
             else
             {
+                target.health.actorCurrentHealth -= 1;
                 return new ActionResultAttack(false, damage);
             }
             

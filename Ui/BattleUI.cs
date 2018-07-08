@@ -19,10 +19,10 @@ namespace TurnBasedFeest.UI
             Finish,
         }
         public state currentState;
-        private List<IAction> actions;
         private List<Actor> actors;
         private int actionIndex;
         private int actorIndex;
+        private Actor currentActor;
 
         public BattleUI()
         {
@@ -35,10 +35,10 @@ namespace TurnBasedFeest.UI
             actorIndex = 0;
         }
 
-        public void startTurn(List<IAction> actions, List<Actor> actors)
+        public void startTurn(Actor currentActor, List<Actor> actors)
         {
+            this.currentActor = currentActor;
             this.actors = actors;
-            this.actions = actions;           
             currentState = state.Action;
         }
 
@@ -73,16 +73,16 @@ namespace TurnBasedFeest.UI
         public ITurnResult GetTurnResult()
         {
             currentState = state.Start;
-            return new PlayerTurnResult(actions[actionIndex], actors[actorIndex]);
+            return new PlayerTurnResult(currentActor.actions[actionIndex], actors[actorIndex], currentActor);
         }
 
         public void Draw(SpriteFont font, SpriteBatch spritebatch)
         {
             if (currentState == state.Action || currentState == state.Target)
             {
-                for (int i = 0; i < actions.Count; i++)
+                for (int i = 0; i < currentActor.actions.Count; i++)
                 {
-                    spritebatch.DrawString(font, actions[i].GetName(), new Vector2(300, 200) + new Vector2(0, 20 * i), (i == actionIndex ? Color.Yellow : Color.White));
+                    spritebatch.DrawString(font, currentActor.actions[i].GetName(), new Vector2(300, 200) + new Vector2(0, 20 * i), (i == actionIndex ? Color.Yellow : Color.White));
                 }
 
                 if (currentState == state.Target)
@@ -120,9 +120,9 @@ namespace TurnBasedFeest.UI
             }
             if (actionIndex < 0)
             {
-                actionIndex = actions.Count - 1;
+                actionIndex = currentActor.actions.Count - 1;
             }
-            if (actionIndex > actions.Count - 1)
+            if (actionIndex > currentActor.actions.Count - 1)
             {
                 actionIndex = 0;
             }

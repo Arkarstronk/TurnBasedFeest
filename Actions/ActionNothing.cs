@@ -17,10 +17,10 @@ namespace TurnBasedFeest.Actions
         {
             elapsedTime = 0;
             this.source = source;
-            this.source.health.color = Color.AliceBlue;
+            this.source.health.color = Color.Violet;
         }
 
-        public IActionResult Execute()
+        public IActionResult Update()
         {
             elapsedTime += (int) Game1.time.ElapsedGameTime.TotalMilliseconds;
             

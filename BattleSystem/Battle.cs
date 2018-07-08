@@ -15,7 +15,7 @@ namespace TurnBasedFeest.BattleSystem
         List<Actor> actors = new List<Actor>();
         List<Actor>.Enumerator actorEnum;
         Actor currentActor;
-        ITurnResult actorResult;
+        ITurnResult turn;
 
 
         public void InitializeFight(List<Actor> actors)
@@ -36,23 +36,26 @@ namespace TurnBasedFeest.BattleSystem
 
         public BattleResult Update(Input input)
         {
-            // If a behaviour is determined
-            if (currentActor.turnBehaviour.DetermineBehaviour(input, actors.FindAll(x => x.health.actorCurrentHealth > 0), currentActor) && actorResult == null)
+            if (turn == null)
             {
-                actorResult = currentActor.turnBehaviour.GetTurnResult();
-                actorResult.Initialize(currentActor);
+                // If a behaviour is determined, keep in mind that the method also changes states.
+                if (currentActor.turnBehaviour.DetermineBehaviour(input, actors.FindAll(x => x.health.actorCurrentHealth > 0), currentActor))
+                {
+                    turn = currentActor.turnBehaviour.GetTurnResult();
+                    turn.Initialize();
+                }
             }
-
-            if (actorResult != null)
+            else
             {
-                IActionResult actionResult = actorResult.Preform();
+                IActionResult actionResult = turn.Update();
 
                 if (actionResult.IsDone())
                 {
                     currentActor = getNextActor();
-                    actorResult = null;
+                    turn = null;
                 }
             }
+            
 
             actors.ForEach(x => x.Update());
 
