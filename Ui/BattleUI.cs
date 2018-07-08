@@ -5,6 +5,7 @@ using TurnBasedFeest.Actors;
 using TurnBasedFeest.Actions;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using TurnBasedFeest.Actors.Behaviours;
 
 namespace TurnBasedFeest.Ui
 {
@@ -65,31 +66,29 @@ namespace TurnBasedFeest.Ui
             CheckIndexBounds();
         }
 
-        public IAction GetChosenAction()
+        public ITurnResult GetTurnResult()
         {
             currentState = state.Start;
-            return actions[actionIndex];
-        }
-
-        public Actor GetChosenActor()
-        {
-            return actors[actorIndex];
+            return new PlayerTurnResult(actions[actionIndex], actors[actorIndex]);
         }
 
         public void Draw(SpriteFont font, SpriteBatch spritebatch)
         {
-            for (int i = 0; i < actions.Count; i++)
+            if (currentState == state.Action || currentState == state.Target)
             {
-                spritebatch.DrawString(font, actions[i].GetName(), new Vector2(200, 200) + new Vector2(0, 20 * i), (i == actionIndex ? Color.Yellow : Color.White));
-            }
-
-            if(currentState == state.Target)
-            {
-                for (int i = 0; i < actors.Count; i++)
+                for (int i = 0; i < actions.Count; i++)
                 {
-                    spritebatch.DrawString(font, actors[i].name, new Vector2(275, 200) + new Vector2(0, 20 * i), (i == actorIndex ? Color.Yellow : Color.White));
+                    spritebatch.DrawString(font, actions[i].GetName(), new Vector2(200, 200) + new Vector2(0, 20 * i), (i == actionIndex ? Color.Yellow : Color.White));
                 }
-            }            
+
+                if (currentState == state.Target)
+                {
+                    for (int i = 0; i < actors.Count; i++)
+                    {
+                        spritebatch.DrawString(font, actors[i].name, new Vector2(275, 200) + new Vector2(0, 20 * i), (i == actorIndex ? Color.Yellow : Color.White));
+                    }
+                }
+            }
         }
 
         public int Navigation(Input input)

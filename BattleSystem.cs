@@ -5,6 +5,7 @@ using TurnBasedFeest.Utilities;
 using TurnBasedFeest.Ui;
 using static TurnBasedFeest.Ui.BattleUI;
 using Microsoft.Xna.Framework;
+using TurnBasedFeest.Actors.Behaviours;
 
 namespace TurnBasedFeest
 {
@@ -13,7 +14,7 @@ namespace TurnBasedFeest
         public bool ongoingBattle;
         List<Actor> actors = new List<Actor>();
         List<Actor>.Enumerator actorEnum;
-        BattleUI playerChoiceUi;
+        Actor currentActor;
 
         public void InitializeFight(List<Actor> actors)
         {
@@ -21,33 +22,16 @@ namespace TurnBasedFeest
             this.actors = actors;
             actorEnum = this.actors.GetEnumerator();
             actorEnum.MoveNext();
-            playerChoiceUi = new BattleUI();
-        }
-
-        public void EndFight()
-        {
-            ongoingBattle = false;
+            currentActor = actorEnum.Current;
         }
 
         public void Update(Input input)
         {
-            Actor currentActor = getCurrentActor();
-
-            switch (playerChoiceUi.currentState)
+            if(currentActor.turnBehaviour.DetermineBehaviour(input, actors, currentActor))
             {
-                case state.Start:
-                    playerChoiceUi.initialize(currentActor.actions, actors);
-                    break;
-                case state.Action:
-                    playerChoiceUi.Update(input);
-                    break;
-                case state.Target:
-                    playerChoiceUi.Update(input);
-                    break;
-                case state.Finish:
-                    playerChoiceUi.GetChosenAction().Execute(currentActor, playerChoiceUi.GetChosenActor());
-                    currentActor.moveRemaining = false;
-                    break;
+                ITurnResult result = currentActor.turnBehaviour.GetTurnResult();
+                result.Preform(currentActor);
+                currentActor = getNextActor();
             }
             
             foreach (Actor actor in actors)
@@ -56,7 +40,7 @@ namespace TurnBasedFeest
 
                 if(actor.health.actorCurrentHealth <= 0)
                 {
-                    EndFight();
+                    ongoingBattle = false;
                 }
             }
         }
@@ -68,24 +52,13 @@ namespace TurnBasedFeest
                 actor.Draw(spritebatch, font);
             }
 
-            playerChoiceUi.Draw(font, spritebatch);
-
-            spritebatch.DrawString(font, ">", getCurrentActor().position - new Vector2(35, 0), Color.White);
+            spritebatch.DrawString(font, ">", currentActor.position - new Vector2(35, 0), Color.White);
         }
 
-        private Actor getCurrentActor()
+        private Actor getNextActor()
         {
-            if (actorEnum.Current.moveRemaining)
+            if (!actorEnum.MoveNext())
             {
-                return actorEnum.Current;
-            }
-            else if (!actorEnum.MoveNext())
-            {
-                foreach (Actor actor in actors)
-                {
-                    actor.moveRemaining = true;
-                }
-
                 actorEnum = actors.GetEnumerator();
                 actorEnum.MoveNext();
             }
