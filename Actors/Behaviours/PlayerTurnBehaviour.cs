@@ -67,9 +67,14 @@ namespace TurnBasedFeest.Actors.Behaviours
             targetActor = target;
         }
 
-        public IActionResult Preform(Actor preformer)
+        public void Initialize(Actor source)
         {
-            return resultAction.Execute(preformer, targetActor);
+            resultAction.Initialize(source, targetActor);
+        }
+
+        public IActionResult Preform()
+        {
+            return resultAction.Execute();
         }
     }
 }

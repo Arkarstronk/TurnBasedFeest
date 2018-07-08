@@ -23,6 +23,7 @@ namespace TurnBasedFeest
         Battle battleSystem;
         List<Actor> actors;
         public static Random rnd = new Random();
+        public static GameTime time;
 
         public Game1()
         {
@@ -73,6 +74,7 @@ namespace TurnBasedFeest
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            time = gameTime;
             input.Update();
 
             if (!battleSystem.ongoingBattle && input.Released(Keys.B))

@@ -9,29 +9,50 @@ using TurnBasedFeest.Actors;
 namespace TurnBasedFeest.Actions
 {
     class ActionNothing : IAction
-    {       
+    {
+        int elapsedTime;
+        Actor source;
 
-        public IActionResult Execute(Actor source, Actor target)
-        {            
-            // Add extra defense to this target or something.
-            return new ActionResultNothing();
+        public void Initialize(Actor source, Actor target)
+        {
+            elapsedTime = 0;
+            this.source = source;
+            this.source.health.color = Color.AliceBlue;
         }
 
-        public void Draw(GameTime gameTime)
+        public IActionResult Execute()
         {
-            throw new NotImplementedException();
-        }
-
-        public void Update(GameTime gameTime)
-        {
-            throw new NotImplementedException();
+            elapsedTime += (int) Game1.time.ElapsedGameTime.TotalMilliseconds;
+            
+            if(elapsedTime > 500)
+            {
+                source.health.color = Color.White;
+                return new ActionResultNothing(true);
+            }
+            else
+            {
+                return new ActionResultNothing(false);
+            }            
         }
 
         public string GetName()
         {
             return "Defend";
-        }
+        }        
     }
 
-    class ActionResultNothing : IActionResult{}
+    class ActionResultNothing : IActionResult
+    {
+        private bool done;
+
+        public ActionResultNothing(bool done)
+        {
+            this.done = done;
+        }
+
+        public bool IsDone()
+        {
+            return done;
+        }
+    }
 }

@@ -10,24 +10,33 @@ namespace TurnBasedFeest.Actions
 {
     class ActionHeal : IAction
     {
-        public IActionResult Execute(Actor source, Actor target)
+        Actor source;
+        Actor target;
+        int targetHP;
+        int heal;
+
+        public void Initialize(Actor source, Actor target)
         {
-            int damage = 20;
-            target.health.actorCurrentHealth += damage;
-            if (target.health.actorCurrentHealth > target.health.actorMaxHealth)
-                target.health.actorCurrentHealth = target.health.actorMaxHealth;
-            return new ActionResultHeal(damage);
-        }        
-        public void Draw(GameTime gameTime)
-        {
-            throw new NotImplementedException();
+            this.source = source;
+            this.target = target;
+            heal = 20;
+            targetHP = (source.health.actorCurrentHealth + heal > source.health.actorMaxHealth) ? source.health.actorMaxHealth : (source.health.actorCurrentHealth + heal);
         }
 
-        public void Update(GameTime gameTime)
+        public IActionResult Execute()
         {
-            throw new NotImplementedException();
-        }
+            source.health.actorCurrentHealth += (int)((targetHP - target.health.actorCurrentHealth) * 0.1f);
 
+            if (source.health.actorCurrentHealth == targetHP)
+            {
+                return new ActionResultHeal(true, heal);
+            }
+            else
+            {
+                return new ActionResultHeal(false, heal);
+            }
+
+        }
         public string GetName()
         {
             return "Heal";
@@ -37,10 +46,17 @@ namespace TurnBasedFeest.Actions
     class ActionResultHeal : IActionResult
     {
         private int healed;
+        private bool isDone;
 
-        public ActionResultHeal(int healed)
+        public ActionResultHeal(bool done, int healed)
         {
             this.healed = healed;
+            this.isDone = done;
+        }
+
+        public bool IsDone()
+        {
+            return isDone;
         }
     }
 }

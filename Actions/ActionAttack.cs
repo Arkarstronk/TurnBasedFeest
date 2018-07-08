@@ -6,29 +6,38 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using TurnBasedFeest.Actors;
 
+
 namespace TurnBasedFeest.Actions
 {
     class ActionAttack : IAction
     {
-
-        public IActionResult Execute(Actor source, Actor target)
+        Actor source;
+        Actor target;
+        int targetHP;
+        int damage;
+        
+        public void Initialize(Actor source, Actor target)
         {
-            int damage = 20;
-
-            target.health.actorCurrentHealth -= damage;
-            return new ActionResultAttack(damage);
+            this.source = source;
+            this.target = target;
+            damage = 20;
+            targetHP = (target.health.actorCurrentHealth - damage < 0) ? 0 : (target.health.actorCurrentHealth - damage);
         }
 
-        public void Draw(GameTime gameTime)
+        public IActionResult Execute()
         {
-            throw new NotImplementedException();
-        }
+            target.health.actorCurrentHealth -= (int) ((target.health.actorCurrentHealth - targetHP) * 0.1f);
 
-        public void Update(GameTime gameTime)
-        {
-            throw new NotImplementedException();
+            if(target.health.actorCurrentHealth == targetHP)
+            {
+                return new ActionResultAttack(true, damage);
+            }
+            else
+            {
+                return new ActionResultAttack(false, damage);
+            }
+            
         }
-
         public string GetName()
         {
             return "Attack";
@@ -37,11 +46,18 @@ namespace TurnBasedFeest.Actions
 
     class ActionResultAttack : IActionResult
     {
-        private int damageDone;
+        public bool done;
+        public int damageDone;
 
-        public ActionResultAttack(int damageDone)
+        public ActionResultAttack(bool done, int damageDone)
         {
+            this.done = done;
             this.damageDone = damageDone;
+        }
+
+        public bool IsDone()
+        {
+            return done;
         }
     }
 }

@@ -15,16 +15,15 @@ namespace TurnBasedFeest.Actions
         /// Returns IActionResult that contains relevant data regarding the executed action.
         /// </summary>
         /// <returns></returns>
-        IActionResult Execute(Actor source, Actor target);
+        IActionResult Execute();
 
-        // Needed methods for action animations.
-        void Update(GameTime gameTime);
-        void Draw(GameTime gameTime);
+        void Initialize(Actor source, Actor target);
+        
         string GetName();
     }
 
     interface IActionResult
     {
-
+        bool IsDone();
     }
 }

@@ -9,6 +9,7 @@ namespace TurnBasedFeest.Actors
         public int actorMaxHealth;
         private Rectangle actorHealthBar;
         private Texture2D actorHealthBarTex;
+        public Color color = Color.White;
 
         public Health(int maxHealth, GraphicsDevice device)
         {
@@ -29,7 +30,7 @@ namespace TurnBasedFeest.Actors
         {
             actorHealthBar.X = (int) position.X;
             actorHealthBar.Y = (int)position.Y;
-            spritebatch.Draw(actorHealthBarTex, actorHealthBar, Color.White);
+            spritebatch.Draw(actorHealthBarTex, actorHealthBar, color);
         }
 
     }
