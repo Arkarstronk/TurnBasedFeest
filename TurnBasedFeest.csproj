@@ -49,7 +49,7 @@
     <Compile Include="Actions\IAction.cs" />
     <Compile Include="Actions\ActionHeal.cs" />
     <Compile Include="Actions\ActionAttack.cs" />
-    <Compile Include="Actions\ActionNothing.cs" />
+    <Compile Include="Actions\ActionDefend.cs" />
     <Compile Include="Actors\Behaviours\ITurnBehaviour.cs" />
     <Compile Include="BattleSystem\BattleResult.cs" />
     <Compile Include="Game1.cs" />

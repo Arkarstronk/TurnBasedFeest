@@ -8,8 +8,9 @@ using TurnBasedFeest.Actors;
 
 namespace TurnBasedFeest.Actions
 {
-    class ActionNothing : IAction
+    class ActionDefend : IAction
     {
+        int actionTime = 1000;
         int elapsedTime;
         Actor source;
 
@@ -24,7 +25,7 @@ namespace TurnBasedFeest.Actions
         {
             elapsedTime += (int) Game1.time.ElapsedGameTime.TotalMilliseconds;
             
-            if(elapsedTime > 500)
+            if(elapsedTime > actionTime)
             {
                 source.health.color = Color.White;
                 return new ActionResultNothing(true);

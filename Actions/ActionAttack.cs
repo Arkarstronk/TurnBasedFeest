@@ -11,28 +11,35 @@ namespace TurnBasedFeest.Actions
 {
     class ActionAttack : IAction
     {
+        int actionTime = 1000;
+        int elapsedTime;
         Actor source;
         Actor target;
+        int beginHP;
         int targetHP;
-        int damage;
+        int damage = 20;
         
         public void Initialize(Actor source, Actor target)
         {
+            elapsedTime = 0;
             this.source = source;
             this.target = target;
-            damage = 20;
+            beginHP = target.health.actorCurrentHealth;
             targetHP = (target.health.actorCurrentHealth - damage <= 0) ? 0 : (target.health.actorCurrentHealth - damage);
         }
 
         public IActionResult Update()
         {
-            if(target.health.actorCurrentHealth == targetHP)
+            elapsedTime += (int)Game1.time.ElapsedGameTime.TotalMilliseconds;
+
+            target.health.actorCurrentHealth = (elapsedTime >= actionTime) ? targetHP : (int)MathHelper.SmoothStep(beginHP, targetHP, (elapsedTime / (float)actionTime));
+
+            if (target.health.actorCurrentHealth == targetHP)
             {
                 return new ActionResultAttack(true, damage);
             }
             else
             {
-                target.health.actorCurrentHealth -= 1;
                 return new ActionResultAttack(false, damage);
             }
             
