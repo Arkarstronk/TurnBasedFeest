@@ -33,8 +33,8 @@ namespace TurnBasedFeest.UI
         {
             this.actors = actors;
             this.actions = actions;
-            actionIndex = 0;
-            actorIndex = 0;
+            //actionIndex = 0;
+            //actorIndex = 0;
             currentState = state.Action;
         }
 
@@ -78,14 +78,14 @@ namespace TurnBasedFeest.UI
             {
                 for (int i = 0; i < actions.Count; i++)
                 {
-                    spritebatch.DrawString(font, actions[i].GetName(), new Vector2(200, 200) + new Vector2(0, 20 * i), (i == actionIndex ? Color.Yellow : Color.White));
+                    spritebatch.DrawString(font, actions[i].GetName(), new Vector2(300, 200) + new Vector2(0, 20 * i), (i == actionIndex ? Color.Yellow : Color.White));
                 }
 
                 if (currentState == state.Target)
                 {
                     for (int i = 0; i < actors.Count; i++)
                     {
-                        spritebatch.DrawString(font, actors[i].name, new Vector2(275, 200) + new Vector2(0, 20 * i), (i == actorIndex ? Color.Yellow : Color.White));
+                        spritebatch.DrawString(font, actors[i].name, new Vector2(375, 200) + new Vector2(0, 20 * i), (i == actorIndex ? Color.Yellow : Color.White));
                     }
                 }
             }

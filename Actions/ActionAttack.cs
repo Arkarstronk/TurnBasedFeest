@@ -13,7 +13,7 @@ namespace TurnBasedFeest.Actions
 
         public IActionResult Execute(Actor source, Actor target)
         {
-            int damage = 10;
+            int damage = 20;
 
             target.health.actorCurrentHealth -= damage;
             return new ActionResultAttack(damage);

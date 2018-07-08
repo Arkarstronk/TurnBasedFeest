@@ -1,10 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using TurnBasedFeest.Actions;
 using TurnBasedFeest.Actors;
 using TurnBasedFeest.Actors.Behaviours;
+using TurnBasedFeest.BattleSystem;
 using TurnBasedFeest.Utilities;
 
 namespace TurnBasedFeest
@@ -18,7 +20,8 @@ namespace TurnBasedFeest
         SpriteBatch spriteBatch;
         SpriteFont font;
         Input input;  
-        BattleSystem battleSystem;
+        Battle battleSystem;
+        List<Actor> actors;
         public static Random rnd = new Random();
 
         public Game1()
@@ -36,7 +39,11 @@ namespace TurnBasedFeest
         protected override void Initialize()
         {
             input = new Input();
-            battleSystem = new BattleSystem();
+            battleSystem = new Battle();
+            actors = new List<Actor> {
+                    new Actor("Ari", new Vector2(100, 100), 100, new List<IAction> { new ActionAttack() , new ActionHeal(), new ActionNothing() }, GraphicsDevice, new PlayerTurnBehaviour()),
+                    new Actor("Zino", new Vector2(100, 200), 100, new List<IAction> { new ActionAttack() , new ActionHeal(), new ActionNothing() }, GraphicsDevice, new PlayerTurnBehaviour())
+            };
             base.Initialize();
         }
 
@@ -68,15 +75,28 @@ namespace TurnBasedFeest
         {
             input.Update();
 
-            if (!battleSystem.ongoingBattle)
+            if (!battleSystem.ongoingBattle && input.Released(Keys.B))
             {
-                battleSystem.InitializeFight(new List<Actor> {
-                    new Actor("Player", new Vector2(100, 100), 100, new List<IAction> { new ActionAttack() , new ActionHeal(), new ActionNothing() }, GraphicsDevice, new PlayerTurnBehaviour()),
-                    new Actor("Enemy", new Vector2(600, 100), 100, new List<IAction> { new ActionAttack() , new ActionNothing() }, GraphicsDevice, new RandomEnemyTurnBehaviour())
-                });
+                actors.Add(new Actor("Hoer", new Vector2(600, 100), 100, new List<IAction> { new ActionAttack(), new ActionNothing() }, GraphicsDevice, new RandomEnemyTurnBehaviour()));
+                actors.Add(new Actor("Bitch", new Vector2(600, 200), 100, new List<IAction> { new ActionAttack(), new ActionNothing() }, GraphicsDevice, new RandomEnemyTurnBehaviour()));
+                battleSystem.InitializeFight(actors);
             }
-
-            battleSystem.Update(input);           
+            if (battleSystem.ongoingBattle)
+            {
+                BattleResult result = battleSystem.Update(input);
+                if (result.isFinished)
+                {
+                    if (result.outcome)
+                    {
+                        battleSystem.EndFight();
+                        actors = result.survivors;
+                    }
+                    else
+                    {
+                        this.Exit();
+                    }
+                }
+            }
 
             base.Update(gameTime);
         }
@@ -90,7 +110,10 @@ namespace TurnBasedFeest
             GraphicsDevice.Clear(Color.Black);            
             spriteBatch.Begin();
 
-            battleSystem.Draw(spriteBatch, font);
+            if (battleSystem.ongoingBattle)
+            {
+                battleSystem.Draw(spriteBatch, font);
+            }
 
             spriteBatch.End();
             base.Draw(gameTime);
