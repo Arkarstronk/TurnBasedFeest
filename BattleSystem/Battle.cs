@@ -17,10 +17,10 @@ namespace TurnBasedFeest.BattleSystem
         Actor currentActor;
         ITurnResult turn;
 
-
         public void InitializeFight(List<Actor> actors)
         {
             this.actors = actors;
+            // we need this to reset the gui for example
             this.actors.ForEach(x => x.turnBehaviour.Initialize());
             actorEnum = this.actors.GetEnumerator();
             actorEnum.MoveNext();
@@ -32,13 +32,12 @@ namespace TurnBasedFeest.BattleSystem
         {
             ongoingBattle = false;
         }
-
-
+        
         public BattleResult Update(Input input)
         {
             if (turn == null)
             {
-                // If a behaviour is determined, keep in mind that the method also changes states.
+                // If a behaviour is determined get the resulting turn. Keep in mind that the method also changes states.
                 if (currentActor.turnBehaviour.DetermineBehaviour(input, actors.FindAll(x => x.health.actorCurrentHealth > 0), currentActor))
                 {
                     turn = currentActor.turnBehaviour.GetTurnResult();
