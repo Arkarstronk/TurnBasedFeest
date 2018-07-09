@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using TurnBasedFeest.Actions;
 using TurnBasedFeest.Events;
-using TurnBasedFeest.Events.TurnBehaviour;
 
 namespace TurnBasedFeest.Actors
 {
@@ -15,13 +14,13 @@ namespace TurnBasedFeest.Actors
         public List<IAction> actions;
         public List<IBattleEvent> battleEvents;
 
-        public Actor(string name, Vector2 position, int maxHealth, List<IAction> actions, GraphicsDevice device, ITurnBehaviourEvent behaviourEvent)
+        public Actor(string name, Vector2 position, int maxHealth, List<IAction> actions, GraphicsDevice device, IBattleEvent behaviourEvent)
         {
             this.name = name;
             this.position = position;
             health = new Health(maxHealth, device);
             this.actions = actions;
-            battleEvents = new List<IBattleEvent> { behaviourEvent };
+            battleEvents = new List<IBattleEvent> { behaviourEvent, behaviourEvent };
         }
 
         public void Update()

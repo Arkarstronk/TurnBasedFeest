@@ -43,7 +43,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Actors\Actor.cs" />
-    <Compile Include="Events\TurnBehaviour\AI\RandomAIEvent.cs" />
+    <Compile Include="Events\TurnBehaviour\RandomAIEvent.cs" />
     <Compile Include="Actors\Health.cs" />
     <Compile Include="Events\Actions\IAction.cs" />
     <Compile Include="Events\Actions\ActionHeal.cs" />
@@ -51,12 +51,11 @@
     <Compile Include="Events\Actions\ActionDefend.cs" />
     <Compile Include="BattleSystem\BattleResult.cs" />
     <Compile Include="Events\IBattleEvent.cs" />
-    <Compile Include="Events\TurnBehaviour\ITurnBehaviourEvent.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BattleSystem\Battle.cs" />
-    <Compile Include="Events\TurnBehaviour\UI\BattleUI.cs" />
+    <Compile Include="Events\TurnBehaviour\BattleUI.cs" />
     <Compile Include="Utilities\Input.cs" />
   </ItemGroup>
   <ItemGroup>

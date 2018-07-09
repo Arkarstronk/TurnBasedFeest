@@ -4,11 +4,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using TurnBasedFeest.BattleSystem;
 using TurnBasedFeest.Actions;
-using TurnBasedFeest.Events.TurnBehaviour;
+using TurnBasedFeest.Events;
 
 namespace TurnBasedFeest.UI
 {
-    class BattleUI : ITurnBehaviourEvent
+    class BattleUI : IBattleEvent
     {
         public enum state
         {
@@ -54,7 +54,7 @@ namespace TurnBasedFeest.UI
                 case state.Finish:
                     IAction chosenAction = battle.currentActor.actions[actionIndex];
                     chosenAction.SetActors(battle.currentActor, battle.actors[actorIndex]);
-                    int index = battle.currentActor.battleEvents.IndexOf(this);
+                    int index = battle.eventIndex;
                     battle.currentActor.battleEvents.Insert(index + 1, chosenAction);
                     return true;
             }

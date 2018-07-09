@@ -75,17 +75,21 @@ namespace TurnBasedFeest.BattleSystem
         {
             foreach (Actor actor in actors)
             {
-                if(actor.health.actorCurrentHealth > 0)
+                if (actor.health.actorCurrentHealth > 0)
                 {
                     actor.Draw(spritebatch, font);
-                }                
+                }
+            }
+
+            for (int i = 0; i < currentActor.battleEvents.Count; i++)
+            {
+                spritebatch.DrawString(font, currentActor.battleEvents[i].ToString(), new Vector2(0, 15 * i), i == eventIndex ? Color.Red: Color.White);
             }
 
             if (eventIndex < currentActor.battleEvents.Count)
             {
                 currentActor.battleEvents[eventIndex].Draw(this, spritebatch, font);
             }
-
             spritebatch.DrawString(font, ">", currentActor.position - new Vector2(35, 0), Color.White);
         }
 

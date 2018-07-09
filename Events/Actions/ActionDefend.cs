@@ -33,6 +33,8 @@ namespace TurnBasedFeest.Actions
             if(elapsedTime > actionTime)
             {
                 source.health.color = Color.White;
+                battle.currentActor.battleEvents.RemoveAt(battle.eventIndex);
+                battle.eventIndex--;
                 return true;
             }
             else

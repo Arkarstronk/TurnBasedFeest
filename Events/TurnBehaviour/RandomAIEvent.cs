@@ -2,13 +2,12 @@
 using Microsoft.Xna.Framework.Graphics;
 using TurnBasedFeest.Actions;
 using TurnBasedFeest.BattleSystem;
-using System;
 using TurnBasedFeest.Utilities;
-using TurnBasedFeest.Events.TurnBehaviour;
+using TurnBasedFeest.Events;
 
 namespace TurnBasedFeest.Actors.Behaviours
 {
-    class RandomAIEvent : ITurnBehaviourEvent
+    class RandomAIEvent : IBattleEvent
     {
         public void Initialize()
         {
@@ -23,7 +22,7 @@ namespace TurnBasedFeest.Actors.Behaviours
             Actor randomActor = possibleTargets[Game1.rnd.Next(possibleTargets.Count)];
             randomAction.SetActors(battle.currentActor, randomActor);
 
-            int index = battle.currentActor.battleEvents.IndexOf(this);
+            int index = battle.eventIndex;
             battle.currentActor.battleEvents.Insert(index + 1, randomAction);
 
             return true;

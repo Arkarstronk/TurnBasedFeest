@@ -38,6 +38,8 @@ namespace TurnBasedFeest.Actions
 
             if (source.health.actorCurrentHealth == targetHP)
             {
+                battle.currentActor.battleEvents.RemoveAt(battle.eventIndex);
+                battle.eventIndex--;
                 return true;
             }
             else
