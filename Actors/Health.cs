@@ -5,7 +5,7 @@ namespace TurnBasedFeest.Actors
 {
     class Health
     {
-        public int actorCurrentHealth;
+        public float actorCurrentHealth;
         public int actorMaxHealth;
         private Rectangle actorHealthBar;
         private Texture2D actorHealthBarTex;

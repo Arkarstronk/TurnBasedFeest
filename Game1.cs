@@ -95,7 +95,7 @@ namespace TurnBasedFeest
                     }
                     else
                     {
-                        this.Exit();
+                        Exit();
                     }
                 }
             }
