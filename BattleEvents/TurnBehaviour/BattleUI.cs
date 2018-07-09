@@ -11,9 +11,9 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
     {
         public enum state
         {
-            Action,
-            Target,
-            Finish,
+            ACTION,
+            TARGET,
+            FINISH,
         }
         public state currentState;
         private int actionIndex;
@@ -23,34 +23,34 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
         {
             actionIndex = 0;
             actorIndex = 0;
-            currentState = state.Action;
+            currentState = state.ACTION;
         }
 
         public bool Update(BattleEvent battle, Input input)
         {
             switch (currentState)
             {
-                case state.Action:
+                case state.ACTION:
                     actionIndex += Navigation(input);
 
                     if (input.Released(Keys.Enter))
                     {
-                        currentState = state.Target;
+                        currentState = state.TARGET;
                     }
                     break;
-                case state.Target:
+                case state.TARGET:
                     actorIndex += Navigation(input);
 
                     if (input.Released(Keys.Enter))
                     {
-                        currentState = state.Finish;
+                        currentState = state.FINISH;
                     }
                     if (input.Released(Keys.Back))
                     {
-                        currentState = state.Action;
+                        currentState = state.ACTION;
                     }
                     break;
-                case state.Finish:
+                case state.FINISH:
                     IAction chosenAction = battle.currentActor.actions[actionIndex];
                     chosenAction.SetActors(battle.currentActor, battle.aliveActors[actorIndex]);
                     int index = battle.eventIndex;
@@ -64,14 +64,14 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
 
         public void Draw(BattleEvent battle, SpriteBatch spritebatch, SpriteFont font)
         {
-            if (currentState == state.Action || currentState == state.Target)
+            if (currentState == state.ACTION || currentState == state.TARGET)
             {
                 for (int i = 0; i < battle.currentActor.actions.Count; i++)
                 {
                     spritebatch.DrawString(font, battle.currentActor.actions[i].GetName(), new Vector2(300, 200) + new Vector2(0, 20 * i), (i == actionIndex ? Color.Yellow : Color.White));
                 }
 
-                if (currentState == state.Target)
+                if (currentState == state.TARGET)
                 {
                     for (int i = 0; i < battle.aliveActors.Count; i++)
                     {
