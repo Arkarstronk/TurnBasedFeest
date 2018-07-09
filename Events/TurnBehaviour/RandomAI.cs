@@ -18,7 +18,7 @@ namespace TurnBasedFeest.Events.TurnBehaviour
         {
             IAction randomAction = battle.currentActor.actions[Game1.rnd.Next(battle.currentActor.actions.Count)];
             //needs to exclude enemies somehow
-            List<Actor> possibleTargets = battle.actors.FindAll(x => true);
+            List<Actor> possibleTargets = battle.aliveActors;
             Actor randomActor = possibleTargets[Game1.rnd.Next(possibleTargets.Count)];
             randomAction.SetActors(battle.currentActor, randomActor);
 

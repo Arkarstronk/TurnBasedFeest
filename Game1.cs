@@ -42,8 +42,8 @@ namespace TurnBasedFeest
             input = new Input();
             battleSystem = new Battle();
             actors = new List<Actor> {
-                    new Actor("Ari", new Vector2(100, 100), 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, GraphicsDevice, new BattleUI()),
-                    new Actor("Zino", new Vector2(100, 200), 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, GraphicsDevice, new BattleUI())
+                    new Actor("Ari", new Vector2(100, 100), 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, GraphicsDevice, new BattleUI(), true),
+                    new Actor("Zino", new Vector2(100, 200), 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, GraphicsDevice, new BattleUI(), true)
             };
             base.Initialize();
         }
@@ -79,8 +79,8 @@ namespace TurnBasedFeest
 
             if (!battleSystem.ongoingBattle && input.Released(Keys.B))
             {
-                actors.Add(new Actor("Hoer", new Vector2(600, 100), 100, new List<IAction> { new AttackAction(), new HealAction() }, GraphicsDevice, new RandomAI()));
-                actors.Add(new Actor("Bitch", new Vector2(600, 200), 100, new List<IAction> { new AttackAction(), new HealAction() }, GraphicsDevice, new RandomAI()));
+                actors.Add(new Actor("Hoer", new Vector2(600, 100), 100, new List<IAction> { new AttackAction(), new HealAction() }, GraphicsDevice, new RandomAI(), false));
+                actors.Add(new Actor("Bitch", new Vector2(600, 200), 100, new List<IAction> { new AttackAction(), new HealAction() }, GraphicsDevice, new RandomAI(), false));
                 battleSystem.InitializeFight(actors);
             }
             if (battleSystem.ongoingBattle)

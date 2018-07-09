@@ -10,17 +10,21 @@ namespace TurnBasedFeest.BattleSystem
     class Battle
     {
         public bool ongoingBattle;
-        public List<Actor> actors = new List<Actor>();
-        List<Actor>.Enumerator actorEnum;
+        public List<Actor> actors;
+        public List<Actor> aliveActors;
         public Actor currentActor;
         public int eventIndex;
 
         public void InitializeFight(List<Actor> actors)
         {
-            this.actors = actors;
-            actorEnum = this.actors.GetEnumerator();
-            currentActor = getNextActor();
             ongoingBattle = true;
+            this.actors = actors;
+            this.aliveActors = this.actors;
+            actors.ForEach(x => x.Initialize());
+            eventIndex = 0;
+            currentActor = this.actors[0];
+            currentActor.hasTurn = false;
+            currentActor.battleEvents[eventIndex].Initialize();
         }
 
         public void EndFight()
@@ -29,45 +33,55 @@ namespace TurnBasedFeest.BattleSystem
         }
         
         public BattleResult Update(Input input)
-        {
+        {            
+            // if the current event exists
             if (eventIndex < currentActor.battleEvents.Count)
             {
+                // preform the event AND if the current event is done
                 if (currentActor.battleEvents[eventIndex].Update(this, input))
                 {
+                    // go to the next event
                     eventIndex++;
+                    // and initialize it if it exists
                     if (eventIndex < currentActor.battleEvents.Count)
                     {
                         currentActor.battleEvents[eventIndex].Initialize();
                     }
                 }
             }
+            // if the event does not exist go to the next actor
             else
             {
                 currentActor = getNextActor();
             }
 
-
+            aliveActors = actors.FindAll(x => x.health.actorCurrentHealth > 0);
             actors.ForEach(x => x.Update());
 
-            List<Actor> aliveActors = actors.FindAll(x => x.health.actorCurrentHealth > 0);
+            // if the current player dies during his turn
+            if (currentActor.health.actorCurrentHealth <= 0)
+            {
+                currentActor = getNextActor();
+            }
 
+            // if there are no more alive players
             if (aliveActors.Count == 0)
             {
                 return new BattleResult(true, false, aliveActors);
             }
-            /*
             else
             {
-                if (aliveActors.TrueForAll(allemaal players))
+                // if there are only players alive
+                if (aliveActors.TrueForAll(x => x.isPlayer))
                 {
                     return new BattleResult(true, true, aliveActors);
                 }
-                if (aliveActors.TrueForAll(allemaal enemies))
+                // if there are only enemies alive
+                if (aliveActors.TrueForAll(x => !x.isPlayer))
                 {
                     return new BattleResult(true, false, aliveActors);
                 }
             }
-            */
             return new BattleResult(false, false, aliveActors);
         }
 
@@ -95,24 +109,32 @@ namespace TurnBasedFeest.BattleSystem
 
         private Actor getNextActor()
         {
-            if (actors.Count(x => x.health.actorCurrentHealth > 0) == 0)
+            // if all the actors are dead (battle will end in this same update loop)
+            if (aliveActors.Count == 0)
             {
-                return currentActor;
+                return null;
             }
-            while (true)
+            else
             {
-                if (!actorEnum.MoveNext())
+                List<Actor> actorsWithTurn = aliveActors.FindAll(x => x.hasTurn);
+
+                // if all the actors have done their turn
+                if(actorsWithTurn.Count == 0)
                 {
-                    actorEnum = actors.GetEnumerator();
-                    actorEnum.MoveNext();
+                    aliveActors.ForEach(x => x.Initialize());
+                    eventIndex = 0;
+                    aliveActors[0].hasTurn = false;
+                    aliveActors[0].battleEvents[eventIndex].Initialize();
+                    return aliveActors[0];
                 }
-                if (actorEnum.Current.health.actorCurrentHealth > 0)
+                else
                 {
                     eventIndex = 0;
-                    actorEnum.Current.battleEvents[eventIndex].Initialize();
-                    return actorEnum.Current;
+                    actorsWithTurn[0].hasTurn = false;
+                    actorsWithTurn[0].battleEvents[eventIndex].Initialize();
+                    return actorsWithTurn[0];
                 }
-            }                      
+            }                   
         }
     }
 }

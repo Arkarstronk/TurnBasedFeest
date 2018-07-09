@@ -13,14 +13,22 @@ namespace TurnBasedFeest.Actors
         public Health health;
         public List<IAction> actions;
         public List<IBattleEvent> battleEvents;
+        public bool hasTurn;
+        public bool isPlayer;
 
-        public Actor(string name, Vector2 position, int maxHealth, List<IAction> actions, GraphicsDevice device, IBattleEvent behaviourEvent)
+        public Actor(string name, Vector2 position, int maxHealth, List<IAction> actions, GraphicsDevice device, IBattleEvent behaviourEvent, bool isPlayer)
         {
             this.name = name;
             this.position = position;
             health = new Health(maxHealth, device);
             this.actions = actions;
             battleEvents = new List<IBattleEvent> { behaviourEvent, behaviourEvent };
+            this.isPlayer = isPlayer;
+        }
+
+        public void Initialize()
+        {
+            hasTurn = true;
         }
 
         public void Update()

@@ -52,7 +52,7 @@ namespace TurnBasedFeest.Events.TurnBehaviour
                     break;
                 case state.Finish:
                     IAction chosenAction = battle.currentActor.actions[actionIndex];
-                    chosenAction.SetActors(battle.currentActor, battle.actors[actorIndex]);
+                    chosenAction.SetActors(battle.currentActor, battle.aliveActors[actorIndex]);
                     int index = battle.eventIndex;
                     battle.currentActor.battleEvents.Insert(index + 1, chosenAction);
                     return true;
@@ -73,9 +73,9 @@ namespace TurnBasedFeest.Events.TurnBehaviour
 
                 if (currentState == state.Target)
                 {
-                    for (int i = 0; i < battle.actors.Count; i++)
+                    for (int i = 0; i < battle.aliveActors.Count; i++)
                     {
-                        spritebatch.DrawString(font, battle.actors[i].name, new Vector2(375, 200) + new Vector2(0, 20 * i), (i == actorIndex ? Color.Yellow : Color.White));
+                        spritebatch.DrawString(font, battle.aliveActors[i].name, new Vector2(375, 200) + new Vector2(0, 20 * i), (i == actorIndex ? Color.Yellow : Color.White));
                     }
                 }
             }
@@ -98,9 +98,9 @@ namespace TurnBasedFeest.Events.TurnBehaviour
         {
             if (actorIndex < 0)
             {
-                actorIndex = battle.actors.Count - 1;
+                actorIndex = battle.aliveActors.Count - 1;
             }
-            if (actorIndex > battle.actors.Count - 1)
+            if (actorIndex > battle.aliveActors.Count - 1)
             {
                 actorIndex = 0;
             }

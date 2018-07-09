@@ -36,7 +36,7 @@ namespace TurnBasedFeest.Events.Actions
 
             source.health.actorCurrentHealth = (elapsedTime >= actionTime) ? targetHP : (int) MathHelper.SmoothStep(beginHP, targetHP, (elapsedTime / (float)actionTime));
 
-            if (source.health.actorCurrentHealth == targetHP)
+            if (elapsedTime >= actionTime)
             {
                 battle.currentActor.battleEvents.RemoveAt(battle.eventIndex);
                 battle.eventIndex--;
