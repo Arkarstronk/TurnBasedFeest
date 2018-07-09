@@ -16,7 +16,7 @@ namespace TurnBasedFeest.Actors.Behaviours
 
         }
 
-        public bool DetermineBehaviour(Input input, List<Actor> actors, Actor currentActor)
+        public bool Update(Input input, List<Actor> actors, Actor currentActor)
         {
             IAction randomAction = currentActor.actions[Game1.rnd.Next(currentActor.actions.Count)];
             List<Actor> possibleTargets = actors.FindAll(x => x.turnBehaviour.GetType() == typeof(PlayerTurnBehaviour));
@@ -40,6 +40,7 @@ namespace TurnBasedFeest.Actors.Behaviours
         IAction resultAction;
         Actor targetActor;
         Actor sourceActor;
+        bool completedAction;
 
         public RandomEnemyTurnResult(IAction action, Actor target, Actor source)
         {
@@ -51,11 +52,25 @@ namespace TurnBasedFeest.Actors.Behaviours
         public void Initialize()
         {
             resultAction.Initialize(sourceActor, targetActor);
+            completedAction = false;
         }
 
-        public IActionResult Update()
+        public bool Update()
         {
-            return resultAction.Update();
+            if (!completedAction)
+            {
+                if (resultAction.Update().IsDone())
+                {
+                    completedAction = true;
+                }
+            }
+            else
+            {
+                // do some other stuff, like status effects
+                return true;
+            }
+            
+            return false;
         }
     }
 }

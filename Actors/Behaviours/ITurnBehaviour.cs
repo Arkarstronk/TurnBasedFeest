@@ -12,7 +12,7 @@ namespace TurnBasedFeest.Actors.Behaviours
     interface ITurnBehaviour
     {
         void Initialize();
-        bool DetermineBehaviour(Input input, List<Actor> actors, Actor currentActor);
+        bool Update(Input input, List<Actor> actors, Actor currentActor);
         ITurnResult GetTurnResult();
         void Draw(SpriteFont font, SpriteBatch spritebatch);
     }
@@ -20,6 +20,6 @@ namespace TurnBasedFeest.Actors.Behaviours
     interface ITurnResult
     {
         void Initialize();
-        IActionResult Update();
+        bool Update();
     }
 }

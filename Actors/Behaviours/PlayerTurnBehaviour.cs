@@ -25,7 +25,7 @@ namespace TurnBasedFeest.Actors.Behaviours
             playerUI.initialize();
         }
 
-        public bool DetermineBehaviour(Input input, List<Actor> actors, Actor currentActor)
+        public bool Update(Input input, List<Actor> actors, Actor currentActor)
         {
             switch (playerUI.currentState)
             {
@@ -74,9 +74,13 @@ namespace TurnBasedFeest.Actors.Behaviours
             resultAction.Initialize(sourceActor, targetActor);
         }
 
-        public IActionResult Update()
+        public bool Update()
         {
-            return resultAction.Update();
+            if (resultAction.Update().IsDone())
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

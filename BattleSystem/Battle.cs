@@ -38,7 +38,7 @@ namespace TurnBasedFeest.BattleSystem
             if (turn == null)
             {
                 // If a behaviour is determined get the resulting turn. Keep in mind that the method also changes states.
-                if (currentActor.turnBehaviour.DetermineBehaviour(input, actors.FindAll(x => x.health.actorCurrentHealth > 0), currentActor))
+                if (currentActor.turnBehaviour.Update(input, actors.FindAll(x => x.health.actorCurrentHealth > 0), currentActor))
                 {
                     turn = currentActor.turnBehaviour.GetTurnResult();
                     turn.Initialize();
@@ -46,9 +46,7 @@ namespace TurnBasedFeest.BattleSystem
             }
             else
             {
-                IActionResult actionResult = turn.Update();
-
-                if (actionResult.IsDone())
+                if (turn.Update())
                 {
                     currentActor = getNextActor();
                     turn = null;
