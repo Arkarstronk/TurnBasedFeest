@@ -1,48 +1,33 @@
-﻿using System.Collections.Generic;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework.Input;
 using TurnBasedFeest.Utilities;
-using TurnBasedFeest.Actors;
-using TurnBasedFeest.Actions;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using TurnBasedFeest.Actors.Behaviours;
+using TurnBasedFeest.BattleSystem;
+using TurnBasedFeest.Actions;
+using TurnBasedFeest.Events.TurnBehaviour;
 
 namespace TurnBasedFeest.UI
 {
-    class BattleUI
+    class BattleUI : ITurnBehaviourEvent
     {
         public enum state
         {
-            Start,
             Action,
             Target,
             Finish,
         }
         public state currentState;
-        private List<Actor> actors;
         private int actionIndex;
         private int actorIndex;
-        private Actor currentActor;
 
-        public BattleUI()
-        {
-            currentState = state.Start;            
-        }
-
-        public void initialize()
+        public void Initialize()
         {
             actionIndex = 0;
             actorIndex = 0;
-        }
-
-        public void startTurn(Actor currentActor, List<Actor> actors)
-        {
-            this.currentActor = currentActor;
-            this.actors = actors;
             currentState = state.Action;
         }
 
-        public void Update(Input input)
+        public bool Update(Battle battle, Input input)
         {
             switch (currentState)
             {
@@ -66,30 +51,32 @@ namespace TurnBasedFeest.UI
                         currentState = state.Action;
                     }
                     break;
+                case state.Finish:
+                    IAction chosenAction = battle.currentActor.actions[actionIndex];
+                    chosenAction.SetActors(battle.currentActor, battle.actors[actorIndex]);
+                    int index = battle.currentActor.battleEvents.IndexOf(this);
+                    battle.currentActor.battleEvents.Insert(index + 1, chosenAction);
+                    return true;
             }
-            CheckIndexBounds();
+            CheckIndexBounds(battle);
+            return false;
         }
+        
 
-        public ITurnResult GetTurnResult()
-        {
-            currentState = state.Start;
-            return new PlayerTurnResult(currentActor.actions[actionIndex], actors[actorIndex], currentActor);
-        }
-
-        public void Draw(SpriteFont font, SpriteBatch spritebatch)
+        public void Draw(Battle battle, SpriteBatch spritebatch, SpriteFont font)
         {
             if (currentState == state.Action || currentState == state.Target)
             {
-                for (int i = 0; i < currentActor.actions.Count; i++)
+                for (int i = 0; i < battle.currentActor.actions.Count; i++)
                 {
-                    spritebatch.DrawString(font, currentActor.actions[i].GetName(), new Vector2(300, 200) + new Vector2(0, 20 * i), (i == actionIndex ? Color.Yellow : Color.White));
+                    spritebatch.DrawString(font, battle.currentActor.actions[i].GetName(), new Vector2(300, 200) + new Vector2(0, 20 * i), (i == actionIndex ? Color.Yellow : Color.White));
                 }
 
                 if (currentState == state.Target)
                 {
-                    for (int i = 0; i < actors.Count; i++)
+                    for (int i = 0; i < battle.actors.Count; i++)
                     {
-                        spritebatch.DrawString(font, actors[i].name, new Vector2(375, 200) + new Vector2(0, 20 * i), (i == actorIndex ? Color.Yellow : Color.White));
+                        spritebatch.DrawString(font, battle.actors[i].name, new Vector2(375, 200) + new Vector2(0, 20 * i), (i == actorIndex ? Color.Yellow : Color.White));
                     }
                 }
             }
@@ -108,21 +95,21 @@ namespace TurnBasedFeest.UI
             return 0;
         }
 
-        public void CheckIndexBounds()
+        public void CheckIndexBounds(Battle battle)
         {
             if (actorIndex < 0)
             {
-                actorIndex = actors.Count - 1;
+                actorIndex = battle.actors.Count - 1;
             }
-            if (actorIndex > actors.Count - 1)
+            if (actorIndex > battle.actors.Count - 1)
             {
                 actorIndex = 0;
             }
             if (actionIndex < 0)
             {
-                actionIndex = currentActor.actions.Count - 1;
+                actionIndex = battle.currentActor.actions.Count - 1;
             }
-            if (actionIndex > currentActor.actions.Count - 1)
+            if (actionIndex > battle.currentActor.actions.Count - 1)
             {
                 actionIndex = 0;
             }

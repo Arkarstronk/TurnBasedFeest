@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using TurnBasedFeest.Actors;
-
+using TurnBasedFeest.BattleSystem;
+using TurnBasedFeest.Utilities;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace TurnBasedFeest.Actions
 {
@@ -13,22 +11,26 @@ namespace TurnBasedFeest.Actions
     {
         int actionTime = 1000;
         int elapsedTime;
-        Actor source;
         Actor target;
+        Actor source;
         int beginHP;
         int targetHP;
         int damage = 20;
-        
-        public void Initialize(Actor source, Actor target)
+
+        public void SetActors(Actor source, Actor target)
         {
-            elapsedTime = 0;
             this.source = source;
             this.target = target;
+        }
+
+        public void Initialize()
+        {
+            elapsedTime = 0;
             beginHP = target.health.actorCurrentHealth;
             targetHP = (target.health.actorCurrentHealth - damage <= 0) ? 0 : (target.health.actorCurrentHealth - damage);
         }
 
-        public IActionResult Update()
+        public bool Update(Battle battle, Input input)
         {
             elapsedTime += (int)Game1.time.ElapsedGameTime.TotalMilliseconds;
 
@@ -36,34 +38,23 @@ namespace TurnBasedFeest.Actions
 
             if (target.health.actorCurrentHealth == targetHP)
             {
-                return new ActionResultAttack(true, damage);
+                battle.currentActor.battleEvents.Remove(this);
+                battle.eventIndex--;
+                return true;
             }
             else
             {
-                return new ActionResultAttack(false, damage);
-            }
-            
+                return false;
+            }            
         }
+
         public string GetName()
         {
             return "Attack";
         }
-    }
 
-    class ActionResultAttack : IActionResult
-    {
-        public bool done;
-        public int damageDone;
-
-        public ActionResultAttack(bool done, int damageDone)
+        public void Draw(Battle battle, SpriteBatch spritebatch, SpriteFont font)
         {
-            this.done = done;
-            this.damageDone = damageDone;
-        }
-
-        public bool IsDone()
-        {
-            return done;
         }
     }
 }

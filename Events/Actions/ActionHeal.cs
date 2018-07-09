@@ -1,5 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using TurnBasedFeest.Actors;
+using TurnBasedFeest.BattleSystem;
+using TurnBasedFeest.Utilities;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace TurnBasedFeest.Actions
 {
@@ -13,16 +17,20 @@ namespace TurnBasedFeest.Actions
         int targetHP;
         int heal = 20;
 
-        public void Initialize(Actor source, Actor target)
+        public void SetActors(Actor source, Actor target)
         {
-            elapsedTime = 0;
             this.source = source;
             this.target = target;
+        }
+
+        public void Initialize()
+        {
+            elapsedTime = 0;
             beginHP = source.health.actorCurrentHealth;
             targetHP = (source.health.actorCurrentHealth + heal >= source.health.actorMaxHealth) ? source.health.actorMaxHealth : (source.health.actorCurrentHealth + heal);
         }
 
-        public IActionResult Update()
+        public bool Update(Battle battle, Input input)
         {
             elapsedTime += (int)Game1.time.ElapsedGameTime.TotalMilliseconds;
 
@@ -30,34 +38,22 @@ namespace TurnBasedFeest.Actions
 
             if (source.health.actorCurrentHealth == targetHP)
             {
-                return new ActionResultHeal(true, heal);
+                return true;
             }
             else
             {
-                return new ActionResultHeal(false, heal);
+                return false;
             }
             
         }
+
         public string GetName()
         {
             return "Heal";
         }
-    }
 
-    class ActionResultHeal : IActionResult
-    {
-        private int healed;
-        private bool isDone;
-
-        public ActionResultHeal(bool done, int healed)
+        public void Draw(Battle battle, SpriteBatch spritebatch, SpriteFont font)
         {
-            this.healed = healed;
-            this.isDone = done;
-        }
-
-        public bool IsDone()
-        {
-            return isDone;
         }
     }
 }

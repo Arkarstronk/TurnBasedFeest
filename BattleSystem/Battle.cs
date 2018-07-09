@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using TurnBasedFeest.Actors;
 using TurnBasedFeest.Utilities;
 using Microsoft.Xna.Framework;
-using TurnBasedFeest.Actors.Behaviours;
-using TurnBasedFeest.Actions;
 using System.Linq;
 
 namespace TurnBasedFeest.BattleSystem
@@ -12,19 +10,16 @@ namespace TurnBasedFeest.BattleSystem
     class Battle
     {
         public bool ongoingBattle;
-        List<Actor> actors = new List<Actor>();
+        public List<Actor> actors = new List<Actor>();
         List<Actor>.Enumerator actorEnum;
-        Actor currentActor;
-        ITurnResult turn;
+        public Actor currentActor;
+        public int eventIndex;
 
         public void InitializeFight(List<Actor> actors)
         {
             this.actors = actors;
-            // we need this to reset the gui for example
-            this.actors.ForEach(x => x.turnBehaviour.Initialize());
             actorEnum = this.actors.GetEnumerator();
-            actorEnum.MoveNext();
-            currentActor = actorEnum.Current;
+            currentActor = getNextActor();
             ongoingBattle = true;
         }
 
@@ -35,45 +30,44 @@ namespace TurnBasedFeest.BattleSystem
         
         public BattleResult Update(Input input)
         {
-            if (turn == null)
+            if (eventIndex < currentActor.battleEvents.Count)
             {
-                // If a behaviour is determined get the resulting turn. Keep in mind that the method also changes states.
-                if (currentActor.turnBehaviour.Update(input, actors.FindAll(x => x.health.actorCurrentHealth > 0), currentActor))
+                if (currentActor.battleEvents[eventIndex].Update(this, input))
                 {
-                    turn = currentActor.turnBehaviour.GetTurnResult();
-                    turn.Initialize();
+                    eventIndex++;
+                    if (eventIndex < currentActor.battleEvents.Count)
+                    {
+                        currentActor.battleEvents[eventIndex].Initialize();
+                    }
                 }
             }
             else
             {
-                if (turn.Update())
-                {
-                    currentActor = getNextActor();
-                    turn = null;
-                }
+                currentActor = getNextActor();
             }
-            
+
 
             actors.ForEach(x => x.Update());
 
             List<Actor> aliveActors = actors.FindAll(x => x.health.actorCurrentHealth > 0);
 
-            if(aliveActors.Count == 0)
+            if (aliveActors.Count == 0)
             {
                 return new BattleResult(true, false, aliveActors);
             }
+            /*
             else
             {
-                if (aliveActors.TrueForAll(x => x.turnBehaviour.GetType() == typeof(PlayerTurnBehaviour)))
+                if (aliveActors.TrueForAll(allemaal players))
                 {
                     return new BattleResult(true, true, aliveActors);
                 }
-                if (aliveActors.TrueForAll(x => x.turnBehaviour.GetType() != typeof(PlayerTurnBehaviour)))
+                if (aliveActors.TrueForAll(allemaal enemies))
                 {
                     return new BattleResult(true, false, aliveActors);
                 }
             }
-
+            */
             return new BattleResult(false, false, aliveActors);
         }
 
@@ -85,6 +79,11 @@ namespace TurnBasedFeest.BattleSystem
                 {
                     actor.Draw(spritebatch, font);
                 }                
+            }
+
+            if (eventIndex < currentActor.battleEvents.Count)
+            {
+                currentActor.battleEvents[eventIndex].Draw(this, spritebatch, font);
             }
 
             spritebatch.DrawString(font, ">", currentActor.position - new Vector2(35, 0), Color.White);
@@ -105,6 +104,8 @@ namespace TurnBasedFeest.BattleSystem
                 }
                 if (actorEnum.Current.health.actorCurrentHealth > 0)
                 {
+                    eventIndex = 0;
+                    actorEnum.Current.battleEvents[eventIndex].Initialize();
                     return actorEnum.Current;
                 }
             }                      

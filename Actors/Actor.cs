@@ -2,8 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using TurnBasedFeest.Actions;
-using TurnBasedFeest.Actors.Behaviours;
-using TurnBasedFeest.Utilities;
+using TurnBasedFeest.Events;
+using TurnBasedFeest.Events.TurnBehaviour;
 
 namespace TurnBasedFeest.Actors
 {
@@ -13,15 +13,15 @@ namespace TurnBasedFeest.Actors
         public Vector2 position;
         public Health health;
         public List<IAction> actions;
-        public ITurnBehaviour turnBehaviour; 
+        public List<IBattleEvent> battleEvents;
 
-        public Actor(string name, Vector2 position, int maxHealth, List<IAction> actions, GraphicsDevice device, ITurnBehaviour turnBehaviour)
+        public Actor(string name, Vector2 position, int maxHealth, List<IAction> actions, GraphicsDevice device, ITurnBehaviourEvent behaviourEvent)
         {
             this.name = name;
             this.position = position;
             health = new Health(maxHealth, device);
             this.actions = actions;
-            this.turnBehaviour = turnBehaviour;
+            battleEvents = new List<IBattleEvent> { behaviourEvent };
         }
 
         public void Update()
@@ -34,7 +34,6 @@ namespace TurnBasedFeest.Actors
             // TODO: do not hardcode offset size
             spritebatch.DrawString(font, name, position + new Vector2(0,-20), Color.White);
             health.Draw(spritebatch, position);
-            turnBehaviour.Draw(font, spritebatch);
         }
     }
 }

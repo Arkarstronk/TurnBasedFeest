@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using TurnBasedFeest.Actors;
+using TurnBasedFeest.BattleSystem;
+using Microsoft.Xna.Framework.Graphics;
+using TurnBasedFeest.Utilities;
 
 namespace TurnBasedFeest.Actions
 {
@@ -13,47 +12,42 @@ namespace TurnBasedFeest.Actions
         int actionTime = 1000;
         int elapsedTime;
         Actor source;
+        Actor target;
 
-        public void Initialize(Actor source, Actor target)
+        public void SetActors(Actor source, Actor target)
+        {
+            this.source = source;
+            this.target = target;
+        }
+
+        public void Initialize()
         {
             elapsedTime = 0;
-            this.source = source;
             this.source.health.color = Color.Violet;
         }
 
-        public IActionResult Update()
+        public bool Update(Battle battle, Input input)
         {
             elapsedTime += (int) Game1.time.ElapsedGameTime.TotalMilliseconds;
             
             if(elapsedTime > actionTime)
             {
                 source.health.color = Color.White;
-                return new ActionResultNothing(true);
+                return true;
             }
             else
             {
-                return new ActionResultNothing(false);
+                return false;
             }            
         }
 
         public string GetName()
         {
             return "Defend";
-        }        
-    }
-
-    class ActionResultNothing : IActionResult
-    {
-        private bool done;
-
-        public ActionResultNothing(bool done)
-        {
-            this.done = done;
         }
 
-        public bool IsDone()
+        public void Draw(Battle battle, SpriteBatch spritebatch, SpriteFont font)
         {
-            return done;
         }
     }
 }
