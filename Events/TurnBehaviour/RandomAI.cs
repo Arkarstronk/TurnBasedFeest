@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
-using TurnBasedFeest.Actions;
 using TurnBasedFeest.BattleSystem;
 using TurnBasedFeest.Utilities;
-using TurnBasedFeest.Events;
+using TurnBasedFeest.Events.Actions;
+using TurnBasedFeest.Actors;
 
-namespace TurnBasedFeest.Actors.Behaviours
+namespace TurnBasedFeest.Events.TurnBehaviour
 {
-    class RandomAIEvent : IBattleEvent
+    class RandomAI : IBattleEvent
     {
         public void Initialize()
         {

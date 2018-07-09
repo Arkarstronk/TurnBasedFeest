@@ -2,7 +2,7 @@
 using TurnBasedFeest.Actors;
 using TurnBasedFeest.Events;
 
-namespace TurnBasedFeest.Actions
+namespace TurnBasedFeest.Events.Actions
 {
     interface IAction : IBattleEvent
     {

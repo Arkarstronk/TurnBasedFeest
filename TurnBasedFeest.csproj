@@ -43,12 +43,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Actors\Actor.cs" />
-    <Compile Include="Events\TurnBehaviour\RandomAIEvent.cs" />
+    <Compile Include="Events\TurnBehaviour\RandomAI.cs" />
     <Compile Include="Actors\Health.cs" />
     <Compile Include="Events\Actions\IAction.cs" />
-    <Compile Include="Events\Actions\ActionHeal.cs" />
-    <Compile Include="Events\Actions\ActionAttack.cs" />
-    <Compile Include="Events\Actions\ActionDefend.cs" />
+    <Compile Include="Events\Actions\HealAction.cs" />
+    <Compile Include="Events\Actions\AttackAction.cs" />
+    <Compile Include="Events\Actions\DefendAction.cs" />
     <Compile Include="BattleSystem\BattleResult.cs" />
     <Compile Include="Events\IBattleEvent.cs" />
     <Compile Include="Game1.cs" />

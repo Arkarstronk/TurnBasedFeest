@@ -3,10 +3,9 @@ using TurnBasedFeest.Utilities;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using TurnBasedFeest.BattleSystem;
-using TurnBasedFeest.Actions;
-using TurnBasedFeest.Events;
+using TurnBasedFeest.Events.Actions;
 
-namespace TurnBasedFeest.UI
+namespace TurnBasedFeest.Events.TurnBehaviour
 {
     class BattleUI : IBattleEvent
     {

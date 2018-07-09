@@ -2,20 +2,17 @@
 using Microsoft.Xna.Framework;
 using TurnBasedFeest.Actors;
 using TurnBasedFeest.BattleSystem;
-using TurnBasedFeest.Utilities;
 using Microsoft.Xna.Framework.Graphics;
+using TurnBasedFeest.Utilities;
 
-namespace TurnBasedFeest.Actions
+namespace TurnBasedFeest.Events.Actions
 {
-    class ActionHeal : IAction
+    class DefendAction : IAction
     {
         int actionTime = 1000;
         int elapsedTime;
         Actor source;
         Actor target;
-        int beginHP;
-        int targetHP;
-        int heal = 20;
 
         public void SetActors(Actor source, Actor target)
         {
@@ -26,18 +23,16 @@ namespace TurnBasedFeest.Actions
         public void Initialize()
         {
             elapsedTime = 0;
-            beginHP = source.health.actorCurrentHealth;
-            targetHP = (source.health.actorCurrentHealth + heal >= source.health.actorMaxHealth) ? source.health.actorMaxHealth : (source.health.actorCurrentHealth + heal);
+            this.source.health.color = Color.Violet;
         }
 
         public bool Update(Battle battle, Input input)
         {
-            elapsedTime += (int)Game1.time.ElapsedGameTime.TotalMilliseconds;
-
-            source.health.actorCurrentHealth = (elapsedTime >= actionTime) ? targetHP : (int) MathHelper.SmoothStep(beginHP, targetHP, (elapsedTime / (float)actionTime));
-
-            if (source.health.actorCurrentHealth == targetHP)
+            elapsedTime += (int) Game1.time.ElapsedGameTime.TotalMilliseconds;
+            
+            if(elapsedTime > actionTime)
             {
+                source.health.color = Color.White;
                 battle.currentActor.battleEvents.RemoveAt(battle.eventIndex);
                 battle.eventIndex--;
                 return true;
@@ -45,13 +40,12 @@ namespace TurnBasedFeest.Actions
             else
             {
                 return false;
-            }
-            
+            }            
         }
 
         public string GetName()
         {
-            return "Heal";
+            return "Defend";
         }
 
         public void Draw(Battle battle, SpriteBatch spritebatch, SpriteFont font)

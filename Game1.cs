@@ -3,11 +3,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
-using TurnBasedFeest.Actions;
 using TurnBasedFeest.Actors;
-using TurnBasedFeest.Actors.Behaviours;
 using TurnBasedFeest.BattleSystem;
-using TurnBasedFeest.UI;
+using TurnBasedFeest.Events.Actions;
+using TurnBasedFeest.Events.TurnBehaviour;
 using TurnBasedFeest.Utilities;
 
 namespace TurnBasedFeest
@@ -43,8 +42,8 @@ namespace TurnBasedFeest
             input = new Input();
             battleSystem = new Battle();
             actors = new List<Actor> {
-                    new Actor("Ari", new Vector2(100, 100), 100, new List<IAction> { new ActionAttack() , new ActionHeal(), new ActionDefend() }, GraphicsDevice, new BattleUI()),
-                    new Actor("Zino", new Vector2(100, 200), 100, new List<IAction> { new ActionAttack() , new ActionHeal(), new ActionDefend() }, GraphicsDevice, new BattleUI())
+                    new Actor("Ari", new Vector2(100, 100), 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, GraphicsDevice, new BattleUI()),
+                    new Actor("Zino", new Vector2(100, 200), 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, GraphicsDevice, new BattleUI())
             };
             base.Initialize();
         }
@@ -80,8 +79,8 @@ namespace TurnBasedFeest
 
             if (!battleSystem.ongoingBattle && input.Released(Keys.B))
             {
-                actors.Add(new Actor("Hoer", new Vector2(600, 100), 100, new List<IAction> { new ActionAttack(), new ActionDefend() }, GraphicsDevice, new RandomAIEvent()));
-                actors.Add(new Actor("Bitch", new Vector2(600, 200), 100, new List<IAction> { new ActionAttack(), new ActionDefend() }, GraphicsDevice, new RandomAIEvent()));
+                actors.Add(new Actor("Hoer", new Vector2(600, 100), 100, new List<IAction> { new AttackAction(), new HealAction() }, GraphicsDevice, new RandomAI()));
+                actors.Add(new Actor("Bitch", new Vector2(600, 200), 100, new List<IAction> { new AttackAction(), new HealAction() }, GraphicsDevice, new RandomAI()));
                 battleSystem.InitializeFight(actors);
             }
             if (battleSystem.ongoingBattle)

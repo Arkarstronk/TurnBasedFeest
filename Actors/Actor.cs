@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using TurnBasedFeest.Actions;
 using TurnBasedFeest.Events;
+using TurnBasedFeest.Events.Actions;
 
 namespace TurnBasedFeest.Actors
 {

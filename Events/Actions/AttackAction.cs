@@ -5,9 +5,9 @@ using TurnBasedFeest.BattleSystem;
 using TurnBasedFeest.Utilities;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace TurnBasedFeest.Actions
+namespace TurnBasedFeest.Events.Actions
 {
-    class ActionAttack : IAction
+    class AttackAction : IAction
     {
         int actionTime = 1000;
         int elapsedTime;
