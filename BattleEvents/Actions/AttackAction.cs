@@ -1,21 +1,20 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using TurnBasedFeest.Actors;
-using TurnBasedFeest.BattleSystem;
 using TurnBasedFeest.Utilities;
 using Microsoft.Xna.Framework.Graphics;
+using TurnBasedFeest.GameEvents;
 
-namespace TurnBasedFeest.Events.Actions
+namespace TurnBasedFeest.BattleEvents.Actions
 {
-    class HealAction : IAction
+    class AttackAction : IAction
     {
         int actionTime = 1000;
         int elapsedTime;
-        Actor source;
         Actor target;
+        Actor source;
         int beginHP;
         int targetHP;
-        int heal = 20;
+        int damage = 20;
 
         public void SetActors(Actor source, Actor target)
         {
@@ -26,15 +25,15 @@ namespace TurnBasedFeest.Events.Actions
         public void Initialize()
         {
             elapsedTime = 0;
-            beginHP = (int)source.health.actorCurrentHealth;
-            targetHP = (int)((source.health.actorCurrentHealth + heal >= source.health.actorMaxHealth) ? source.health.actorMaxHealth : (source.health.actorCurrentHealth + heal));
+            beginHP = (int) target.health.actorCurrentHealth;
+            targetHP = (int) ((target.health.actorCurrentHealth - damage <= 0) ? 0 : (target.health.actorCurrentHealth - damage));
         }
 
-        public bool Update(Battle battle, Input input)
+        public bool Update(BattleEvent battle, Input input)
         {
             elapsedTime += (int)Game1.time.ElapsedGameTime.TotalMilliseconds;
 
-            source.health.actorCurrentHealth = (elapsedTime >= actionTime) ? targetHP : MathHelper.SmoothStep(beginHP, targetHP, (elapsedTime / (float)actionTime));
+            target.health.actorCurrentHealth = (elapsedTime >= actionTime) ? targetHP : MathHelper.SmoothStep(beginHP, targetHP, (elapsedTime / (float)actionTime));
 
             if (elapsedTime >= actionTime)
             {
@@ -45,22 +44,21 @@ namespace TurnBasedFeest.Events.Actions
             else
             {
                 return false;
-            }
-            
-        }
-
-        public bool isPositive()
-        {
-            return true;
+            }            
         }
 
         public string GetName()
         {
-            return "Heal";
+            return "Attack";
         }
 
-        public void Draw(Battle battle, SpriteBatch spritebatch, SpriteFont font)
+        public void Draw(BattleEvent battle, SpriteBatch spritebatch, SpriteFont font)
         {
+        }
+
+        public bool isPositive()
+        {
+            return false;
         }
     }
 }

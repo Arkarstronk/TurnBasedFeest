@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
-using TurnBasedFeest.BattleSystem;
 using TurnBasedFeest.Utilities;
-using TurnBasedFeest.Events.Actions;
 using TurnBasedFeest.Actors;
+using TurnBasedFeest.GameEvents;
+using TurnBasedFeest.BattleEvents.Actions;
 
-namespace TurnBasedFeest.Events.TurnBehaviour
+namespace TurnBasedFeest.BattleEvents.TurnBehaviour
 {
     // Randomly does positive things (from the perspective of the actor) 
     class EfficientRandomAI : IBattleEvent
@@ -15,7 +15,7 @@ namespace TurnBasedFeest.Events.TurnBehaviour
 
         }
 
-        public bool Update(Battle battle, Input input)
+        public bool Update(BattleEvent battle, Input input)
         {
             IAction randomAction = battle.currentActor.actions[Game1.rnd.Next(battle.currentActor.actions.Count)];
 
@@ -38,7 +38,7 @@ namespace TurnBasedFeest.Events.TurnBehaviour
             return true;
         }
 
-        public void Draw(Battle battle, SpriteBatch spritebatch, SpriteFont font)
+        public void Draw(BattleEvent battle, SpriteBatch spritebatch, SpriteFont font)
         {
         }
     }

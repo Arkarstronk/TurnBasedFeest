@@ -1,8 +1,6 @@
-﻿
-using TurnBasedFeest.Actors;
-using TurnBasedFeest.Events;
+﻿using TurnBasedFeest.Actors;
 
-namespace TurnBasedFeest.Events.Actions
+namespace TurnBasedFeest.BattleEvents.Actions
 {
     interface IAction : IBattleEvent
     {

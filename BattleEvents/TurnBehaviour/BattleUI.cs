@@ -2,10 +2,10 @@
 using TurnBasedFeest.Utilities;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using TurnBasedFeest.BattleSystem;
-using TurnBasedFeest.Events.Actions;
+using TurnBasedFeest.GameEvents;
+using TurnBasedFeest.BattleEvents.Actions;
 
-namespace TurnBasedFeest.Events.TurnBehaviour
+namespace TurnBasedFeest.BattleEvents.TurnBehaviour
 {
     class BattleUI : IBattleEvent
     {
@@ -26,7 +26,7 @@ namespace TurnBasedFeest.Events.TurnBehaviour
             currentState = state.Action;
         }
 
-        public bool Update(Battle battle, Input input)
+        public bool Update(BattleEvent battle, Input input)
         {
             switch (currentState)
             {
@@ -62,7 +62,7 @@ namespace TurnBasedFeest.Events.TurnBehaviour
         }
         
 
-        public void Draw(Battle battle, SpriteBatch spritebatch, SpriteFont font)
+        public void Draw(BattleEvent battle, SpriteBatch spritebatch, SpriteFont font)
         {
             if (currentState == state.Action || currentState == state.Target)
             {
@@ -94,7 +94,7 @@ namespace TurnBasedFeest.Events.TurnBehaviour
             return 0;
         }
 
-        public void CheckIndexBounds(Battle battle)
+        public void CheckIndexBounds(BattleEvent battle)
         {
             if (actorIndex < 0)
             {

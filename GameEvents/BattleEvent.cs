@@ -3,21 +3,20 @@ using System.Collections.Generic;
 using TurnBasedFeest.Actors;
 using TurnBasedFeest.Utilities;
 using Microsoft.Xna.Framework;
-using System.Linq;
+using TurnBasedFeest.BattleEvents.Actions;
+using TurnBasedFeest.BattleEvents.TurnBehaviour;
 
-namespace TurnBasedFeest.BattleSystem
+namespace TurnBasedFeest.GameEvents
 {
-    class Battle
+    class BattleEvent : IGameEvent
     {
-        public bool ongoingBattle;
         public List<Actor> actors;
         public List<Actor> aliveActors;
         public Actor currentActor;
         public int eventIndex;
 
-        public void InitializeFight(List<Actor> actors)
+        public void Initialize(List<Actor> actors)
         {
-            ongoingBattle = true;
             this.actors = actors;
             this.aliveActors = this.actors;
             actors.ForEach(x => x.Initialize());
@@ -26,13 +25,8 @@ namespace TurnBasedFeest.BattleSystem
             currentActor.hasTurn = false;
             currentActor.battleEvents[eventIndex].Initialize();
         }
-
-        public void EndFight()
-        {
-            ongoingBattle = false;
-        }
         
-        public BattleResult Update(Input input)
+        public bool Update(Game1 game, Input input)
         {            
             // if the current event exists
             if (eventIndex < currentActor.battleEvents.Count)
@@ -67,22 +61,29 @@ namespace TurnBasedFeest.BattleSystem
             // if there are no more alive players
             if (aliveActors.Count == 0)
             {
-                return new BattleResult(true, false, aliveActors);
+                // TODO: go to a game-over event, which on its turn can go to a load-save event or a quit event
+                game.Exit();
+                return true;
             }
             else
             {
-                // if there are only players alive
+                // TODO: go to a loot event, or a level event or something like that
                 if (aliveActors.TrueForAll(x => x.isPlayer))
                 {
-                    return new BattleResult(true, true, aliveActors);
+                    game.actors = aliveActors;
+                    game.actors.Add(new Actor("Smart", new Vector2(600, 200), 100, new List<IAction> { new AttackAction(), new HealAction(), new DefendAction() }, game.GraphicsDevice, new EfficientRandomAI(), false));
+                    game.nextEvent = new BattleEvent();
+                    return true;
                 }
-                // if there are only enemies alive
+
+                // TODO: go to a game-over event, which on its turn can go to a load-save event or a quit event
                 if (aliveActors.TrueForAll(x => !x.isPlayer))
                 {
-                    return new BattleResult(true, false, aliveActors);
+                    game.Exit();
+                    return true;
                 }
             }
-            return new BattleResult(false, false, aliveActors);
+            return false;
         }
 
         public void Draw(SpriteBatch spritebatch, SpriteFont font)
