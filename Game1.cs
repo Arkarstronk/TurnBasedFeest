@@ -79,8 +79,8 @@ namespace TurnBasedFeest
 
             if (!battleSystem.ongoingBattle && input.Released(Keys.B))
             {
-                actors.Add(new Actor("Hoer", new Vector2(600, 100), 100, new List<IAction> { new AttackAction(), new HealAction() }, GraphicsDevice, new RandomAI(), false));
-                actors.Add(new Actor("Bitch", new Vector2(600, 200), 100, new List<IAction> { new AttackAction(), new HealAction() }, GraphicsDevice, new RandomAI(), false));
+                actors.Add(new Actor("Stupid", new Vector2(600, 100), 100, new List<IAction> { new AttackAction(), new HealAction(), new DefendAction() }, GraphicsDevice, new RandomAI(), false));
+                actors.Add(new Actor("Smart", new Vector2(600, 200), 100, new List<IAction> { new AttackAction(), new HealAction(), new DefendAction() }, GraphicsDevice, new EfficientRandomAI(), false));
                 battleSystem.InitializeFight(actors);
             }
             if (battleSystem.ongoingBattle)

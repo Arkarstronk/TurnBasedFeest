@@ -48,6 +48,11 @@ namespace TurnBasedFeest.Events.Actions
             return "Defend";
         }
 
+        public bool isPositive()
+        {
+            return true;
+        }
+
         public void Draw(Battle battle, SpriteBatch spritebatch, SpriteFont font)
         {
         }

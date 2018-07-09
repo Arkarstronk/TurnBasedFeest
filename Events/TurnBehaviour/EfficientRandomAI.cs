@@ -7,8 +7,8 @@ using TurnBasedFeest.Actors;
 
 namespace TurnBasedFeest.Events.TurnBehaviour
 {
-    // Randomly does things without caring if its positive or negative
-    class RandomAI : IBattleEvent
+    // Randomly does positive things (from the perspective of the actor) 
+    class EfficientRandomAI : IBattleEvent
     {
         public void Initialize()
         {
@@ -18,7 +18,17 @@ namespace TurnBasedFeest.Events.TurnBehaviour
         public bool Update(Battle battle, Input input)
         {
             IAction randomAction = battle.currentActor.actions[Game1.rnd.Next(battle.currentActor.actions.Count)];
-            List<Actor> possibleTargets = battle.aliveActors;
+
+            List<Actor> possibleTargets;
+            if (randomAction.isPositive())
+            {
+                possibleTargets = battle.aliveActors.FindAll(x => x.isPlayer == battle.currentActor.isPlayer);
+            }
+            else
+            {
+                possibleTargets = battle.aliveActors.FindAll(x => x.isPlayer != battle.currentActor.isPlayer);
+            }
+
             Actor randomActor = possibleTargets[Game1.rnd.Next(possibleTargets.Count)];
             randomAction.SetActors(battle.currentActor, randomActor);
 
@@ -26,10 +36,10 @@ namespace TurnBasedFeest.Events.TurnBehaviour
             battle.currentActor.battleEvents.Insert(index + 1, randomAction);
 
             return true;
-        } 
+        }
 
         public void Draw(Battle battle, SpriteBatch spritebatch, SpriteFont font)
         {
         }
-    }    
+    }
 }

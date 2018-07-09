@@ -49,6 +49,11 @@ namespace TurnBasedFeest.Events.Actions
             
         }
 
+        public bool isPositive()
+        {
+            return true;
+        }
+
         public string GetName()
         {
             return "Heal";
