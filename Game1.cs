@@ -23,6 +23,8 @@ namespace TurnBasedFeest
         public static Random rnd = new Random();
         public static GameTime time;
 
+        public Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
+
         public IGameEvent currentEvent;
         public IGameEvent nextEvent;
 
@@ -42,15 +44,7 @@ namespace TurnBasedFeest
         /// </summary>
         protected override void Initialize()
         {
-            input = new Input();
-            currentEvent = new BattleEvent();
-            actors = new List<Actor> {
-                    new Actor("Ari", new Vector2(100, 100), 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, GraphicsDevice, new BattleUI(), true),
-                    new Actor("Zino", new Vector2(100, 200), 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, GraphicsDevice, new BattleUI(), true),
-                    new Actor("Stupid", new Vector2(600, 100), 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, GraphicsDevice, new RandomAI(), false),
-                    new Actor("Smart", new Vector2(600, 200), 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, GraphicsDevice, new EfficientRandomAI(), false)
-            };
-            currentEvent.Initialize(actors);
+            input = new Input();           
             base.Initialize();
         }
 
@@ -62,6 +56,17 @@ namespace TurnBasedFeest
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("Fonts/default");
+
+            textures.Add("pixel", new Texture2D(GraphicsDevice, 1, 1));
+
+            currentEvent = new BattleEvent();
+            actors = new List<Actor> {
+                    new Actor("Ari", new Vector2(100, 100), 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, textures["pixel"], new BattleUI(), true),
+                    new Actor("Zino", new Vector2(100, 200), 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, textures["pixel"], new BattleUI(), true),
+                    new Actor("Stupid", new Vector2(600, 100), 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, textures["pixel"], new RandomAI(), false),
+                    new Actor("Smart", new Vector2(600, 200), 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, textures["pixel"], new EfficientRandomAI(), false)
+            };
+            currentEvent.Initialize(actors);
         }
 
         /// <summary>

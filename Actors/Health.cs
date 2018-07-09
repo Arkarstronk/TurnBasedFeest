@@ -11,13 +11,13 @@ namespace TurnBasedFeest.Actors
         private Texture2D actorHealthBarTex;
         public Color color = Color.White;
 
-        public Health(int maxHealth, GraphicsDevice device)
+        public Health(int maxHealth, Texture2D texture)
         {
             actorMaxHealth = maxHealth;
             actorCurrentHealth = maxHealth;
             // TODO: do not hardcode size 
             actorHealthBar = new Rectangle(0, 0, (int)(actorCurrentHealth / actorMaxHealth * 100), 20);
-            actorHealthBarTex = new Texture2D(device, 1, 1);
+            actorHealthBarTex = texture;
             actorHealthBarTex.SetData(new[] { Color.White });
         }
 
