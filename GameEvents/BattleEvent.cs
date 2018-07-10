@@ -59,7 +59,13 @@ namespace TurnBasedFeest.GameEvents
                 if (aliveActors.TrueForAll(x => x.isPlayer))
                 {
                     game.actors = aliveActors;
-                    game.actors.Add(new Actor("Smart", new Vector2(600, 200), 100, new List<IAction> { new AttackAction(), new HealAction(), new DefendAction() }, game.textures["pixel"], new EfficientRandomAI(), false));
+                    game.actors.Add(new Actor(
+                        "Smart",
+                        100,
+                        new Vector2(600, 200), new List<IAction> { new AttackAction(), new HealAction(), new DefendAction() },
+                        TextureFactory.Instance.GetTexture("actor"),
+                        new EfficientRandomAI(),
+                        false));
                     game.nextEvent = new BattleEvent();
                     return true;
                 }

@@ -33,7 +33,7 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
                 case state.ACTION:
                     actionIndex += Navigation(input);
 
-                    if (input.Released(Keys.Enter))
+                    if (input.Pressed(Keys.Enter))
                     {
                         currentState = state.TARGET;
                     }
@@ -41,11 +41,11 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
                 case state.TARGET:
                     actorIndex += Navigation(input);
 
-                    if (input.Released(Keys.Enter))
+                    if (input.Pressed(Keys.Enter))
                     {
                         currentState = state.FINISH;
                     }
-                    if (input.Released(Keys.Back))
+                    if (input.Pressed(Keys.Back))
                     {
                         currentState = state.ACTION;
                     }
@@ -82,11 +82,11 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
 
         public int Navigation(Input input)
         {
-            if (input.Released(Keys.Down))
+            if (input.Pressed(Keys.Down))
             {
                 return 1;
             }
-            if (input.Released(Keys.Up))
+            if (input.Pressed(Keys.Up))
             {
                 return -1;
             }
