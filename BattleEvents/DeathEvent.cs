@@ -37,16 +37,18 @@ namespace TurnBasedFeest.BattleEvents
                 // potentially an extreme small amount of chance to cause an innocent bug if actors do not have to be unique
                 battle.aliveActors.Remove(deceased);
 
+                battle.currentActor.battleEvents.RemoveAt(battle.eventIndex);
+                battle.eventIndex--;
+
+                deceased.color = Color.White;
+
                 // if the current player dies during his turn
                 if (battle.currentActor == deceased)
                 {
                     battle.currentActor = battle.getNextActor();
+                    // There is no event after the current actors death, therefore we dont want to signal that we should go to the next event
+                    return false;
                 }
-
-                deceased.color = Color.White;
-
-                battle.currentActor.battleEvents.RemoveAt(battle.eventIndex);
-                battle.eventIndex--;
 
                 return true;
             }

@@ -25,25 +25,22 @@ namespace TurnBasedFeest.GameEvents
         
         public bool Update(Game1 game, Input input)
         {            
-            // if the current event exists
-            if (eventIndex < currentActor.battleEvents.Count)
+            
+            // preform the event AND if the current event is done
+            if (currentActor.battleEvents[eventIndex].Update(this, input))
             {
-                // preform the event AND if the current event is done
-                if (currentActor.battleEvents[eventIndex].Update(this, input))
+                // go to the next event
+                eventIndex++;
+                // and initialize it if it exists
+                if (eventIndex < currentActor.battleEvents.Count)
                 {
-                    // go to the next event
-                    eventIndex++;
-                    // and initialize it if it exists
-                    if (eventIndex < currentActor.battleEvents.Count)
-                    {
-                        currentActor.battleEvents[eventIndex].Initialize();
-                    }
+                    currentActor.battleEvents[eventIndex].Initialize();
                 }
-            }
-            // if the event does not exist go to the next actor
-            else
-            {
-                currentActor = getNextActor();
+                // if it does not exist, go to the next actor
+                else
+                {
+                    currentActor = getNextActor();
+                }
             }
             
             // update the alive actors
