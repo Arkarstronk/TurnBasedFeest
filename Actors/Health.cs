@@ -5,32 +5,32 @@ namespace TurnBasedFeest.Actors
 {
     class Health
     {
-        public float actorCurrentHealth;
-        public int actorMaxHealth;
-        private Rectangle actorHealthBar;
-        private Texture2D actorHealthBarTex;
+        public int MaxHealth;
+        public float CurrentHealth;
         public Color color = Color.White;
 
-        public Health(int maxHealth, Texture2D texture)
+        private Rectangle HealthBar;
+        private Texture2D texture;
+
+        public Health(int maxHealth)
         {
-            actorMaxHealth = maxHealth;
-            actorCurrentHealth = maxHealth;
-            // TODO: do not hardcode size 
-            actorHealthBar = new Rectangle(0, 0, (int)(actorCurrentHealth / actorMaxHealth * 100), 20);
-            actorHealthBarTex = texture;
-            actorHealthBarTex.SetData(new[] { Color.White });
+            MaxHealth = maxHealth;
+            CurrentHealth = maxHealth;
+            // TODO: do not hardcode size
+            HealthBar = new Rectangle(0, 0, (int)(CurrentHealth / MaxHealth * 100), 20);
+            texture = TextureFactory.Instance.GetTexture("health");
         }
 
         public void Update()
         {
-            actorHealthBar.Width = (int)(actorCurrentHealth / (float)actorMaxHealth * 100);
+            HealthBar.Width = (int)(CurrentHealth / (float)MaxHealth * 100);
         }
 
         public void Draw(SpriteBatch spritebatch, Vector2 position)
         {
-            actorHealthBar.X = (int) position.X;
-            actorHealthBar.Y = (int)position.Y;
-            spritebatch.Draw(actorHealthBarTex, actorHealthBar, color);
+            HealthBar.X = (int) position.X;
+            HealthBar.Y = (int)position.Y;
+            spritebatch.Draw(texture, HealthBar, color);
         }
 
     }

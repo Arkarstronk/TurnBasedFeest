@@ -17,12 +17,15 @@ namespace TurnBasedFeest.Actors
         public bool isPlayer;
         public Color color = Color.White;
 
-        public Actor(string name, Vector2 position, int maxHealth, List<IAction> actions, Texture2D texture, IBattleEvent behaviourEvent, bool isPlayer)
+        private Texture2D texture;
+
+        public Actor(string name, int maxHealth, Vector2 position, List<IAction> actions, Texture2D texture, IBattleEvent behaviourEvent, bool isPlayer)
         {
             this.name = name;
             this.position = position;
-            health = new Health(maxHealth, texture);
+            this.health = new Health(maxHealth);
             this.actions = actions;
+            this.texture = texture;
             battleEvents = new List<IBattleEvent> { behaviourEvent, behaviourEvent };
             this.isPlayer = isPlayer;
         }
@@ -40,8 +43,11 @@ namespace TurnBasedFeest.Actors
         public void Draw(SpriteBatch spritebatch, SpriteFont font)
         {
             // TODO: do not hardcode offset size
-            spritebatch.DrawString(font, name, position + new Vector2(0,-20), color);
+            
+            spritebatch.DrawString(font, name, position + new Vector2(0,-20), color);            
             health.Draw(spritebatch, position);
+            spritebatch.Draw(texture, position + new Vector2(0, 30), Color.White);
+
         }
     }
 }

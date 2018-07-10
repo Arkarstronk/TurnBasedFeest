@@ -13,9 +13,9 @@ namespace TurnBasedFeest.Utilities
             newKeyState = Keyboard.GetState();
         }
 
-        public bool Released(Keys key)
+        public bool Pressed(Keys key)
         {
-            if(oldKeyState.IsKeyDown(key) && newKeyState.IsKeyUp(key))
+            if(newKeyState.IsKeyDown(key) && oldKeyState.IsKeyUp(key))
             {
                 return true;
             }
