@@ -8,7 +8,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
 {
     class DefendAction : IAction
     {
-        int actionTime = 1000;
+        int eventTime = 1000;
         int elapsedTime;
         Actor source;
         Actor target;
@@ -29,7 +29,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
         {
             elapsedTime += (int) Game1.time.ElapsedGameTime.TotalMilliseconds;
             
-            if(elapsedTime > actionTime)
+            if(elapsedTime > eventTime)
             {
                 source.health.color = Color.White;
                 battle.currentActor.battleEvents.RemoveAt(battle.eventIndex);

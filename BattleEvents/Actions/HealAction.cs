@@ -8,7 +8,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
 {
     class HealAction : IAction
     {
-        int actionTime = 1000;
+        int eventTime = 1000;
         int elapsedTime;
         Actor source;
         Actor target;
@@ -33,9 +33,9 @@ namespace TurnBasedFeest.BattleEvents.Actions
         {
             elapsedTime += (int)Game1.time.ElapsedGameTime.TotalMilliseconds;
 
-            source.health.actorCurrentHealth = (elapsedTime >= actionTime) ? targetHP : MathHelper.SmoothStep(beginHP, targetHP, (elapsedTime / (float)actionTime));
+            source.health.actorCurrentHealth = (elapsedTime >= eventTime) ? targetHP : MathHelper.SmoothStep(beginHP, targetHP, (elapsedTime / (float)eventTime));
 
-            if (elapsedTime >= actionTime)
+            if (elapsedTime >= eventTime)
             {
                 battle.currentActor.battleEvents.RemoveAt(battle.eventIndex);
                 battle.eventIndex--;

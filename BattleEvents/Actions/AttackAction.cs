@@ -8,7 +8,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
 {
     class AttackAction : IAction
     {
-        int actionTime = 1000;
+        int eventTime = 1000;
         int elapsedTime;
         Actor target;
         Actor source;
@@ -33,10 +33,16 @@ namespace TurnBasedFeest.BattleEvents.Actions
         {
             elapsedTime += (int)Game1.time.ElapsedGameTime.TotalMilliseconds;
 
-            target.health.actorCurrentHealth = (elapsedTime >= actionTime) ? targetHP : MathHelper.SmoothStep(beginHP, targetHP, (elapsedTime / (float)actionTime));
+            target.health.actorCurrentHealth = (elapsedTime >= eventTime) ? targetHP : MathHelper.SmoothStep(beginHP, targetHP, (elapsedTime / (float)eventTime));
 
-            if (elapsedTime >= actionTime)
+            if (elapsedTime >= eventTime)
             {
+                //if this attack killed its target
+                if(target.health.actorCurrentHealth == 0)
+                {
+                    battle.currentActor.battleEvents.Insert(battle.eventIndex + 1, new DeathEvent(target));
+                }                
+
                 battle.currentActor.battleEvents.RemoveAt(battle.eventIndex);
                 battle.eventIndex--;
                 return true;

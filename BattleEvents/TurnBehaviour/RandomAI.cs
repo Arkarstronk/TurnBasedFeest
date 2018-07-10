@@ -22,8 +22,7 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
             Actor randomActor = possibleTargets[Game1.rnd.Next(possibleTargets.Count)];
             randomAction.SetActors(battle.currentActor, randomActor);
 
-            int index = battle.eventIndex;
-            battle.currentActor.battleEvents.Insert(index + 1, randomAction);
+            battle.currentActor.battleEvents.Insert(battle.eventIndex + 1, randomAction);
 
             return true;
         } 

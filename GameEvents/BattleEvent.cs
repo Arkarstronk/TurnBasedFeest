@@ -20,10 +20,7 @@ namespace TurnBasedFeest.GameEvents
             this.actors = actors;
             this.aliveActors = this.actors;
             actors.ForEach(x => x.Initialize());
-            eventIndex = 0;
-            currentActor = this.actors[0];
-            currentActor.hasTurn = false;
-            currentActor.battleEvents[eventIndex].Initialize();
+            currentActor = getNextActor();
         }
         
         public bool Update(Game1 game, Input input)
@@ -48,15 +45,9 @@ namespace TurnBasedFeest.GameEvents
             {
                 currentActor = getNextActor();
             }
-
-            aliveActors = actors.FindAll(x => x.health.actorCurrentHealth > 0);
-            actors.ForEach(x => x.Update());
-
-            // if the current player dies during his turn
-            if (currentActor.health.actorCurrentHealth <= 0)
-            {
-                currentActor = getNextActor();
-            }
+            
+            // update the alive actors
+            aliveActors.ForEach(x => x.Update());
 
             // if there are no more alive players
             if (aliveActors.Count == 0)
@@ -88,12 +79,9 @@ namespace TurnBasedFeest.GameEvents
 
         public void Draw(SpriteBatch spritebatch, SpriteFont font)
         {
-            foreach (Actor actor in actors)
+            foreach (Actor actor in aliveActors)
             {
-                if (actor.health.actorCurrentHealth > 0)
-                {
-                    actor.Draw(spritebatch, font);
-                }
+                actor.Draw(spritebatch, font);
             }
 
             for (int i = 0; i < currentActor.battleEvents.Count; i++)
@@ -105,10 +93,11 @@ namespace TurnBasedFeest.GameEvents
             {
                 currentActor.battleEvents[eventIndex].Draw(this, spritebatch, font);
             }
+
             spritebatch.DrawString(font, ">", currentActor.position - new Vector2(35, 0), Color.White);
         }
 
-        private Actor getNextActor()
+        public Actor getNextActor()
         {
             // if all the actors are dead (battle will end in this same update loop)
             if (aliveActors.Count == 0)

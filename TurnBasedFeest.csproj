@@ -43,6 +43,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Actors\Actor.cs" />
+    <Compile Include="BattleEvents\DeathEvent.cs" />
     <Compile Include="BattleEvents\TurnBehaviour\EfficientRandomAI.cs" />
     <Compile Include="BattleEvents\TurnBehaviour\RandomAI.cs" />
     <Compile Include="Actors\Health.cs" />

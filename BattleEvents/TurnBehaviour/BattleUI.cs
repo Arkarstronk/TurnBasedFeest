@@ -53,8 +53,7 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
                 case state.FINISH:
                     IAction chosenAction = battle.currentActor.actions[actionIndex];
                     chosenAction.SetActors(battle.currentActor, battle.aliveActors[actorIndex]);
-                    int index = battle.eventIndex;
-                    battle.currentActor.battleEvents.Insert(index + 1, chosenAction);
+                    battle.currentActor.battleEvents.Insert(battle.eventIndex + 1, chosenAction);
                     return true;
             }
             CheckIndexBounds(battle);
