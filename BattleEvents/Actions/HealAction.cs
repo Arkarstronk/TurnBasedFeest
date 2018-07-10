@@ -25,18 +25,22 @@ namespace TurnBasedFeest.BattleEvents.Actions
         public void Initialize()
         {
             elapsedTime = 0;
-            beginHP = (int)source.health.CurrentHealth;
-            targetHP = (int)((source.health.CurrentHealth + heal >= source.health.MaxHealth) ? source.health.MaxHealth : (source.health.CurrentHealth + heal));
+            beginHP = (int)target.health.CurrentHealth;
+            targetHP = (int)((target.health.CurrentHealth + heal >= target.health.MaxHealth) ? target.health.MaxHealth : (target.health.CurrentHealth + heal));
+            target.health.color = Color.Green;
         }
 
         public bool Update(BattleEvent battle, Input input)
         {
             elapsedTime += (int)Game1.time.ElapsedGameTime.TotalMilliseconds;
 
-            source.health.CurrentHealth = (elapsedTime >= eventTime) ? targetHP : MathHelper.SmoothStep(beginHP, targetHP, (elapsedTime / (float)eventTime));
+            target.health.CurrentHealth = MathHelper.SmoothStep(beginHP, targetHP, (elapsedTime / (float)eventTime));
 
             if (elapsedTime >= eventTime)
             {
+                target.health.CurrentHealth = targetHP;
+                target.health.color = Color.White;
+
                 battle.currentActor.battleEvents.RemoveAt(battle.eventIndex);
                 battle.eventIndex--;
                 return true;

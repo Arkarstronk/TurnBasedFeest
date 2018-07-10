@@ -10,8 +10,8 @@ namespace TurnBasedFeest.BattleEvents.Actions
     {
         int eventTime = 1000;
         int elapsedTime;
-        Actor target;
         Actor source;
+        Actor target;
         int beginHP;
         int targetHP;
         int damage = 20;
@@ -27,18 +27,22 @@ namespace TurnBasedFeest.BattleEvents.Actions
             elapsedTime = 0;
             beginHP = (int) target.health.CurrentHealth;
             targetHP = (int) ((target.health.CurrentHealth - damage <= 0) ? 0 : (target.health.CurrentHealth - damage));
+            target.health.color = Color.Yellow;
         }
 
         public bool Update(BattleEvent battle, Input input)
         {
             elapsedTime += (int)Game1.time.ElapsedGameTime.TotalMilliseconds;
 
-            target.health.CurrentHealth = (elapsedTime >= eventTime) ? targetHP : MathHelper.SmoothStep(beginHP, targetHP, (elapsedTime / (float)eventTime));
+            target.health.CurrentHealth = MathHelper.SmoothStep(beginHP, targetHP, (elapsedTime / (float)eventTime));
 
             if (elapsedTime >= eventTime)
             {
+                target.health.color = Color.White;
+                target.health.CurrentHealth = targetHP;
+
                 //if this attack killed its target
-                if(target.health.CurrentHealth == 0)
+                if (target.health.CurrentHealth == 0)
                 {
                     battle.currentActor.battleEvents.Insert(battle.eventIndex + 1, new DeathEvent(target));
                 }                

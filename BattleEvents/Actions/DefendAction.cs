@@ -29,7 +29,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
         {
             elapsedTime += (int) Game1.time.ElapsedGameTime.TotalMilliseconds;
             
-            if(elapsedTime > eventTime)
+            if (elapsedTime >= eventTime)
             {
                 source.health.color = Color.White;
                 battle.currentActor.battleEvents.RemoveAt(battle.eventIndex);
