@@ -5,6 +5,7 @@ using TurnBasedFeest.Utilities;
 using Microsoft.Xna.Framework;
 using TurnBasedFeest.BattleEvents.Actions;
 using TurnBasedFeest.BattleEvents.TurnBehaviour;
+using TurnBasedFeest.BattleEvents;
 
 namespace TurnBasedFeest.GameEvents
 {
@@ -21,11 +22,11 @@ namespace TurnBasedFeest.GameEvents
             this.aliveActors = this.actors;
             actors.ForEach(x => x.Initialize());
             currentActor = getNextActor();
+            currentActor.battleEvents.Insert(0, new BattleBeginEvent());
         }
         
         public bool Update(Game1 game, Input input)
-        {            
-            
+        {          
             // preform the event AND if the current event is done
             if (currentActor.battleEvents[eventIndex].Update(this, input))
             {
