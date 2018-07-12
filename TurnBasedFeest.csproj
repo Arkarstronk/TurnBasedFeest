@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Actors\Actor.cs" />
     <Compile Include="BattleEvents\BattleBeginEvent.cs" />
+    <Compile Include="BattleEvents\BattleEndEvent.cs" />
     <Compile Include="BattleEvents\DeathEvent.cs" />
     <Compile Include="BattleEvents\TurnBehaviour\EfficientRandomAI.cs" />
     <Compile Include="BattleEvents\TurnBehaviour\RandomAI.cs" />
