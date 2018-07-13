@@ -2,20 +2,20 @@
 using Microsoft.Xna.Framework.Graphics;
 using TurnBasedFeest.Utilities;
 using TurnBasedFeest.Actors;
-using TurnBasedFeest.GameEvents;
+using TurnBasedFeest.GameEvents.Battle;
 using TurnBasedFeest.BattleEvents.Actions;
 
 namespace TurnBasedFeest.BattleEvents.TurnBehaviour
 {
     // Randomly does things without caring if its positive or negative
-    class RandomAI : IBattleEvent
+    class RandomAI : ITurnEvent
     {
         public void Initialize()
         {
 
         }
 
-        public bool Update(BattleEvent battle, Input input)
+        public bool Update(BattleTurnEvent battle, Input input)
         {
             IAction randomAction = battle.currentActor.actions[Game1.rnd.Next(battle.currentActor.actions.Count)];
             List<Actor> possibleTargets = battle.aliveActors;
@@ -27,7 +27,7 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
             return true;
         } 
 
-        public void Draw(BattleEvent battle, SpriteBatch spritebatch, SpriteFont font)
+        public void Draw(BattleTurnEvent battle, SpriteBatch spritebatch, SpriteFont font)
         {
         }
     }    

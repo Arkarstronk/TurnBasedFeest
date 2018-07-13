@@ -2,20 +2,20 @@
 using Microsoft.Xna.Framework.Graphics;
 using TurnBasedFeest.Utilities;
 using TurnBasedFeest.Actors;
-using TurnBasedFeest.GameEvents;
 using TurnBasedFeest.BattleEvents.Actions;
+using TurnBasedFeest.GameEvents.Battle;
 
 namespace TurnBasedFeest.BattleEvents.TurnBehaviour
 {
     // Randomly does positive things (from the perspective of the actor) 
-    class EfficientRandomAI : IBattleEvent
+    class EfficientRandomAI : ITurnEvent
     {
         public void Initialize()
         {
 
         }
 
-        public bool Update(BattleEvent battle, Input input)
+        public bool Update(BattleTurnEvent battle, Input input)
         {
             IAction randomAction = battle.currentActor.actions[Game1.rnd.Next(battle.currentActor.actions.Count)];
 
@@ -37,7 +37,7 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
             return true;
         }
 
-        public void Draw(BattleEvent battle, SpriteBatch spritebatch, SpriteFont font)
+        public void Draw(BattleTurnEvent battle, SpriteBatch spritebatch, SpriteFont font)
         {
         }
     }

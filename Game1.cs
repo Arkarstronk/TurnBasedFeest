@@ -1,12 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using TurnBasedFeest.Actors;
 using TurnBasedFeest.BattleEvents.Actions;
 using TurnBasedFeest.BattleEvents.TurnBehaviour;
 using TurnBasedFeest.GameEvents;
+using TurnBasedFeest.GameEvents.Battle;
 using TurnBasedFeest.Utilities;
 
 namespace TurnBasedFeest

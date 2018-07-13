@@ -2,7 +2,7 @@
 using TurnBasedFeest.Actors;
 using Microsoft.Xna.Framework.Graphics;
 using TurnBasedFeest.Utilities;
-using TurnBasedFeest.GameEvents;
+using TurnBasedFeest.GameEvents.Battle;
 
 namespace TurnBasedFeest.BattleEvents.Actions
 {
@@ -25,7 +25,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
             this.source.health.color = Color.Violet;
         }
 
-        public bool Update(BattleEvent battle, Input input)
+        public bool Update(BattleTurnEvent battle, Input input)
         {
             elapsedTime += (int) Game1.time.ElapsedGameTime.TotalMilliseconds;
             
@@ -52,7 +52,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
             return true;
         }
 
-        public void Draw(BattleEvent battle, SpriteBatch spritebatch, SpriteFont font)
+        public void Draw(BattleTurnEvent battle, SpriteBatch spritebatch, SpriteFont font)
         {
         }
     }

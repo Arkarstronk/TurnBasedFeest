@@ -7,26 +7,31 @@ using TurnBasedFeest.BattleEvents.Actions;
 using TurnBasedFeest.BattleEvents.TurnBehaviour;
 using TurnBasedFeest.BattleEvents;
 
-namespace TurnBasedFeest.GameEvents
+namespace TurnBasedFeest.GameEvents.Battle
 {
-    class BattleEvent : IGameEvent
+    class BattleTurnEvent : IGameEvent
     {
+        BattleEvent battle;
         public List<Actor> actors;
         public List<Actor> aliveActors;
         public Actor currentActor;
         public int eventIndex;
 
+        public BattleTurnEvent(BattleEvent battle)
+        {
+            this.battle = battle;
+        }
+
         public void Initialize(List<Actor> actors)
         {
             this.actors = actors;
-            this.aliveActors = this.actors;
+            aliveActors = this.actors;
             actors.ForEach(x => x.Initialize());
             currentActor = getNextActor();
-            currentActor.battleEvents.Insert(0, new BattleBeginEvent());
         }
-        
+
         public bool Update(Game1 game, Input input)
-        {          
+        {
             // preform the event AND if the current event is done
             if (currentActor.battleEvents[eventIndex].Update(this, input))
             {
@@ -43,40 +48,15 @@ namespace TurnBasedFeest.GameEvents
                     currentActor = getNextActor();
                 }
             }
-            
+
             // update the alive actors
             aliveActors.ForEach(x => x.Update());
 
             // if there are no more alive players
-            if (aliveActors.Count == 0)
+            if (aliveActors.Count == 0 || aliveActors.TrueForAll(x => x.isPlayer) || aliveActors.TrueForAll(x => !x.isPlayer))
             {
-                // TODO: go to a game-over event, which on its turn can go to a load-save event or a quit event
-                game.Exit();
+                battle.aliveActors = aliveActors;
                 return true;
-            }
-            else
-            {
-                // TODO: go to a loot event, or a level event or something like that
-                if (aliveActors.TrueForAll(x => x.isPlayer))
-                {
-                    game.actors = aliveActors;
-                    game.actors.Add(new Actor(
-                        "Smart",
-                        100,
-                        new Vector2(600, 200), new List<IAction> { new AttackAction(), new HealAction(), new DefendAction() },
-                        TextureFactory.Instance.GetTexture("actor"),
-                        new EfficientRandomAI(),
-                        false));
-                    game.nextEvent = new BattleEvent();
-                    return true;
-                }
-
-                // TODO: go to a game-over event, which on its turn can go to a load-save event or a quit event
-                if (aliveActors.TrueForAll(x => !x.isPlayer))
-                {
-                    game.Exit();
-                    return true;
-                }
             }
             return false;
         }
@@ -90,7 +70,7 @@ namespace TurnBasedFeest.GameEvents
 
             for (int i = 0; i < currentActor.battleEvents.Count; i++)
             {
-                spritebatch.DrawString(font, currentActor.battleEvents[i].ToString(), new Vector2(0, 15 * i), i == eventIndex ? Color.Red: Color.White);
+                spritebatch.DrawString(font, currentActor.battleEvents[i].ToString(), new Vector2(400, 15 * i), i == eventIndex ? Color.Red: Color.White);
             }
 
             if (eventIndex < currentActor.battleEvents.Count)

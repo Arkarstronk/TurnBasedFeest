@@ -12,21 +12,21 @@ namespace TurnBasedFeest.Actors
         public Vector2 position;
         public Health health;
         public List<IAction> actions;
-        public List<IBattleEvent> battleEvents;
+        public List<ITurnEvent> battleEvents;
         public bool hasTurn;
         public bool isPlayer;
         public Color color = Color.White;
 
         private Texture2D texture;
 
-        public Actor(string name, int maxHealth, Vector2 position, List<IAction> actions, Texture2D texture, IBattleEvent behaviourEvent, bool isPlayer)
+        public Actor(string name, int maxHealth, Vector2 position, List<IAction> actions, Texture2D texture, ITurnEvent behaviourEvent, bool isPlayer)
         {
             this.name = name;
             this.position = position;
             this.health = new Health(maxHealth);
             this.actions = actions;
             this.texture = texture;
-            battleEvents = new List<IBattleEvent> { behaviourEvent, behaviourEvent };
+            battleEvents = new List<ITurnEvent> { behaviourEvent, behaviourEvent };
             this.isPlayer = isPlayer;
         }
 

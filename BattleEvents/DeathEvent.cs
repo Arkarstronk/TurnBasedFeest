@@ -1,12 +1,12 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using TurnBasedFeest.GameEvents;
+using TurnBasedFeest.GameEvents.Battle;
 using TurnBasedFeest.Utilities;
 using TurnBasedFeest.Actors;
 using Microsoft.Xna.Framework;
 
 namespace TurnBasedFeest.BattleEvents
 {
-    class DeathEvent : IBattleEvent
+    class DeathEvent : ITurnEvent
     {
         int eventTime = 1000;
         int elapsedTime;
@@ -23,7 +23,7 @@ namespace TurnBasedFeest.BattleEvents
             deceased.color = Color.Red;
         }
 
-        public bool Update(BattleEvent battle, Input input)
+        public bool Update(BattleTurnEvent battle, Input input)
         {
             elapsedTime += (int)Game1.time.ElapsedGameTime.TotalMilliseconds;
 
@@ -51,7 +51,7 @@ namespace TurnBasedFeest.BattleEvents
             return false;
         }
 
-        public void Draw(BattleEvent battle, SpriteBatch spritebatch, SpriteFont font)
+        public void Draw(BattleTurnEvent battle, SpriteBatch spritebatch, SpriteFont font)
         {
         }
 

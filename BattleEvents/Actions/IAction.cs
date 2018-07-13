@@ -2,7 +2,7 @@
 
 namespace TurnBasedFeest.BattleEvents.Actions
 {
-    interface IAction : IBattleEvent
+    interface IAction : ITurnEvent
     {
         void SetActors(Actor source, Actor target);
         bool isPositive();
