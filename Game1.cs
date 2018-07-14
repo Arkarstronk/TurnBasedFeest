@@ -28,7 +28,7 @@ namespace TurnBasedFeest
         public IGameEvent previousEvent;
         public IGameEvent currentEvent;
         public IGameEvent nextEvent;
-        public Dictionary<int, string> hardcodedEvents = new Dictionary<int, string>();
+        public Dictionary<int, string> hardcodedEvents = new Dictionary<int, string> { {100, "OnTurn100ThisStubEventTakesPlace" } };
 
         public List<Actor> actors;
 

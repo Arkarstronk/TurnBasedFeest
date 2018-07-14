@@ -49,7 +49,17 @@ namespace TurnBasedFeest.GameEvents
 
         public void Draw(SpriteBatch spritebatch, SpriteFont font)
         {
+            //draws some text for now
             spritebatch.DrawString(font, "Press enter to go to the next event!", new Vector2(0.4f * Game1.screenWidth, 0.5f * Game1.screenHeight), Color.White);
+
+            //debugs the hardcoded events
+            for(int i = 0; i < game.hardcodedEvents.Count; i++)
+            {
+                spritebatch.DrawString(font, $"{game.hardcodedEvents.ElementAt(i).Key.ToString()}  =>  {game.hardcodedEvents.ElementAt(i).Value.ToString()}", new Vector2(0, 15 * i), Color.Red);
+            }
+
+            spritebatch.DrawString(font, $"Turn count : {game.eventCounter.ToString()}", new Vector2(Game1.screenWidth * 0.45f, 0), Color.Red);
+
         }
 
         private void setRandomEvent()
@@ -61,8 +71,7 @@ namespace TurnBasedFeest.GameEvents
                 int randomHealth = Game1.rnd.Next(50, 150);
                 game.actors.Add(new Actor("toBeRandomlyGeneratedName", randomHealth, new List<IAction> { new AttackAction(), new DefendAction() }, TextureFactory.Instance.GetTexture("actor"), new EfficientRandomAI(), false));
                 nextEvent = new BattleEvent();
-            }
-            
+            }            
         }
 
         private void SetHardcodedEvent(string hardcodedEvent)
