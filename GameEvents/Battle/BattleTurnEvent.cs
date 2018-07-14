@@ -3,16 +3,12 @@ using System.Collections.Generic;
 using TurnBasedFeest.Actors;
 using TurnBasedFeest.Utilities;
 using Microsoft.Xna.Framework;
-using TurnBasedFeest.BattleEvents.Actions;
-using TurnBasedFeest.BattleEvents.TurnBehaviour;
-using TurnBasedFeest.BattleEvents;
 
 namespace TurnBasedFeest.GameEvents.Battle
 {
     class BattleTurnEvent : IGameEvent
     {
         BattleEvent battle;
-        public List<Actor> actors;
         public List<Actor> aliveActors;
         public Actor currentActor;
         public int eventIndex;
@@ -22,11 +18,10 @@ namespace TurnBasedFeest.GameEvents.Battle
             this.battle = battle;
         }
 
-        public void Initialize(List<Actor> actors)
+        public void Initialize(List<Actor> aliveActors)
         {
-            this.actors = actors;
-            aliveActors = this.actors;
-            actors.ForEach(x => x.Initialize());
+            this.aliveActors = aliveActors;
+            this.aliveActors.ForEach(x => x.Initialize());
             currentActor = getNextActor();
         }
 
@@ -63,21 +58,19 @@ namespace TurnBasedFeest.GameEvents.Battle
 
         public void Draw(SpriteBatch spritebatch, SpriteFont font)
         {
-            foreach (Actor actor in aliveActors)
-            {
-                actor.Draw(spritebatch, font);
-            }
-
+            //draws debug
             for (int i = 0; i < currentActor.battleEvents.Count; i++)
             {
-                spritebatch.DrawString(font, currentActor.battleEvents[i].ToString(), new Vector2(400, 15 * i), i == eventIndex ? Color.Red: Color.White);
+                spritebatch.DrawString(font, currentActor.battleEvents[i].ToString(), new Vector2(Game1.screenWidth - 400, 15 * i), i == eventIndex ? Color.Red: Color.White);
             }
 
+            //draws the current event
             if (eventIndex < currentActor.battleEvents.Count)
             {
                 currentActor.battleEvents[eventIndex].Draw(this, spritebatch, font);
             }
 
+            //draws an indication of the current player
             spritebatch.DrawString(font, ">", currentActor.position - new Vector2(35, 0), Color.White);
         }
 

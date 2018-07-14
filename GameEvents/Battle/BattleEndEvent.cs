@@ -43,8 +43,8 @@ namespace TurnBasedFeest.GameEvents.Battle
                         game.actors = battle.aliveActors;
                         game.actors.Add(new Actor(
                             "Smart",
-                            100,
-                            new Vector2(600, 200), new List<IAction> { new AttackAction(), new HealAction(), new DefendAction() },
+                            100, 
+                            new List<IAction> { new AttackAction(), new HealAction(), new DefendAction() },
                             TextureFactory.Instance.GetTexture("actor"),
                             new EfficientRandomAI(),
                             false));

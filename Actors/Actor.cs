@@ -19,10 +19,9 @@ namespace TurnBasedFeest.Actors
 
         private Texture2D texture;
 
-        public Actor(string name, int maxHealth, Vector2 position, List<IAction> actions, Texture2D texture, ITurnEvent behaviourEvent, bool isPlayer)
+        public Actor(string name, int maxHealth, List<IAction> actions, Texture2D texture, ITurnEvent behaviourEvent, bool isPlayer)
         {
             this.name = name;
-            this.position = position;
             this.health = new Health(maxHealth);
             this.actions = actions;
             this.texture = texture;
@@ -42,8 +41,7 @@ namespace TurnBasedFeest.Actors
 
         public void Draw(SpriteBatch Spritebatch, SpriteFont font)
         {
-            // TODO: do not hardcode offset size
-            
+            // TODO: do not hardcode offset size            
             Spritebatch.DrawString(font, name, position + new Vector2(0,-20), color);            
             health.Draw(Spritebatch, position);
 
@@ -53,19 +51,8 @@ namespace TurnBasedFeest.Actors
             }
             else
             {
-                Spritebatch.Draw(
-                    texture, 
-                    position + new Vector2(0, 30), 
-                    null,
-                    Color.White,
-                    0,
-                    new Vector2(),
-                    new Vector2(1,1),
-                    SpriteEffects.FlipHorizontally,
-                    0);
-            }
-            
-
+                Spritebatch.Draw(texture, position + new Vector2(0, 30), null, Color.White, 0, new Vector2(), new Vector2(1,1), SpriteEffects.FlipHorizontally, 0);
+            }   
         }
     }
 }

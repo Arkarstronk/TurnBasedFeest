@@ -21,7 +21,9 @@ namespace TurnBasedFeest
         SpriteFont font;
         Input input;  
         public static Random rnd = new Random();
-        public static GameTime time;        
+        public static GameTime time;     
+        public static int screenWidth = 1280;
+        public static int screenHeight = 720;
 
         public IGameEvent currentEvent;
         public IGameEvent nextEvent;
@@ -31,6 +33,8 @@ namespace TurnBasedFeest
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferWidth = screenWidth;
+            graphics.PreferredBackBufferHeight = screenHeight;
             Content.RootDirectory = "Content";
         }
 
@@ -62,10 +66,10 @@ namespace TurnBasedFeest
 
             var actorPlaceHolderTexture = factory.GetTexture("actor");
             actors = new List<Actor> {
-                    new Actor("Ari", 100, new Vector2(100, 100), new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, actorPlaceHolderTexture, new BattleUI(), true),
-                    new Actor("Zino", 100, new Vector2(100, 200), new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, actorPlaceHolderTexture, new BattleUI(), true),
-                    new Actor("Stupid", 100, new Vector2(600, 100), new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, actorPlaceHolderTexture, new RandomAI(), false),
-                    new Actor("Smart", 100, new Vector2(600, 200), new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, actorPlaceHolderTexture, new EfficientRandomAI(), false)
+                    new Actor("Ari", 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, actorPlaceHolderTexture, new BattleUI(), true),
+                    new Actor("Zino", 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, actorPlaceHolderTexture, new BattleUI(), true),
+                    new Actor("Stupid", 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, actorPlaceHolderTexture, new RandomAI(), false),
+                    new Actor("Smart", 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, actorPlaceHolderTexture, new EfficientRandomAI(), false)
             };
             currentEvent.Initialize(actors);
         }

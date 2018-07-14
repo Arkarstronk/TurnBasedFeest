@@ -16,9 +16,10 @@ namespace TurnBasedFeest.GameEvents.Battle
 
         public void Initialize(List<Actor> actors)
         {
-            events = new List<IGameEvent> { new BattleBeginEvent(), new BattleTurnEvent(this), new BattleEndEvent(this) };
+            events = new List<IGameEvent> { new BattleBeginEvent(this), new BattleTurnEvent(this), new BattleEndEvent(this) };
             this.actors = actors;
-            events[1].Initialize(actors);
+            aliveActors = new List<Actor>(actors);
+            events[0].Initialize(aliveActors);
         }
 
         public bool Update(Game1 game, Input input)
@@ -31,7 +32,7 @@ namespace TurnBasedFeest.GameEvents.Battle
                 // and initialize it if it exists
                 if (eventIndex < events.Count)
                 {
-                    events[eventIndex].Initialize(actors);
+                    events[eventIndex].Initialize(aliveActors);
                 }
                 // if it does not exist, we are done
                 else
@@ -45,8 +46,19 @@ namespace TurnBasedFeest.GameEvents.Battle
 
         public void Draw(SpriteBatch spritebatch, SpriteFont font)
         {
-            events.ForEach(x => x.Draw(spritebatch, font));
+            //draw current event
+            if (eventIndex < events.Count)
+            {
+                events[eventIndex].Draw(spritebatch, font);
+            }               
 
+            //draw actors
+            foreach (Actor actor in actors)
+            {
+                actor.Draw(spritebatch, font);
+            }
+
+            //debug
             for (int i = 0; i < events.Count; i++)
             {
                 spritebatch.DrawString(font, events[i].ToString(), new Vector2(0, 15 * i), i == eventIndex ? Color.Red : Color.White);

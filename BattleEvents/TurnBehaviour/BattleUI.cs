@@ -67,14 +67,14 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
             {
                 for (int i = 0; i < battle.currentActor.actions.Count; i++)
                 {
-                    spritebatch.DrawString(font, battle.currentActor.actions[i].GetName(), new Vector2(300, 200) + new Vector2(0, 20 * i), (i == actionIndex ? Color.Yellow : Color.White));
+                    spritebatch.DrawString(font, battle.currentActor.actions[i].GetName(), new Vector2(Game1.screenWidth * 0.5f - 75, Game1.screenHeight * 0.6f) + new Vector2(0, 20 * i), (i == actionIndex ? Color.Yellow : Color.White));
                 }
 
                 if (currentState == state.TARGET)
                 {
                     for (int i = 0; i < battle.aliveActors.Count; i++)
                     {
-                        spritebatch.DrawString(font, battle.aliveActors[i].name, new Vector2(375, 200) + new Vector2(0, 20 * i), (i == actorIndex ? Color.Yellow : Color.White));
+                        spritebatch.DrawString(font, battle.aliveActors[i].name, new Vector2(Game1.screenWidth * 0.5f, Game1.screenHeight * 0.6f) + new Vector2(0, 20 * i), (i == actorIndex ? Color.Yellow : Color.White));
                     }
                 }
             }
