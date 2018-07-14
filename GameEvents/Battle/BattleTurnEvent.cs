@@ -8,7 +8,7 @@ namespace TurnBasedFeest.GameEvents.Battle
 {
     class BattleTurnEvent : IGameEvent
     {
-        BattleEvent battle;
+        public BattleEvent battle;
         public List<Actor> aliveActors;
         public Actor currentActor;
         public int eventIndex;
