@@ -14,7 +14,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
         Actor target;
         int beginHP;
         int targetHP;
-        int damage = 20;
+        int damage = 25;
 
         public void SetActors(Actor source, Actor target)
         {

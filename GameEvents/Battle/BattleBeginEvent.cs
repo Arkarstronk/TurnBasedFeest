@@ -19,17 +19,16 @@ namespace TurnBasedFeest.GameEvents.Battle
 
         public void Initialize(List<Actor> actors)
         {
-
-            int parseDistanceAlly = (int)(0.4f * Game1.screenHeight / actors.FindAll(x => x.isPlayer).Count + 1);
+            int parseDistanceAlly = (int)((0.5f * Game1.screenHeight) / (actors.FindAll(x => x.isPlayer).Count + 1));
             for (int i = 0; i < actors.FindAll(x => x.isPlayer).Count; i++)
             {
-                actors.FindAll(x => x.isPlayer)[i].position = new Vector2(Game1.screenWidth - 50 - 0.8f * Game1.screenWidth, (i + 1) * parseDistanceAlly);
+                actors.FindAll(x => x.isPlayer)[i].position = new Vector2(Game1.screenWidth - 50 - 0.8f * Game1.screenWidth, 0.1f * Game1.screenHeight + (i + 1) * parseDistanceAlly);
             }
 
-            int parseDistanceEnemies = (int)(0.4f * Game1.screenHeight / actors.FindAll(x => !x.isPlayer).Count + 1);
+            int parseDistanceEnemies = (int)((0.5f * Game1.screenHeight) / (actors.FindAll(x => !x.isPlayer).Count + 1));
             for (int i = 0; i < actors.FindAll(x => !x.isPlayer).Count; i++)
             {
-                actors.FindAll(x => !x.isPlayer)[i].position = new Vector2(Game1.screenWidth - 50 - 0.2f * Game1.screenWidth, (i + 1) * parseDistanceEnemies);
+                actors.FindAll(x => !x.isPlayer)[i].position = new Vector2(Game1.screenWidth - 50 - 0.2f * Game1.screenWidth, 0.1f * Game1.screenHeight + (i + 1) * parseDistanceEnemies);
             }
         }
 
