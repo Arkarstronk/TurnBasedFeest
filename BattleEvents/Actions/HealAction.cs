@@ -66,6 +66,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
 
         public void Draw(BattleTurnEvent battle, SpriteBatch spritebatch, SpriteFont font)
         {
+            spritebatch.DrawString(font, heal.ToString(), target.position + new Vector2(0, -(elapsedTime / (float)eventTime) * 50 + 20), Color.White, 0, new Vector2(), 2, SpriteEffects.None, 1);
         }
     }
 }

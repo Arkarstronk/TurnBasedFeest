@@ -39,19 +39,19 @@ namespace TurnBasedFeest.Actors
             health.Update();   
         }
 
-        public void Draw(SpriteBatch Spritebatch, SpriteFont font)
+        public void Draw(SpriteBatch spritebatch, SpriteFont font)
         {
             // TODO: do not hardcode offset size            
-            Spritebatch.DrawString(font, name, position + new Vector2(0,-20), color);            
-            health.Draw(Spritebatch, position);
+            spritebatch.DrawString(font, name, position + new Vector2(0,-90), color);            
+            health.Draw(spritebatch, position, font);
 
             if (isPlayer)
             {
-                Spritebatch.Draw(texture, position + new Vector2(0, 30), Color.White);
+                spritebatch.Draw(texture, position, Color.White);
             }
             else
             {
-                Spritebatch.Draw(texture, position + new Vector2(0, 30), null, Color.White, 0, new Vector2(), new Vector2(1,1), SpriteEffects.FlipHorizontally, 0);
+                spritebatch.Draw(texture, position, null, Color.White, 0, new Vector2(), new Vector2(1,1), SpriteEffects.FlipHorizontally, 0);
             }   
         }
     }

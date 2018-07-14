@@ -48,12 +48,6 @@ namespace TurnBasedFeest.GameEvents.Battle
 
         public void Draw(SpriteBatch spritebatch, SpriteFont font)
         {
-            //draw current event
-            if (eventIndex < events.Count)
-            {
-                events[eventIndex].Draw(spritebatch, font);
-            }
-
             //draws the battle text UI
             spritebatch.DrawString(font, battleText, new Vector2(0.2f * Game1.screenWidth, 0.75f * Game1.screenHeight), Color.White);
 
@@ -61,6 +55,12 @@ namespace TurnBasedFeest.GameEvents.Battle
             foreach (Actor actor in actors)
             {
                 actor.Draw(spritebatch, font);
+            }
+
+            //draw current event
+            if (eventIndex < events.Count)
+            {
+                events[eventIndex].Draw(spritebatch, font);
             }
 
             //debug
