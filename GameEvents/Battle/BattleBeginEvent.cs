@@ -34,6 +34,8 @@ namespace TurnBasedFeest.GameEvents.Battle
 
         public bool Update(Game1 game, Input input)
         {
+            battle.battleText = "A new battle started!";
+
             elapsedTime += (int)Game1.time.ElapsedGameTime.TotalMilliseconds;
 
             if (elapsedTime >= eventTime)

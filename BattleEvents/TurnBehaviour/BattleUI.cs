@@ -37,6 +37,7 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
                     {
                         currentState = state.TARGET;
                     }
+                    battle.battle.battleText = $"What will {battle.currentActor.name} do?";
                     break;
                 case state.TARGET:
                     actorIndex += Navigation(input);
@@ -49,6 +50,7 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
                     {
                         currentState = state.ACTION;
                     }
+                    battle.battle.battleText = $"Select a target.";
                     break;
                 case state.FINISH:
                     IAction chosenAction = battle.currentActor.actions[actionIndex];

@@ -8,7 +8,7 @@ namespace TurnBasedFeest.BattleEvents
 {
     class DeathEvent : ITurnEvent
     {
-        int eventTime = 1000;
+        int eventTime = 2000;
         int elapsedTime;
         Actor deceased;
 
@@ -25,6 +25,8 @@ namespace TurnBasedFeest.BattleEvents
 
         public bool Update(BattleTurnEvent battle, Input input)
         {
+            battle.battle.battleText = $"{deceased.name} is critically wounded.";
+
             elapsedTime += (int)Game1.time.ElapsedGameTime.TotalMilliseconds;
 
             if (elapsedTime >= eventTime)

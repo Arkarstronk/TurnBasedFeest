@@ -25,6 +25,8 @@ namespace TurnBasedFeest.GameEvents.Battle
 
         public bool Update(Game1 game, Input input)
         {
+            battle.battleText = "Battle ended!";
+
             elapsedTime += (int)Game1.time.ElapsedGameTime.TotalMilliseconds;
 
             if (elapsedTime >= eventTime)

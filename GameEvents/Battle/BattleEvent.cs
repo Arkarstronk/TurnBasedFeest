@@ -13,6 +13,7 @@ namespace TurnBasedFeest.GameEvents.Battle
         public List<Actor> aliveActors;
         List<IGameEvent> events;
         int eventIndex = 0;
+        public string battleText = string.Empty;
 
         public void Initialize(List<Actor> actors)
         {
@@ -50,7 +51,9 @@ namespace TurnBasedFeest.GameEvents.Battle
             if (eventIndex < events.Count)
             {
                 events[eventIndex].Draw(spritebatch, font);
-            }               
+            }
+
+            spritebatch.DrawString(font, battleText, new Vector2(0.2f * Game1.screenWidth, 0.75f * Game1.screenHeight), Color.White);
 
             //draw actors
             foreach (Actor actor in actors)
