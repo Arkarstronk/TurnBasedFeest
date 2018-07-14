@@ -42,17 +42,26 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Actor\Actor.cs" />
-    <Compile Include="Actor\Health.cs" />
-    <Compile Include="Actions\IAction.cs" />
-	<Compile Include="Actions\ActionHeal.cs" />
-	<Compile Include="Actions\ActionAttack.cs" />
-	<Compile Include="Actions\ActionNothing.cs" />
+    <Compile Include="Actors\Actor.cs" />
+    <Compile Include="GameEvents\Battle\BattleBeginEvent.cs" />
+    <Compile Include="GameEvents\Battle\BattleEndEvent.cs" />
+    <Compile Include="BattleEvents\DeathEvent.cs" />
+    <Compile Include="BattleEvents\TurnBehaviour\EfficientRandomAI.cs" />
+    <Compile Include="BattleEvents\TurnBehaviour\RandomAI.cs" />
+    <Compile Include="Actors\Health.cs" />
+    <Compile Include="BattleEvents\Actions\IAction.cs" />
+    <Compile Include="BattleEvents\Actions\HealAction.cs" />
+    <Compile Include="BattleEvents\Actions\AttackAction.cs" />
+    <Compile Include="BattleEvents\Actions\DefendAction.cs" />
+    <Compile Include="BattleEvents\ITurnEvent.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="GameEvents\Battle\BattleEvent.cs" />
+    <Compile Include="GameEvents\IGameEvent.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BattleSystem.cs" />
-    <Compile Include="Ui\ListChoiceUi.cs" />
+    <Compile Include="GameEvents\Battle\BattleTurnEvent.cs" />
+    <Compile Include="BattleEvents\TurnBehaviour\BattleUI.cs" />
+    <Compile Include="TextureFactory.cs" />
     <Compile Include="Utilities\Input.cs" />
   </ItemGroup>
   <ItemGroup>

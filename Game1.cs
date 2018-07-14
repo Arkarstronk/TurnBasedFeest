@@ -1,7 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using TurnBasedFeest.Actors;
+using TurnBasedFeest.BattleEvents.Actions;
+using TurnBasedFeest.BattleEvents.TurnBehaviour;
+using TurnBasedFeest.GameEvents;
+using TurnBasedFeest.GameEvents.Battle;
 using TurnBasedFeest.Utilities;
 
 namespace TurnBasedFeest
@@ -9,17 +14,27 @@ namespace TurnBasedFeest
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
-    public class Game1 : Game
+    class Game1 : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         SpriteFont font;
         Input input;  
-        BattleSystem battleSystem;
+        public static Random rnd = new Random();
+        public static GameTime time;     
+        public static int screenWidth = 1280;
+        public static int screenHeight = 720;
+
+        public IGameEvent currentEvent;
+        public IGameEvent nextEvent;
+
+        public List<Actor> actors;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferWidth = screenWidth;
+            graphics.PreferredBackBufferHeight = screenHeight;
             Content.RootDirectory = "Content";
         }
 
@@ -31,8 +46,7 @@ namespace TurnBasedFeest
         /// </summary>
         protected override void Initialize()
         {
-            input = new Input();
-            battleSystem = new BattleSystem();
+            input = new Input();           
             base.Initialize();
         }
 
@@ -42,8 +56,22 @@ namespace TurnBasedFeest
         /// </summary>
         protected override void LoadContent()
         {
+            TextureFactory factory = TextureFactory.Instance;
+            factory.Initialize(GraphicsDevice, Content);
+
             spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("Fonts/default");
+
+            currentEvent = new BattleEvent();
+
+            var actorPlaceHolderTexture = factory.GetTexture("actor");
+            actors = new List<Actor> {
+                    new Actor("Ari", 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, actorPlaceHolderTexture, new BattleUI(), true),
+                    new Actor("Zino", 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, actorPlaceHolderTexture, new BattleUI(), true),
+                    new Actor("Stupid", 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, actorPlaceHolderTexture, new RandomAI(), false),
+                    new Actor("Smart", 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, actorPlaceHolderTexture, new EfficientRandomAI(), false)
+            };
+            currentEvent.Initialize(actors);
         }
 
         /// <summary>
@@ -62,17 +90,14 @@ namespace TurnBasedFeest
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            time = gameTime;
             input.Update();
 
-            if (!battleSystem.ongoingBattle)
+            if (currentEvent.Update(this, input))
             {
-                battleSystem.InitializeFight(new List<Actor> {
-                    new Actor("player", new Vector2(100, 100), 100, GraphicsDevice),
-                    new Actor("Enemy", new Vector2(600, 100), 100, GraphicsDevice)
-                });
+                currentEvent = nextEvent;
+                currentEvent.Initialize(actors);
             }
-
-            battleSystem.Update(input);           
 
             base.Update(gameTime);
         }
@@ -85,8 +110,8 @@ namespace TurnBasedFeest
         {
             GraphicsDevice.Clear(Color.Black);            
             spriteBatch.Begin();
-
-            battleSystem.Draw(spriteBatch, font);
+            
+            currentEvent.Draw(spriteBatch, font);
 
             spriteBatch.End();
             base.Draw(gameTime);
