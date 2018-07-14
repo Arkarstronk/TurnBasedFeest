@@ -43,14 +43,7 @@ namespace TurnBasedFeest.GameEvents.Battle
                     if (battle.aliveActors.TrueForAll(x => x.isPlayer))
                     {
                         game.actors = battle.aliveActors;
-                        game.actors.Add(new Actor(
-                            "Smart",
-                            100, 
-                            new List<IAction> { new AttackAction(), new HealAction(), new DefendAction() },
-                            TextureFactory.Instance.GetTexture("actor"),
-                            new EfficientRandomAI(),
-                            false));
-                        game.nextEvent = new BattleEvent();
+                        game.nextEvent = new EventDeterminerEvent(game);
                     }
 
                     // TODO: go to a game-over event, which on its turn can go to a load-save event or a quit event

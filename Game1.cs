@@ -6,7 +6,6 @@ using TurnBasedFeest.Actors;
 using TurnBasedFeest.BattleEvents.Actions;
 using TurnBasedFeest.BattleEvents.TurnBehaviour;
 using TurnBasedFeest.GameEvents;
-using TurnBasedFeest.GameEvents.Battle;
 using TurnBasedFeest.Utilities;
 
 namespace TurnBasedFeest
@@ -25,8 +24,11 @@ namespace TurnBasedFeest
         public static int screenWidth = 1280;
         public static int screenHeight = 720;
 
+        public int eventCounter;
+        public IGameEvent previousEvent;
         public IGameEvent currentEvent;
         public IGameEvent nextEvent;
+        public Dictionary<int, string> hardcodedEvents = new Dictionary<int, string>();
 
         public List<Actor> actors;
 
@@ -62,15 +64,14 @@ namespace TurnBasedFeest
             spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("Fonts/default");
 
-            currentEvent = new BattleEvent();
-
             var actorPlaceHolderTexture = factory.GetTexture("actor");
             actors = new List<Actor> {
                     new Actor("Ari", 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, actorPlaceHolderTexture, new BattleUI(), true),
-                    new Actor("Zino", 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, actorPlaceHolderTexture, new BattleUI(), true),
-                    new Actor("Stupid", 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, actorPlaceHolderTexture, new RandomAI(), false),
-                    new Actor("Smart", 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, actorPlaceHolderTexture, new EfficientRandomAI(), false)
+                    new Actor("Zino", 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, actorPlaceHolderTexture, new BattleUI(), true)
             };
+
+            eventCounter = 0;
+            currentEvent = new EventDeterminerEvent(this);    
             currentEvent.Initialize(actors);
         }
 
@@ -95,7 +96,10 @@ namespace TurnBasedFeest
 
             if (currentEvent.Update(this, input))
             {
+                previousEvent = currentEvent;
                 currentEvent = nextEvent;
+                nextEvent = null;
+
                 currentEvent.Initialize(actors);
             }
 

@@ -56,6 +56,7 @@
     <Compile Include="BattleEvents\ITurnEvent.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameEvents\Battle\BattleEvent.cs" />
+    <Compile Include="GameEvents\EventDeterminerEvent.cs" />
     <Compile Include="GameEvents\IGameEvent.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
