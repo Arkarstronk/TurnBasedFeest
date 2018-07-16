@@ -113,7 +113,7 @@ namespace TurnBasedFeest
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);            
-            spriteBatch.Begin();
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp);
             
             currentEvent.Draw(spriteBatch, font);
 
