@@ -38,6 +38,7 @@ namespace TurnBasedFeest.GameEvents.Battle
                 // if it does not exist, we are done
                 else
                 {
+                    game.eventCounter++;
                     return true;
                 }
             }
@@ -53,6 +54,7 @@ namespace TurnBasedFeest.GameEvents.Battle
                 events[eventIndex].Draw(spritebatch, font);
             }
 
+            //draws the battle text UI
             spritebatch.DrawString(font, battleText, new Vector2(0.2f * Game1.screenWidth, 0.75f * Game1.screenHeight), Color.White);
 
             //draw actors
