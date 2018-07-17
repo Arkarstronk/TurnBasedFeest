@@ -34,7 +34,6 @@ namespace TurnBasedFeest.Actors
         public void Initialize()
         {
             hasTurn = true;
-            attributes.RemoveAll(x => true);
         }
 
         public void Update()
@@ -48,6 +47,11 @@ namespace TurnBasedFeest.Actors
             spritebatch.DrawString(font, name, position + new Vector2(0,-90), color);            
             health.Draw(spritebatch, position, font);
 
+            for (int i = 0; i < attributes.Count; i++)
+            {
+                attributes[i].Draw(spritebatch, font, position + new Vector2(i * 12, 0));
+            }
+
             if (isPlayer)
             {
                 spritebatch.Draw(texture, position, Color.White);
@@ -55,12 +59,7 @@ namespace TurnBasedFeest.Actors
             else
             {
                 spritebatch.Draw(texture, position, null, Color.White, 0, new Vector2(), new Vector2(1,1), SpriteEffects.FlipHorizontally, 0);
-            }   
-
-            for(int i = 0; i < attributes.Count; i++)
-            {
-                attributes[i].Draw(spritebatch, font, position + new Vector2(i * 12, 0));
-            }
+            }               
         }
     }
 }
