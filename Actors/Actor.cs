@@ -27,7 +27,7 @@ namespace TurnBasedFeest.Actors
             this.health = new Health(maxHealth);
             this.actions = actions;
             this.texture = texture;
-            battleEvents = new List<ITurnEvent> { new AttributeEvent(), behaviourEvent, behaviourEvent };
+            battleEvents = new List<ITurnEvent> { new AttributeEvent(), behaviourEvent };
             this.isPlayer = isPlayer;
         }
 

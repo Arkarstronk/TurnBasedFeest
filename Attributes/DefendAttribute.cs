@@ -5,7 +5,7 @@ namespace TurnBasedFeest.Attributes
 {
     class DefendAttribute : IAttribute
     {
-        int expiration = 2;
+        int expiration = 1;
         Rectangle rectangle = new Rectangle(0,0,10,10);
         Texture2D icon = TextureFactory.Instance.GetTexture("health");
 
