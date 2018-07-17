@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using TurnBasedFeest.Attributes;
 using TurnBasedFeest.BattleEvents;
 using TurnBasedFeest.BattleEvents.Actions;
 
@@ -11,6 +12,7 @@ namespace TurnBasedFeest.Actors
         public string name;
         public Vector2 position;
         public Health health;
+        public List<IAttribute> attributes = new List<IAttribute>();
         public List<IAction> actions;
         public List<ITurnEvent> battleEvents;
         public bool hasTurn;
@@ -25,7 +27,7 @@ namespace TurnBasedFeest.Actors
             this.health = new Health(maxHealth);
             this.actions = actions;
             this.texture = texture;
-            battleEvents = new List<ITurnEvent> { behaviourEvent, behaviourEvent };
+            battleEvents = new List<ITurnEvent> { new AttributeEvent(), behaviourEvent };
             this.isPlayer = isPlayer;
         }
 
@@ -45,6 +47,11 @@ namespace TurnBasedFeest.Actors
             spritebatch.DrawString(font, name, position + new Vector2(0,-90), color);            
             health.Draw(spritebatch, position, font);
 
+            for (int i = 0; i < attributes.Count; i++)
+            {
+                attributes[i].Draw(spritebatch, font, position + new Vector2(i * 12, 0));
+            }
+
             if (isPlayer)
             {
                 spritebatch.Draw(texture, position, Color.White);
@@ -52,7 +59,7 @@ namespace TurnBasedFeest.Actors
             else
             {
                 spritebatch.Draw(texture, position, null, Color.White, 0, new Vector2(), new Vector2(1,1), SpriteEffects.FlipHorizontally, 0);
-            }   
+            }               
         }
     }
 }

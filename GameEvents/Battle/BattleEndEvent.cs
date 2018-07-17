@@ -21,6 +21,10 @@ namespace TurnBasedFeest.GameEvents.Battle
 
         public void Initialize(List<Actor> actors)
         {
+            foreach (Actor actor in actors)
+            {
+                actor.attributes.RemoveAll(x => true);
+            }
         }
 
         public bool Update(Game1 game, Input input)

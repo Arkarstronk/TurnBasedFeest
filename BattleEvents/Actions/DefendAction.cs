@@ -3,6 +3,7 @@ using TurnBasedFeest.Actors;
 using Microsoft.Xna.Framework.Graphics;
 using TurnBasedFeest.Utilities;
 using TurnBasedFeest.GameEvents.Battle;
+using TurnBasedFeest.Attributes;
 
 namespace TurnBasedFeest.BattleEvents.Actions
 {
@@ -33,6 +34,8 @@ namespace TurnBasedFeest.BattleEvents.Actions
             
             if (elapsedTime >= eventTime)
             {
+                source.attributes.RemoveAll(x => x.GetType() == typeof(DefendAttribute));
+                source.attributes.Add(new DefendAttribute());
                 source.health.color = Color.White;
                 battle.currentActor.battleEvents.RemoveAt(battle.eventIndex);
                 battle.eventIndex--;
