@@ -23,7 +23,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
         public void Initialize()
         {
             elapsedTime = 0;
-            this.source.health.color = Color.Violet;
+            this.target.health.color = Color.Violet;
         }
 
         public bool Update(BattleTurnEvent battle, Input input)
@@ -34,9 +34,9 @@ namespace TurnBasedFeest.BattleEvents.Actions
             
             if (elapsedTime >= eventTime)
             {
-                source.attributes.RemoveAll(x => x.GetType() == typeof(DefendAttribute));
-                source.attributes.Add(new DefendAttribute());
-                source.health.color = Color.White;
+                target.attributes.RemoveAll(x => x.GetType() == typeof(DefendAttribute));
+                target.attributes.Add(new DefendAttribute());
+                target.health.color = Color.White;
                 battle.currentActor.battleEvents.RemoveAt(battle.eventIndex);
                 battle.eventIndex--;
                 return true;
@@ -49,10 +49,10 @@ namespace TurnBasedFeest.BattleEvents.Actions
 
         public string GetName()
         {
-            return "Defend";
+            return "Guard";
         }
 
-        public bool isPositive()
+        public bool IsSupportive()
         {
             return true;
         }

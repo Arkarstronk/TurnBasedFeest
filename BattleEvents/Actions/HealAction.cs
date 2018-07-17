@@ -54,7 +54,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
             
         }
 
-        public bool isPositive()
+        public bool IsSupportive()
         {
             return true;
         }

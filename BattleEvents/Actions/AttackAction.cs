@@ -75,7 +75,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
             spritebatch.DrawString(font, damage.ToString(), target.position + new Vector2(0, -(elapsedTime / (float) eventTime) * 50 + 20), Color.White, 0, new Vector2(), 2, SpriteEffects.None, 1);
         }
 
-        public bool isPositive()
+        public bool IsSupportive()
         {
             return false;
         }

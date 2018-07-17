@@ -20,7 +20,7 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
             IAction randomAction = battle.currentActor.actions[Game1.rnd.Next(battle.currentActor.actions.Count)];
 
             List<Actor> possibleTargets;
-            if (randomAction.isPositive())
+            if (randomAction.IsSupportive())
             {
                 possibleTargets = battle.aliveActors.FindAll(x => x.isPlayer == battle.currentActor.isPlayer);
             }

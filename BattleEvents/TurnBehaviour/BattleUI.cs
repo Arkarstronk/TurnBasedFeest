@@ -11,109 +11,179 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
     {
         public enum state
         {
-            ACTION,
+            START,
+            FIGHT,
+            SUPPORT,
             TARGET,
             FINISH,
         }
         public state currentState;
+
+        private IAction chosenAction;
+
+        private int startIndex;
         private int actionIndex;
-        private int actorIndex;
+        private int targetIndex;
 
         public void Initialize()
         {
+            startIndex = 0;
             actionIndex = 0;
-            actorIndex = 0;
-            currentState = state.ACTION;
+            targetIndex = 0;
+            currentState = state.START;
+            chosenAction = null;
         }
 
         public bool Update(BattleTurnEvent battle, Input input)
         {
             switch (currentState)
             {
-                case state.ACTION:
-                    actionIndex += Navigation(input);
+                case state.START:
+                    Navigation(input, ref startIndex, 2);
 
                     if (input.Pressed(Keys.Enter))
                     {
-                        currentState = state.TARGET;
+                        switch (startIndex)
+                        {
+                            case 0:
+                                currentState = state.FIGHT;
+                                break;
+                            case 1:
+                                currentState = state.SUPPORT;
+                                break;
+                        }                        
                     }
                     battle.battle.battleText = $"What will {battle.currentActor.name} do?";
                     break;
-                case state.TARGET:
-                    actorIndex += Navigation(input);
+                case state.FIGHT:
+                    Navigation(input, ref actionIndex, battle.currentActor.actions.FindAll(x => !x.IsSupportive()).Count);
 
+                    if (input.Pressed(Keys.Enter))
+                    {
+                        chosenAction = battle.currentActor.actions.FindAll(x => !x.IsSupportive())[actionIndex];
+                        currentState = state.TARGET;
+                    }
+                    if (input.Pressed(Keys.Back))
+                    {
+                        currentState = state.START;
+                        chosenAction = null;
+                        actionIndex = 0;
+                    }
+                    battle.battle.battleText = $"How will {battle.currentActor.name} fight?";
+                    break;
+                case state.SUPPORT:
+                    Navigation(input, ref actionIndex, battle.currentActor.actions.FindAll(x => x.IsSupportive()).Count);
+
+                    if (input.Pressed(Keys.Enter))
+                    {
+                        chosenAction = battle.currentActor.actions.FindAll(x => x.IsSupportive())[actionIndex];
+                        currentState = state.TARGET;
+                    }
+                    if (input.Pressed(Keys.Back))
+                    {
+                        currentState = state.START;
+                        chosenAction = null;
+                        actionIndex = 0;
+                    }
+                    battle.battle.battleText = $"How will {battle.currentActor.name} support?";
+                    break;
+                case state.TARGET:
+                    Navigation(input, ref targetIndex, chosenAction.IsSupportive() ? battle.aliveActors.FindAll(x => x.isPlayer).Count : battle.aliveActors.FindAll(x => !x.isPlayer).Count);
+                    
                     if (input.Pressed(Keys.Enter))
                     {
                         currentState = state.FINISH;
                     }
                     if (input.Pressed(Keys.Back))
                     {
-                        currentState = state.ACTION;
+                        currentState = chosenAction.IsSupportive() ? state.SUPPORT : state.FIGHT;
+                        targetIndex = 0;
                     }
+
                     battle.battle.battleText = $"Select a target.";
                     break;
                 case state.FINISH:
-                    IAction chosenAction = battle.currentActor.actions[actionIndex];
-                    chosenAction.SetActors(battle.currentActor, battle.aliveActors[actorIndex]);
+                    chosenAction.SetActors(battle.currentActor, chosenAction.IsSupportive() ? battle.aliveActors.FindAll(x => x.isPlayer)[targetIndex] : battle.aliveActors.FindAll(x => !x.isPlayer)[targetIndex]);
                     battle.currentActor.battleEvents.Insert(battle.eventIndex + 1, chosenAction);
                     return true;
             }
-            CheckIndexBounds(battle);
             return false;
         }
         
 
         public void Draw(BattleTurnEvent battle, SpriteBatch spritebatch, SpriteFont font)
         {
-            if (currentState == state.ACTION || currentState == state.TARGET)
-            {
-                for (int i = 0; i < battle.currentActor.actions.Count; i++)
-                {
-                    spritebatch.DrawString(font, battle.currentActor.actions[i].GetName(), new Vector2(Game1.screenWidth * 0.5f - 75, Game1.screenHeight * 0.6f) + new Vector2(0, 20 * i), (i == actionIndex ? Color.Yellow : Color.White));
-                }
+            spritebatch.DrawString(font, "Fight", new Vector2(Game1.screenWidth * 0.5f - 100, Game1.screenHeight * 0.6f), (0 == startIndex ? Color.Yellow : Color.White));
+            spritebatch.DrawString(font, "Support", new Vector2(Game1.screenWidth * 0.5f - 100, Game1.screenHeight * 0.6f + 20), (1 == startIndex ? Color.Yellow : Color.White));
 
-                if (currentState == state.TARGET)
+            if (currentState == state.FIGHT)
+            {
+                for (int i = 0; i < battle.currentActor.actions.FindAll(x => !x.IsSupportive()).Count; i++)
                 {
-                    for (int i = 0; i < battle.aliveActors.Count; i++)
+                    spritebatch.DrawString(font, battle.currentActor.actions.FindAll(x => !x.IsSupportive())[i].GetName(), new Vector2(Game1.screenWidth * 0.5f, Game1.screenHeight * 0.6f) + new Vector2(0, 20 * i), (i == actionIndex ? Color.Yellow : Color.White));
+                }
+            }
+
+            if (currentState == state.SUPPORT)
+            {
+                for (int i = 0; i < battle.currentActor.actions.FindAll(x => x.IsSupportive()).Count; i++)
+                {
+                    spritebatch.DrawString(font, battle.currentActor.actions.FindAll(x => x.IsSupportive())[i].GetName(), new Vector2(Game1.screenWidth * 0.5f, Game1.screenHeight * 0.6f) + new Vector2(0, 20 * i), (i == actionIndex ? Color.Yellow : Color.White));
+                }
+            }
+
+            if (currentState == state.TARGET)
+            {
+                if (chosenAction.IsSupportive())
+                {
+                    for (int i = 0; i < battle.currentActor.actions.FindAll(x => x.IsSupportive()).Count; i++)
                     {
-                        spritebatch.DrawString(font, battle.aliveActors[i].name, new Vector2(Game1.screenWidth * 0.5f, Game1.screenHeight * 0.6f) + new Vector2(0, 20 * i), (i == actorIndex ? Color.Yellow : Color.White));
+                        spritebatch.DrawString(font, battle.currentActor.actions.FindAll(x => x.IsSupportive())[i].GetName(), new Vector2(Game1.screenWidth * 0.5f, Game1.screenHeight * 0.6f) + new Vector2(0, 20 * i), (i == actionIndex ? Color.Yellow : Color.White));
+                    }
+
+                    for (int i = 0; i < battle.aliveActors.FindAll(x => x.isPlayer).Count; i++)
+                    {
+                        spritebatch.DrawString(font, battle.aliveActors.FindAll(x => x.isPlayer)[i].name, new Vector2(Game1.screenWidth * 0.5f + 100, Game1.screenHeight * 0.6f) + new Vector2(0, 20 * i), (i == targetIndex ? Color.Yellow : Color.White));
                     }
                 }
+                else
+                {
+                    for (int i = 0; i < battle.currentActor.actions.FindAll(x => !x.IsSupportive()).Count; i++)
+                    {
+                        spritebatch.DrawString(font, battle.currentActor.actions.FindAll(x => !x.IsSupportive())[i].GetName(), new Vector2(Game1.screenWidth * 0.5f, Game1.screenHeight * 0.6f) + new Vector2(0, 20 * i), (i == actionIndex ? Color.Yellow : Color.White));
+                    }
+
+                    for (int i = 0; i < battle.aliveActors.FindAll(x => !x.isPlayer).Count; i++)
+                    {
+                        spritebatch.DrawString(font, battle.aliveActors.FindAll(x => !x.isPlayer)[i].name, new Vector2(Game1.screenWidth * 0.5f + 100, Game1.screenHeight * 0.6f) + new Vector2(0, 20 * i), (i == targetIndex ? Color.Yellow : Color.White));
+                    }
+                }
+                
             }
         }
 
-        public int Navigation(Input input)
+        public void Navigation(Input input, ref int index, int upperBound)
         {
+            //move index
             if (input.Pressed(Keys.Down))
             {
-                return 1;
+                index++;
             }
             if (input.Pressed(Keys.Up))
             {
-                return -1;
+                index--;
             }
-            return 0;
-        }
 
-        public void CheckIndexBounds(BattleTurnEvent battle)
-        {
-            if (actorIndex < 0)
+            //check bounds
+            if (index < 0)
             {
-                actorIndex = battle.aliveActors.Count - 1;
+                index = upperBound - 1;
             }
-            if (actorIndex > battle.aliveActors.Count - 1)
+            if (index >= upperBound)
             {
-                actorIndex = 0;
+                index = 0;
             }
-            if (actionIndex < 0)
-            {
-                actionIndex = battle.currentActor.actions.Count - 1;
-            }
-            if (actionIndex > battle.currentActor.actions.Count - 1)
-            {
-                actionIndex = 0;
-            }
-        }
 
+        }
     }
 }
