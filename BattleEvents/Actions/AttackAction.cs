@@ -3,6 +3,7 @@ using TurnBasedFeest.Actors;
 using TurnBasedFeest.Utilities;
 using Microsoft.Xna.Framework.Graphics;
 using TurnBasedFeest.GameEvents.Battle;
+using TurnBasedFeest.Attributes;
 
 namespace TurnBasedFeest.BattleEvents.Actions
 {
@@ -14,7 +15,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
         Actor target;
         int beginHP;
         int targetHP;
-        int damage = 25;
+        int damage;
 
         public void SetActors(Actor source, Actor target)
         {
@@ -25,7 +26,13 @@ namespace TurnBasedFeest.BattleEvents.Actions
         public void Initialize()
         {
             elapsedTime = 0;
+            damage = 25;
             beginHP = (int) target.health.CurrentHealth;
+
+            foreach(IAttribute attribute in target.attributes.FindAll(x => x.GetAttributeType() == attributeType.INCOMING))
+            {
+                damage = (int) (damage * attribute.GetDamageMultiplier());
+            }
             targetHP = (int) ((target.health.CurrentHealth - damage <= 0) ? 0 : (target.health.CurrentHealth - damage));
             target.health.color = Color.Yellow;
         }
