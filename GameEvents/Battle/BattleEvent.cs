@@ -19,8 +19,9 @@ namespace TurnBasedFeest.GameEvents.Battle
         {
             events = new List<IGameEvent> { new BattleBeginEvent(this), new BattleTurnEvent(this), new BattleEndEvent(this) };
             this.actors = actors;
-            aliveActors = new List<Actor>(actors);
-            events[0].Initialize(aliveActors);
+            //we want the position of all actors to be considered, even dead alies
+            events[0].Initialize(actors);
+            aliveActors = new List<Actor>(actors.FindAll(x => x.health.CurrentHealth > 0));
         }
 
         public bool Update(Game1 game, Input input)

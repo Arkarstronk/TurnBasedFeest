@@ -20,7 +20,6 @@ namespace TurnBasedFeest.BattleEvents
         public void Initialize()
         {
             elapsedTime = 0;
-            deceased.color = Color.Red;
         }
 
         public bool Update(BattleTurnEvent battle, Input input)
@@ -38,8 +37,6 @@ namespace TurnBasedFeest.BattleEvents
 
                 battle.currentActor.battleEvents.RemoveAt(battle.eventIndex);
                 battle.eventIndex--;
-
-                deceased.color = Color.White;
 
                 // if the current player dies during his turn
                 if (battle.currentActor == deceased)

@@ -47,7 +47,7 @@ namespace TurnBasedFeest.GameEvents.Battle
                     // TODO: go to a loot event, or a level event or something like that
                     if (battle.aliveActors.TrueForAll(x => x.isPlayer))
                     {
-                        game.actors = battle.aliveActors;
+                        game.actors = battle.actors.FindAll(x => x.isPlayer);
                         game.nextEvent = new EventDeterminerEvent(game);
                     }
 
