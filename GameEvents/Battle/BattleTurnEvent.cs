@@ -9,6 +9,7 @@ namespace TurnBasedFeest.GameEvents.Battle
     class BattleTurnEvent : IGameEvent
     {
         public BattleEvent battle;
+        public List<Actor> allActors;
         public List<Actor> aliveActors;
         public Actor currentActor;
         public int eventIndex;
@@ -20,6 +21,7 @@ namespace TurnBasedFeest.GameEvents.Battle
 
         public void Initialize(List<Actor> aliveActors)
         {
+            allActors = new List<Actor>(aliveActors);
             this.aliveActors = aliveActors;
             this.aliveActors.ForEach(x => x.Initialize());
             currentActor = getNextActor();

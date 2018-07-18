@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using TurnBasedFeest.Actors;
 
 namespace TurnBasedFeest.Attributes
 {
@@ -8,6 +9,12 @@ namespace TurnBasedFeest.Attributes
         int expiration = 1;
         Rectangle rectangle = new Rectangle(0,0,10,10);
         Texture2D icon = TextureFactory.Instance.GetTexture("health");
+        Actor gifter;
+
+        public DefendAttribute(Actor gifter)
+        {
+            this.gifter = gifter;
+        }
 
         public void Draw(SpriteBatch spritebatch, SpriteFont font, Vector2 position)
         {
@@ -23,7 +30,6 @@ namespace TurnBasedFeest.Attributes
 
         public int GetExpiration()
         {
-            expiration -= 1;
             return expiration;
         }
 

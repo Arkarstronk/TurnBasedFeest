@@ -34,6 +34,8 @@ namespace TurnBasedFeest.BattleEvents
                 // potentially an extreme small amount of chance to cause an innocent bug if actors do not have to be unique
                 battle.aliveActors.Remove(deceased);
 
+                deceased.giftedAttributes.ForEach(x => x.receiver.attributes.Remove(x.attribute));                
+
                 battle.currentActor.battleEvents.RemoveAt(battle.eventIndex);
                 battle.eventIndex--;
 

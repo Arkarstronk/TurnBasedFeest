@@ -24,6 +24,7 @@ namespace TurnBasedFeest.GameEvents.Battle
             foreach (Actor actor in actors)
             {
                 actor.attributes.RemoveAll(x => true);
+                actor.giftedAttributes.RemoveAll(x => true);
             }
         }
 

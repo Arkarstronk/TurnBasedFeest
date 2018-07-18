@@ -14,11 +14,13 @@ namespace TurnBasedFeest.BattleEvents
 
         public bool Update(BattleTurnEvent battle, Input input)
         {
-            for(int i = 0; i < battle.currentActor.attributes.Count; i ++)
+            for(int i = 0; i < battle.currentActor.giftedAttributes.Count; i ++)
             {
-                if (battle.currentActor.attributes[i].GetExpiration() == 0)
+                battle.currentActor.giftedAttributes[i].expiration--;
+                if (battle.currentActor.giftedAttributes[i].expiration == 0)
                 {
-                    battle.currentActor.attributes.RemoveAt(i);
+                    //possible bug if identic attributes
+                    battle.currentActor.giftedAttributes[i].receiver.attributes.Remove(battle.currentActor.giftedAttributes[i].attribute);
                 }
             }
             return true;

@@ -12,6 +12,7 @@ namespace TurnBasedFeest.Actors
         public string name;
         public Vector2 position;
         public Health health;
+        public List<GivenAttribute> giftedAttributes = new List<GivenAttribute>();
         public List<IAttribute> attributes = new List<IAttribute>();
         public List<IAction> actions;
         public List<ITurnEvent> battleEvents;

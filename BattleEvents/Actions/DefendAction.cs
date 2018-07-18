@@ -34,8 +34,9 @@ namespace TurnBasedFeest.BattleEvents.Actions
             
             if (elapsedTime >= eventTime)
             {
-                target.attributes.RemoveAll(x => x.GetType() == typeof(DefendAttribute));
-                target.attributes.Add(new DefendAttribute());
+                IAttribute newAttribute = new DefendAttribute(source);
+                source.giftedAttributes.Add(new GivenAttribute(newAttribute.GetExpiration(), newAttribute, target));
+                target.attributes.Add(newAttribute);
                 target.health.color = Color.White;
                 battle.currentActor.battleEvents.RemoveAt(battle.eventIndex);
                 battle.eventIndex--;
