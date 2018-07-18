@@ -30,6 +30,9 @@ namespace TurnBasedFeest.GameEvents.Battle
             {
                 actors.FindAll(x => !x.isPlayer)[i].position = new Vector2(Game1.screenWidth - 50 - 0.2f * Game1.screenWidth, 0.1f * Game1.screenHeight + (i + 1) * parseDistanceEnemies);
             }
+
+            // update the health bar for if players for example got healed during another event
+            actors.ForEach(x => x.Update());
         }
 
         public bool Update(Game1 game, Input input)

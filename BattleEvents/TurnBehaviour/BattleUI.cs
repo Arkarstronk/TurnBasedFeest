@@ -7,6 +7,7 @@ using TurnBasedFeest.BattleEvents.Actions;
 
 namespace TurnBasedFeest.BattleEvents.TurnBehaviour
 {
+    // todo: refactor this with multiple choice events
     class BattleUI : ITurnEvent
     {
         public enum state

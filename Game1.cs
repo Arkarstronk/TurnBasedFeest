@@ -67,8 +67,7 @@ namespace TurnBasedFeest
             var actorPlaceHolderTexture = factory.GetTexture("actor");
             actors = new List<Actor> {
                     new Actor("Ari", Color.Red, 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, actorPlaceHolderTexture, new BattleUI(), true),
-                    new Actor("Zino", Color.Blue, 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, actorPlaceHolderTexture, new BattleUI(), true),
-                    new Actor("Slettebak", Color.Green, 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, actorPlaceHolderTexture, new BattleUI(), true)
+                    new Actor("Zino", Color.Blue, 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, actorPlaceHolderTexture, new BattleUI(), true)
 
             };
 

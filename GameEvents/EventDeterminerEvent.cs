@@ -66,12 +66,16 @@ namespace TurnBasedFeest.GameEvents
         {
             int random = Game1.rnd.Next(100);
              
-            if(random < 100)
+            if(random < 50)
             {
                 game.actors.Add(new Actor("RandomName1", Color.White, Game1.rnd.Next(50, 100), new List<IAction> { new AttackAction() }, TextureFactory.Instance.GetTexture("actor"), new EfficientRandomAI(), false));
                 game.actors.Add(new Actor("RandomName2", Color.White, Game1.rnd.Next(50, 100), new List<IAction> { new AttackAction() }, TextureFactory.Instance.GetTexture("actor"), new EfficientRandomAI(), false));
                 nextEvent = new BattleEvent();
-            }            
+            }
+            else
+            {
+                nextEvent = new RestEvent();
+            }
         }
 
         private void SetHardcodedEvent(string hardcodedEvent)
