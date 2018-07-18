@@ -65,11 +65,11 @@ namespace TurnBasedFeest.GameEvents
         private void setRandomEvent()
         {
             int random = Game1.rnd.Next(100);
-
+             
             if(random < 100)
             {
-                game.actors.Add(new Actor("RandomName1", Game1.rnd.Next(50, 100), new List<IAction> { new AttackAction() }, TextureFactory.Instance.GetTexture("actor"), new EfficientRandomAI(), false));
-                game.actors.Add(new Actor("RandomName2", Game1.rnd.Next(50, 100), new List<IAction> { new AttackAction() }, TextureFactory.Instance.GetTexture("actor"), new EfficientRandomAI(), false));
+                game.actors.Add(new Actor("RandomName1", Color.White, Game1.rnd.Next(50, 100), new List<IAction> { new AttackAction() }, TextureFactory.Instance.GetTexture("actor"), new EfficientRandomAI(), false));
+                game.actors.Add(new Actor("RandomName2", Color.White, Game1.rnd.Next(50, 100), new List<IAction> { new AttackAction() }, TextureFactory.Instance.GetTexture("actor"), new EfficientRandomAI(), false));
                 nextEvent = new BattleEvent();
             }            
         }

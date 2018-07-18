@@ -20,7 +20,7 @@ namespace TurnBasedFeest.Attributes
         {
             rectangle.X = (int)position.X;
             rectangle.Y = (int)position.Y - 30;
-            spritebatch.Draw(icon, rectangle , Color.Violet);
+            spritebatch.Draw(icon, rectangle , gifter.color);
         }
 
         public float GetDamageMultiplier()
