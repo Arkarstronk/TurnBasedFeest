@@ -11,10 +11,12 @@ using TurnBasedFeest.Utilities;
 
 namespace TurnBasedFeest.BattleEvents.Battle
 {
+
+    // This class handles the AI actions
     class BattleEventAI : BattleEvent
     {
         private BattleContainer battle;
-        private IAction randomAction;
+        private ITurnEvent action;        
 
         public void Initialize(BattleContainer battle)
         {
@@ -24,11 +26,11 @@ namespace TurnBasedFeest.BattleEvents.Battle
             var actions = battle.CurrentActor.GetActions();
 
             // Choose a random action
-            randomAction = actions[Game1.rnd.Next(actions.Count)];
+            IAction action = actions[Game1.rnd.Next(actions.Count)];
 
             // Get the possible targets
             List<Actor> possibleTargets;
-            if (randomAction.IsSupportive())
+            if (action.IsSupportive())
             {
                 possibleTargets = battle.GetAliveActors().FindAll(x => !x.isPlayer);
             }
@@ -41,23 +43,29 @@ namespace TurnBasedFeest.BattleEvents.Battle
             Actor randomActor = possibleTargets[Game1.rnd.Next(possibleTargets.Count)];
 
 
-            randomAction.SetActors(battle.CurrentActor, randomActor);
-            randomAction.Initialize();
+            action.SetActors(battle.CurrentActor, randomActor);
+            action.Initialize();
+
+            this.action = action;
         }
 
         public void Draw(SpriteBatch batch, SpriteFont font)
         {
-            randomAction.Draw(battle, batch, font);   
+            action.Draw(battle, batch, font);   
         }
 
         public void Update(GameTime gameTime, Input input)
         {
-            randomAction.Update(battle, gameTime, input);
+            action.Update(battle, gameTime, input);
         }
 
         public bool HasCompleted()
         {
-            return randomAction.HasCompleted();
+            if (action.HasCompleted() && action is IContinueableAction && (action as IContinueableAction).HasNextEvent())
+            {
+                action = (action as IContinueableAction).NextEvent() ?? action;
+            }
+            return action.HasCompleted();
         }
 
     }

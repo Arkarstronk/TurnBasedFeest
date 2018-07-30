@@ -63,10 +63,32 @@ namespace TurnBasedFeest.GameEvents
         private void setRandomEvent()
         {
             int random = Game1.rnd.Next(100);
-             
-            // With 80% probability, start a battle.
-            if(random <= 80)
+
+            // With 50% probability, start a boss battle.
+            if (random <= 20)
             {
+                List<Actor> actors = new List<Actor>();
+                actors.AddRange(game.heroes);
+
+                var enemySprite = CustomSprite.GetSprite("actor", SpriteDirection.LEFT);
+                var stats = new Stats(1000, new List<IAction> {
+                    new AttackAction(),
+                    new DefendAction(),
+                    new HealAction()
+                })
+                .SetStat(StatisticAttribute.ATTACK, 100)
+                .SetStat(StatisticAttribute.DEFENCE, 30)
+                .SetStat(StatisticAttribute.SUPPORT_MAGIC, 3)
+                .SetStat(StatisticAttribute.SPEED, 20);
+                var actor = new Actor($"Battle Gorilla", Color.Red, stats, enemySprite, new BattleEventAI(), false);
+                actors.Add(actor);
+
+
+                nextScreen = new BattleScreen(game, actors);
+            }
+            else if (random <= 80)
+            {
+                // With 80% probability, start a boss battle.
                 List<Actor> actors = new List<Actor>();
                 actors.AddRange(game.heroes);
                 for (int i = 0; i < Game1.rnd.Next(2) + 1; i++)
@@ -76,12 +98,12 @@ namespace TurnBasedFeest.GameEvents
                     var actor = new Actor($"Battle Monkey {i + 1}", Color.Red, stats, enemySprite, new BattleEventAI(), false);
                     actors.Add(actor);
                 }
-                
+
                 nextScreen = new BattleScreen(game, actors);
             }
             else
             {
-                nextScreen = new RestScreen(game, game.heroes);                
+                nextScreen = new RestScreen(game, game.heroes);
             }
         }
 

@@ -7,7 +7,7 @@ using System;
 
 namespace TurnBasedFeest.BattleEvents.Actions
 {
-    class AttackAction : IAction, ContinueableAction
+    class AttackAction : IAction, IContinueableAction
     {
         int eventTime = 1000;
         int elapsedTime;
@@ -30,7 +30,8 @@ namespace TurnBasedFeest.BattleEvents.Actions
         public void Initialize()
         {
             beginHP = (int)target.Health.CurrentHealth;
-            elapsedTime = 0;            
+            elapsedTime = 0;
+            damage = 0;
 
             int attack = source.GetStats()[StatisticAttribute.ATTACK];
             int defence = target.GetStats()[StatisticAttribute.DEFENCE];
@@ -67,8 +68,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
                 // Calculate a chance to hit the target based on a log
                 // If the source is faster than target, chance to hit should be higher
                 // and vice versa
-                hitChance = ((difference) / 140.0) * 0.87 + 0.6;
-                Console.WriteLine($"hit: {hitChance}, diff: {difference}");
+                hitChance = ((difference) / 140.0) * 0.87 + 0.6;             
             }
 
             
@@ -85,16 +85,24 @@ namespace TurnBasedFeest.BattleEvents.Actions
                 {
                     status = $"{source.Name} used {GetName()}";
                 }
-
-                damage = Math.Max(1, attack - defence);
                 
+                damage = Math.Max(1, attack - defence);
+
+                double randomDamageRange = 0.2;
+                double damageMultiplier = (Game1.rnd.NextDouble()) * randomDamageRange + (1 - randomDamageRange / 2);
+                Console.WriteLine($"Multiplier: {damageMultiplier}");
+                damage = Math.Max(1, (int)(damage * damageMultiplier));
+
+
+                targetHP = (int)((beginHP - damage <= 0) ? 0 : (beginHP - damage));
+                target.Health.SetColor(Color.DarkRed);
             } else
             {
+                damage = 0;
                 status = $"{source.Name} used {GetName()} and missed!";
+                target.Health.SetColor(Color.CornflowerBlue);
+                targetHP = beginHP;
             }
-
-            targetHP = (int) ((target.Health.CurrentHealth - damage <= 0) ? 0 : (target.Health.CurrentHealth - damage));
-            target.Health.SetColor(Color.DarkRed);
         }
 
         public void Update(BattleContainer battle, GameTime gameTime, Input input)        

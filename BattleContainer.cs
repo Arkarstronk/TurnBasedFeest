@@ -16,8 +16,7 @@ namespace TurnBasedFeest
     {
         public Actor CurrentActor;
         
-        private List<Actor> actors;
-        private IEnumerator<Actor> cyclicActorList;
+        private List<Actor> actors;        
         private Queue<BattleEvent> battleEvents = new Queue<BattleEvent>();
         private BattleEvent CurrentEvent => battleEvents.Peek();
         private String splashText = "A new fight awaits~!";
@@ -31,17 +30,13 @@ namespace TurnBasedFeest
 
         private BattleContainer(List<Actor> actors)
         {
-            cyclicActorList = GetCyclicAutorList();
             this.actors = actors;
             this.actors.ForEach(x =>
             {
-                x.Initialize();                
+                x.Initialize();
             });
 
             calculateDistances(actors);
-
-            NextActor();
-            CurrentActor.OnTurnStart();
         }
 
         public void Enqueue(BattleEvent nextEvent)
@@ -81,8 +76,7 @@ namespace TurnBasedFeest
 
                 // Take from the queue if the event is completed.
                 if (currentEvent.HasCompleted())
-                {
-                    Console.WriteLine("yo?");
+                {                    
                     battleEvents.Dequeue();
                 }
             } else
@@ -137,16 +131,39 @@ namespace TurnBasedFeest
                 actor.attributes.RemoveAll(x => true);
                 actor.HandedOutAttributes.RemoveAll(x => true);
             }
+
+            actors = new List<Actor>();
         }
 
         private Actor NextActor()
         {
-            this.CurrentActor = cyclicActorList.Current;
-            cyclicActorList.MoveNext();
-            return this.CurrentActor;
+            // Check if there are actors alive
+            var aliveActors = GetAliveActors();
+            if (aliveActors.Count == 0)
+            {
+                CurrentActor = null;             
+            } else
+            {
+                List<Actor> actorsWithTurn = aliveActors.FindAll(x => x.hasTurn);
+
+                
+
+                // if all the actors have done their turn
+                if (actorsWithTurn.Count == 0)
+                {
+                    aliveActors.ForEach(x => x.hasTurn = true);
+                    CurrentActor = aliveActors[0];
+                } else
+                {                    
+                    CurrentActor = actorsWithTurn[0];
+                }
+
+                CurrentActor.hasTurn = false;                
+            }
+            return CurrentActor;
         }
 
-        private IEnumerator<Actor> GetCyclicAutorList()
+        /*private IEnumerator<Actor> GetCyclicAutorList()
         {
             while(true)
             {
@@ -155,12 +172,12 @@ namespace TurnBasedFeest
                     yield return null;
                 }
 
-                foreach(Actor actor in this.actors)
+                foreach(Actor actor in this.actors.FindAll(x => x.IsAlive()))
                 {
                     yield return actor;
                 }
             }
-        }
+        }*/
 
         public enum Victors
         {
@@ -169,6 +186,12 @@ namespace TurnBasedFeest
 
         public Victors GetVictors()
         {
+            // If there is still events to be processed, we are not done yet then.
+            if (battleEvents.Count > 0)
+            {
+                return Victors.NONE;
+            }
+
             if (actors.FindAll(x => x.isPlayer).TrueForAll(x => !x.IsAlive()))
             {
                 return Victors.ENEMY;

@@ -59,7 +59,7 @@
     <Compile Include="BattleEvents\BattleEventAI.cs" />
     <Compile Include="BattleEvents\BattleEventSelection.cs" />
     <Compile Include="BattleEvents\BattleEvent.cs" />
-    <Compile Include="BattleEvents\Actions\ContinueableAction.cs" />
+    <Compile Include="BattleEvents\Actions\IContinueableAction.cs" />
     <Compile Include="UI\RestScreen.cs" />
     <Compile Include="UI\WelcomeScreen.cs" />
     <Compile Include="UI\MultipleChoiceEvent.cs" />
@@ -130,9 +130,7 @@
     </None>
     <None Include="app.manifest" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="GameEvents\Battle\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -8,9 +8,6 @@ namespace TurnBasedFeest.BattleEvents.Actions
 {
     class DefendAction : IAction
     {
-
-        ITurnEvent nextEvent;
-
         int eventTime = 1000;
         int elapsedTime;
         Actor source;

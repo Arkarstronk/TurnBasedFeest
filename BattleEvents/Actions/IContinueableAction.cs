@@ -1,6 +1,6 @@
 ﻿namespace TurnBasedFeest.BattleEvents.Actions
 {
-    interface ContinueableAction
+    interface IContinueableAction
     {
         bool HasNextEvent();
         ITurnEvent NextEvent();        

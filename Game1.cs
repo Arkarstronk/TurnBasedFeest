@@ -71,15 +71,15 @@ namespace TurnBasedFeest
             var actorPlaceHolderTexture = factory.GetTexture("actor");
 
             var AriStats = new Stats(100, new List<IAction> { new AttackAction(), new HealAction(), new DefendAction() })
-                .SetStat(StatisticAttribute.ATTACK, 60)
+                .SetStat(StatisticAttribute.ATTACK, 80)
                 .SetStat(StatisticAttribute.DEFENCE, 50)
-                .SetStat(StatisticAttribute.SPEED, 20)
+                .SetStat(StatisticAttribute.SPEED, 700)
                 .SetStat(StatisticAttribute.ATTACK_MAGIC, 90)
                 .SetStat(StatisticAttribute.SUPPORT_MAGIC, 5);
             var ZinoStats = new Stats(100, new List<IAction> { new AttackAction(), new HealAction(), new DefendAction() })
-                .SetStat(StatisticAttribute.ATTACK, 10)
-                .SetStat(StatisticAttribute.DEFENCE, 40)
-                .SetStat(StatisticAttribute.SPEED, 70)
+                .SetStat(StatisticAttribute.ATTACK, 80)
+                .SetStat(StatisticAttribute.DEFENCE, 50)
+                .SetStat(StatisticAttribute.SPEED, 700)
                 .SetStat(StatisticAttribute.ATTACK_MAGIC, 10)
                 .SetStat(StatisticAttribute.SUPPORT_MAGIC, 30);
 

@@ -14,8 +14,6 @@ namespace TurnBasedFeest.BattleEvents.Battle
     public enum Targets { ENEMY, FRIENDLY }
     class BattleEventSelection : BattleEvent
     {
-        
-
         private BattleContainer battle;
         private MultipleChoiceUI multipleChoiceEvent;
         private bool hasCompleted;
@@ -82,7 +80,7 @@ namespace TurnBasedFeest.BattleEvents.Battle
 
             this.hasCompleted = false;            
             this.battle = battle;            
-            this.multipleChoiceEvent = new MultipleChoiceUI(possibleActions.Select(x => x.GetName()).ToList());
+            this.multipleChoiceEvent = new MultipleChoiceUI(possibleActions.Select(x => x.GetName()).ToList());            
         }
 
         public void Update(GameTime gameTime, Input input)
@@ -198,8 +196,7 @@ namespace TurnBasedFeest.BattleEvents.Battle
         }
 
         public void Initialize(BattleContainer battle)
-        {
-            Console.WriteLine($"Attacking: {target.Name}");
+        {            
             this.battle = battle;            
             this.action.Initialize();            
         }
@@ -207,6 +204,8 @@ namespace TurnBasedFeest.BattleEvents.Battle
         public void Draw(SpriteBatch batch, SpriteFont font)
         {
             this.action.Draw(battle, batch, font);
+
+            batch.DrawString(font, action.ToString(), new Vector2(200, 15), Color.Red);
         }
 
         public void Update(GameTime gameTime, Input input)
@@ -218,9 +217,9 @@ namespace TurnBasedFeest.BattleEvents.Battle
 
         public bool HasCompleted()
         {
-            if (action.HasCompleted() && action is ContinueableAction && (action as ContinueableAction).HasNextEvent())
+            if (action.HasCompleted() && action is IContinueableAction && (action as IContinueableAction).HasNextEvent())
             {
-                action = (action as ContinueableAction).NextEvent() ?? action;
+                action = (action as IContinueableAction).NextEvent() ?? action;
             }
             return action.HasCompleted();
         }
