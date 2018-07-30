@@ -2,7 +2,6 @@
 using TurnBasedFeest.Actors;
 using Microsoft.Xna.Framework.Graphics;
 using TurnBasedFeest.Utilities;
-using TurnBasedFeest.GameEvents.Battle;
 using TurnBasedFeest.Attributes;
 
 namespace TurnBasedFeest.BattleEvents.Actions
@@ -48,7 +47,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
             if (HasCompleted())
             {
                 IAttribute newAttribute = new DefendAttribute(source);
-                source.giftedAttributes.Add(new GivenAttribute(newAttribute.GetExpiration(), newAttribute, target));
+                source.HandedOutAttributes.Add(new GivenAttribute(newAttribute.GetExpiration(), newAttribute, target));
                 target.attributes.Add(newAttribute);
                 target.Health.SetColor(Color.White);                
 

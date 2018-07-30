@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using TurnBasedFeest.Attributes;
 using TurnBasedFeest.BattleEvents;
 using TurnBasedFeest.BattleEvents.Actions;
-using TurnBasedFeest.GameEvents.Battle;
+using TurnBasedFeest.BattleEvents.Battle;
 using TurnBasedFeest.Graphics;
 
 namespace TurnBasedFeest.Actors
@@ -18,7 +18,7 @@ namespace TurnBasedFeest.Actors
         public string Name;
         public Vector2 Position;
         public Health Health;
-        public List<GivenAttribute> giftedAttributes = new List<GivenAttribute>();
+        public List<GivenAttribute> HandedOutAttributes = new List<GivenAttribute>();
         public List<IAttribute> attributes = new List<IAttribute>();
         //public List<IAction> actions;
         //public List<ITurnEvent> battleEvents;
@@ -42,11 +42,19 @@ namespace TurnBasedFeest.Actors
             this.isPlayer = isPlayer;
         }
 
-        
-
         public void Initialize()
         {
             hasTurn = true;
+        }
+
+        // The actor starts its turn here
+        public void OnTurnStart()
+        {
+            // Handle attributes expiration
+            HandedOutAttributes.ForEach(x => x.Expiration--);
+            HandedOutAttributes.FindAll(x => x.Expiration <= 0).ForEach(x => {
+                x.receiver.attributes.Remove(x.attribute);
+            });
         }
 
         public void Update(GameTime gameTime)

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TurnBasedFeest.Actors;
-using TurnBasedFeest.GameEvents.Battle;
+using TurnBasedFeest.BattleEvents.Battle;
 using TurnBasedFeest.Utilities;
 
 namespace TurnBasedFeest
@@ -41,7 +41,7 @@ namespace TurnBasedFeest
             calculateDistances(actors);
 
             NextActor();
-            Console.WriteLine(CurrentActor);
+            CurrentActor.OnTurnStart();
         }
 
         public void Enqueue(BattleEvent nextEvent)
@@ -135,7 +135,7 @@ namespace TurnBasedFeest
             foreach (Actor actor in actors)
             {
                 actor.attributes.RemoveAll(x => true);
-                actor.giftedAttributes.RemoveAll(x => true);
+                actor.HandedOutAttributes.RemoveAll(x => true);
             }
         }
 

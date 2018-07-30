@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using TurnBasedFeest.GameEvents.Battle;
 using TurnBasedFeest.Utilities;
 using TurnBasedFeest.Actors;
 using Microsoft.Xna.Framework;
@@ -30,7 +29,7 @@ namespace TurnBasedFeest.BattleEvents
 
             if (HasCompleted())
             {
-                deceased.giftedAttributes.ForEach(x => x.receiver.attributes.Remove(x.attribute));
+                deceased.HandedOutAttributes.ForEach(x => x.receiver.attributes.Remove(x.attribute));
             }
         }
 

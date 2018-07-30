@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TurnBasedFeest.Utilities;
 
-namespace TurnBasedFeest.GameEvents.Battle
+namespace TurnBasedFeest.BattleEvents.Battle
 {
     interface BattleEvent
     {

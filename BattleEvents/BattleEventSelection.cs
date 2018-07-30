@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TurnBasedFeest.Actors;
-using TurnBasedFeest.BattleEvents;
 using TurnBasedFeest.BattleEvents.Actions;
 using TurnBasedFeest.UI;
 using TurnBasedFeest.Utilities;
 
-namespace TurnBasedFeest.GameEvents.Battle
+namespace TurnBasedFeest.BattleEvents.Battle
 {
     public enum Targets { ENEMY, FRIENDLY }
     class BattleEventSelection : BattleEvent

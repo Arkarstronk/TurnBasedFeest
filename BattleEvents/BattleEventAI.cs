@@ -9,7 +9,7 @@ using TurnBasedFeest.Actors;
 using TurnBasedFeest.BattleEvents.Actions;
 using TurnBasedFeest.Utilities;
 
-namespace TurnBasedFeest.GameEvents.Battle
+namespace TurnBasedFeest.BattleEvents.Battle
 {
     class BattleEventAI : BattleEvent
     {

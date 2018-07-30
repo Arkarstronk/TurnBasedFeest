@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using TurnBasedFeest.GameEvents.Battle;
 using TurnBasedFeest.Utilities;
 
 namespace TurnBasedFeest.BattleEvents

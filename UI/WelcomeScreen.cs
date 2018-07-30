@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using TurnBasedFeest.Graphics;
 using TurnBasedFeest.UI;
-using TurnBasedFeest.GameEvents.Battle;
+using TurnBasedFeest.BattleEvents.Battle;
 
 namespace TurnBasedFeest.GameEvents
 {

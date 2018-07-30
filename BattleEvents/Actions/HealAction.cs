@@ -2,7 +2,6 @@
 using TurnBasedFeest.Actors;
 using TurnBasedFeest.Utilities;
 using Microsoft.Xna.Framework.Graphics;
-using TurnBasedFeest.GameEvents.Battle;
 
 namespace TurnBasedFeest.BattleEvents.Actions
 {
