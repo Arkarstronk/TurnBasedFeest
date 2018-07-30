@@ -73,6 +73,7 @@ namespace TurnBasedFeest
 
         public void Update(GameTime gameTime, Input input)
         {
+            // Handle the battle events
             if (battleEvents.Count > 0)
             {
                 BattleEvent currentEvent = battleEvents.Peek();
@@ -94,6 +95,10 @@ namespace TurnBasedFeest
                 battleEvents.Enqueue(nextEvent);
                 //throw new NotImplementedException("Battle events need to be populized");
             }
+
+            // Update all the actors
+            actors.ForEach(x => x.Update(gameTime));
+
         }
 
         public void Draw(SpriteBatch batch, SpriteFont font)

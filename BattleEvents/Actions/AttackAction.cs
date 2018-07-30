@@ -8,7 +8,7 @@ using System;
 
 namespace TurnBasedFeest.BattleEvents.Actions
 {
-    class AttackAction : IAction
+    class AttackAction : IAction, ContinueableAction
     {
         int eventTime = 1000;
         int elapsedTime;
@@ -18,6 +18,8 @@ namespace TurnBasedFeest.BattleEvents.Actions
         int targetHP;
         int damage;
 
+
+        private ITurnEvent nextEvent = null;
         private string status;
 
         public void SetActors(Actor source, Actor target)
@@ -73,6 +75,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
             
             if (Game1.rnd.NextDouble() <= hitChance)
             {
+                target.Health.Shake = true;
                 isCritical = Game1.rnd.NextDouble() >= 0.9;
 
                 if (isCritical)
@@ -92,7 +95,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
             }
 
             targetHP = (int) ((target.Health.CurrentHealth - damage <= 0) ? 0 : (target.Health.CurrentHealth - damage));
-            target.Health.SetColor(Color.Yellow);
+            target.Health.SetColor(Color.DarkRed);
         }
 
         public void Update(BattleContainer battle, GameTime gameTime, Input input)        
@@ -106,12 +109,12 @@ namespace TurnBasedFeest.BattleEvents.Actions
             {
                 target.Health.SetColor(Color.White);                
                 target.Health.CurrentHealth = targetHP;
+                target.Health.Shake = false;
 
-                /*//if this attack killed its target
-                if (target.health.CurrentHealth == 0)
+                if (!target.IsAlive())
                 {
-                    battle.CurrentActor.battleEvents.Insert(battle.eventIndex + 1, new DeathEvent(target));
-                */
+                    nextEvent = new DeathEvent(target);
+                }
             }            
         }
 
@@ -133,6 +136,15 @@ namespace TurnBasedFeest.BattleEvents.Actions
         public bool HasCompleted()
         {
             return elapsedTime >= eventTime;
+        }
+
+        public bool HasNextEvent()
+        {
+            return nextEvent != null;
+        }
+        public ITurnEvent NextEvent()
+        {
+            return nextEvent;
         }
     }
 }

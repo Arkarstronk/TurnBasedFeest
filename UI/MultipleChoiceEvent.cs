@@ -6,14 +6,14 @@ using TurnBasedFeest.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace TurnBasedFeest.GameEvents.UI
+namespace TurnBasedFeest.UI
 {
-    class MultipleChoiceEvent
+    class MultipleChoiceUI
     {
         List<string> choices;
         int index;
 
-        public MultipleChoiceEvent(List<string> choices)
+        public MultipleChoiceUI(List<string> choices)
         {
             this.choices = choices;
         }

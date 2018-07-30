@@ -9,6 +9,9 @@ namespace TurnBasedFeest.BattleEvents.Actions
 {
     class DefendAction : IAction
     {
+
+        ITurnEvent nextEvent;
+
         int eventTime = 1000;
         int elapsedTime;
         Actor source;
@@ -48,6 +51,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
                 source.giftedAttributes.Add(new GivenAttribute(newAttribute.GetExpiration(), newAttribute, target));
                 target.attributes.Add(newAttribute);
                 target.Health.SetColor(Color.White);                
+
             }            
         }
 

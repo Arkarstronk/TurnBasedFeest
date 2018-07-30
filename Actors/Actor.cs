@@ -13,6 +13,8 @@ namespace TurnBasedFeest.Actors
     class Actor
     {
         public BattleEvent StartEvent { get; }
+        public bool Shake { get; internal set; }
+
         public string Name;
         public Vector2 Position;
         public Health Health;
@@ -47,7 +49,7 @@ namespace TurnBasedFeest.Actors
             hasTurn = true;
         }
 
-        public void Update()
+        public void Update(GameTime gameTime)
         {
             Health.Update();   
         }

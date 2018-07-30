@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TurnBasedFeest.Actors;
 using TurnBasedFeest.GameEvents;
-using TurnBasedFeest.GameEvents.UI;
 using TurnBasedFeest.Utilities;
 
 namespace TurnBasedFeest.UI
@@ -17,13 +16,13 @@ namespace TurnBasedFeest.UI
     {
         private Game1 game;
         private List<Actor> heroes;
-        private MultipleChoiceEvent choice;
+        private MultipleChoiceUI choice;
 
         public RestScreen(Game1 game, List<Actor> heroes)
         {            
             this.game = game;
             this.heroes = heroes;
-            this.choice = new MultipleChoiceEvent(new List<string> { "Rest", "Explore area" });
+            this.choice = new MultipleChoiceUI(new List<string> { "Rest", "Explore area" });
         }
 
         public void Initialize()
