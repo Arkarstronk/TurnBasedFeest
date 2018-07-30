@@ -14,7 +14,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
         Actor target;
         int beginHP;
         int targetHP;
-        int heal = 20;
+        int heal = 0;
 
         public void SetActors(Actor source, Actor target)
         {
@@ -25,6 +25,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
         public void Initialize()
         {
             elapsedTime = 0;
+            heal = source.GetStats()[StatisticAttribute.SUPPORT_MAGIC];
             beginHP = (int)target.health.CurrentHealth;
             targetHP = (int)((target.health.CurrentHealth + heal >= target.health.MaxHealth) ? target.health.MaxHealth : (target.health.CurrentHealth + heal));
             target.health.color = Color.Green;
@@ -43,7 +44,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
                 target.health.CurrentHealth = targetHP;
                 target.health.color = Color.White;
 
-                battle.currentActor.battleEvents.RemoveAt(battle.eventIndex);
+                battle.CurrentActor.battleEvents.RemoveAt(battle.eventIndex);
                 battle.eventIndex--;
                 return true;
             }

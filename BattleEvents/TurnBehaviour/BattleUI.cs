@@ -54,14 +54,14 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
                                 break;
                         }                        
                     }
-                    battle.battle.battleText = $"What will {battle.currentActor.name} do?";
+                    battle.battle.battleText = $"What will {battle.CurrentActor.name} do?";
                     break;
                 case state.FIGHT:
-                    Navigation(input, ref actionIndex, battle.currentActor.actions.FindAll(x => !x.IsSupportive()).Count);
+                    Navigation(input, ref actionIndex, battle.CurrentActor.GetActions().FindAll(x => !x.IsSupportive()).Count);
 
                     if (input.Pressed(Keys.Enter))
                     {
-                        chosenAction = battle.currentActor.actions.FindAll(x => !x.IsSupportive())[actionIndex];
+                        chosenAction = battle.CurrentActor.GetActions().FindAll(x => !x.IsSupportive())[actionIndex];
                         currentState = state.TARGET;
                     }
                     if (input.Pressed(Keys.Back))
@@ -70,14 +70,14 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
                         chosenAction = null;
                         actionIndex = 0;
                     }
-                    battle.battle.battleText = $"How will {battle.currentActor.name} fight?";
+                    battle.battle.battleText = $"How will {battle.CurrentActor.name} fight?";
                     break;
                 case state.SUPPORT:
-                    Navigation(input, ref actionIndex, battle.currentActor.actions.FindAll(x => x.IsSupportive()).Count);
+                    Navigation(input, ref actionIndex, battle.CurrentActor.GetActions().FindAll(x => x.IsSupportive()).Count);
 
                     if (input.Pressed(Keys.Enter))
                     {
-                        chosenAction = battle.currentActor.actions.FindAll(x => x.IsSupportive())[actionIndex];
+                        chosenAction = battle.CurrentActor.GetActions().FindAll(x => x.IsSupportive())[actionIndex];
                         currentState = state.TARGET;
                     }
                     if (input.Pressed(Keys.Back))
@@ -86,7 +86,7 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
                         chosenAction = null;
                         actionIndex = 0;
                     }
-                    battle.battle.battleText = $"How will {battle.currentActor.name} support?";
+                    battle.battle.battleText = $"How will {battle.CurrentActor.name} support?";
                     break;
                 case state.TARGET:
                     Navigation(input, ref targetIndex, chosenAction.IsSupportive() ? battle.aliveActors.FindAll(x => x.isPlayer).Count : battle.aliveActors.FindAll(x => !x.isPlayer).Count);
@@ -104,8 +104,8 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
                     battle.battle.battleText = $"Select a target.";
                     break;
                 case state.FINISH:
-                    chosenAction.SetActors(battle.currentActor, chosenAction.IsSupportive() ? battle.aliveActors.FindAll(x => x.isPlayer)[targetIndex] : battle.aliveActors.FindAll(x => !x.isPlayer)[targetIndex]);
-                    battle.currentActor.battleEvents.Insert(battle.eventIndex + 1, chosenAction);
+                    chosenAction.SetActors(battle.CurrentActor, chosenAction.IsSupportive() ? battle.aliveActors.FindAll(x => x.isPlayer)[targetIndex] : battle.aliveActors.FindAll(x => !x.isPlayer)[targetIndex]);
+                    battle.CurrentActor.battleEvents.Insert(battle.eventIndex + 1, chosenAction);
                     return true;
             }
             return false;
@@ -119,17 +119,17 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
 
             if (currentState == state.FIGHT)
             {
-                for (int i = 0; i < battle.currentActor.actions.FindAll(x => !x.IsSupportive()).Count; i++)
+                for (int i = 0; i < battle.CurrentActor.GetActions().FindAll(x => !x.IsSupportive()).Count; i++)
                 {
-                    spritebatch.DrawString(font, battle.currentActor.actions.FindAll(x => !x.IsSupportive())[i].GetName(), new Vector2(Game1.screenWidth * 0.5f, Game1.screenHeight * 0.6f) + new Vector2(0, 20 * i), (i == actionIndex ? Color.Yellow : Color.White));
+                    spritebatch.DrawString(font, battle.CurrentActor.GetActions().FindAll(x => !x.IsSupportive())[i].GetName(), new Vector2(Game1.screenWidth * 0.5f, Game1.screenHeight * 0.6f) + new Vector2(0, 20 * i), (i == actionIndex ? Color.Yellow : Color.White));
                 }
             }
 
             if (currentState == state.SUPPORT)
             {
-                for (int i = 0; i < battle.currentActor.actions.FindAll(x => x.IsSupportive()).Count; i++)
+                for (int i = 0; i < battle.CurrentActor.GetActions().FindAll(x => x.IsSupportive()).Count; i++)
                 {
-                    spritebatch.DrawString(font, battle.currentActor.actions.FindAll(x => x.IsSupportive())[i].GetName(), new Vector2(Game1.screenWidth * 0.5f, Game1.screenHeight * 0.6f) + new Vector2(0, 20 * i), (i == actionIndex ? Color.Yellow : Color.White));
+                    spritebatch.DrawString(font, battle.CurrentActor.GetActions().FindAll(x => x.IsSupportive())[i].GetName(), new Vector2(Game1.screenWidth * 0.5f, Game1.screenHeight * 0.6f) + new Vector2(0, 20 * i), (i == actionIndex ? Color.Yellow : Color.White));
                 }
             }
 
@@ -137,9 +137,9 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
             {
                 if (chosenAction.IsSupportive())
                 {
-                    for (int i = 0; i < battle.currentActor.actions.FindAll(x => x.IsSupportive()).Count; i++)
+                    for (int i = 0; i < battle.CurrentActor.GetActions().FindAll(x => x.IsSupportive()).Count; i++)
                     {
-                        spritebatch.DrawString(font, battle.currentActor.actions.FindAll(x => x.IsSupportive())[i].GetName(), new Vector2(Game1.screenWidth * 0.5f, Game1.screenHeight * 0.6f) + new Vector2(0, 20 * i), (i == actionIndex ? Color.Yellow : Color.White));
+                        spritebatch.DrawString(font, battle.CurrentActor.GetActions().FindAll(x => x.IsSupportive())[i].GetName(), new Vector2(Game1.screenWidth * 0.5f, Game1.screenHeight * 0.6f) + new Vector2(0, 20 * i), (i == actionIndex ? Color.Yellow : Color.White));
                     }
 
                     for (int i = 0; i < battle.aliveActors.FindAll(x => x.isPlayer).Count; i++)
@@ -149,9 +149,9 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
                 }
                 else
                 {
-                    for (int i = 0; i < battle.currentActor.actions.FindAll(x => !x.IsSupportive()).Count; i++)
+                    for (int i = 0; i < battle.CurrentActor.GetActions().FindAll(x => !x.IsSupportive()).Count; i++)
                     {
-                        spritebatch.DrawString(font, battle.currentActor.actions.FindAll(x => !x.IsSupportive())[i].GetName(), new Vector2(Game1.screenWidth * 0.5f, Game1.screenHeight * 0.6f) + new Vector2(0, 20 * i), (i == actionIndex ? Color.Yellow : Color.White));
+                        spritebatch.DrawString(font, battle.CurrentActor.GetActions().FindAll(x => !x.IsSupportive())[i].GetName(), new Vector2(Game1.screenWidth * 0.5f, Game1.screenHeight * 0.6f) + new Vector2(0, 20 * i), (i == actionIndex ? Color.Yellow : Color.White));
                     }
 
                     for (int i = 0; i < battle.aliveActors.FindAll(x => !x.isPlayer).Count; i++)

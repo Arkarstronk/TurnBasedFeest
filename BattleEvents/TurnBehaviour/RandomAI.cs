@@ -17,12 +17,17 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
 
         public bool Update(BattleTurnEvent battle, Input input)
         {
-            IAction randomAction = battle.currentActor.actions[Game1.rnd.Next(battle.currentActor.actions.Count)];
+            // Get a random action
+            var actions = battle.CurrentActor.GetActions();
+            IAction randomAction = actions[Game1.rnd.Next(actions.Count)];
+
+            // Get a random target
             List<Actor> possibleTargets = battle.aliveActors;
             Actor randomActor = possibleTargets[Game1.rnd.Next(possibleTargets.Count)];
-            randomAction.SetActors(battle.currentActor, randomActor);
 
-            battle.currentActor.battleEvents.Insert(battle.eventIndex + 1, randomAction);
+            randomAction.SetActors(battle.CurrentActor, randomActor);
+
+            battle.CurrentActor.battleEvents.Insert(battle.eventIndex + 1, randomAction);
 
             return true;
         } 

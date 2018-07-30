@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using TurnBasedFeest.Attributes;
 using TurnBasedFeest.BattleEvents;
@@ -14,20 +15,20 @@ namespace TurnBasedFeest.Actors
         public Health health;
         public List<GivenAttribute> giftedAttributes = new List<GivenAttribute>();
         public List<IAttribute> attributes = new List<IAttribute>();
-        public List<IAction> actions;
+        //public List<IAction> actions;
         public List<ITurnEvent> battleEvents;
         public bool hasTurn;
         public bool isPlayer;
         public Color color;
-
+        private Stats stats;
         private Texture2D texture;
 
-        public Actor(string name, Color color, int maxHealth, List<IAction> actions, Texture2D texture, ITurnEvent behaviourEvent, bool isPlayer)
+        public Actor(string name, Color color, Stats stats, Texture2D texture, ITurnEvent behaviourEvent, bool isPlayer)
         {
             this.name = name;
             this.color = color;
-            this.health = new Health(maxHealth);
-            this.actions = actions;
+            this.stats = stats;
+            this.health = new Health(stats.MaxHealth);
             this.texture = texture;
             battleEvents = new List<ITurnEvent> { new AttributeEvent(), behaviourEvent };
             this.isPlayer = isPlayer;
@@ -62,6 +63,16 @@ namespace TurnBasedFeest.Actors
             {
                 spritebatch.Draw(texture, position, null, Color.White, 0, new Vector2(), new Vector2(1,1), SpriteEffects.FlipHorizontally, 0);
             }               
+        }
+
+        public List<IAction> GetActions()
+        {
+            return stats.Actions;
+        }
+
+        public Stats GetStats()
+        {
+            return this.stats;
         }
     }
 }

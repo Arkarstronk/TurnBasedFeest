@@ -23,9 +23,14 @@ namespace TurnBasedFeest.Attributes
             spritebatch.Draw(icon, rectangle , gifter.color);
         }
 
-        public float GetDamageMultiplier()
+        public float GetAddition()
         {
-            return 0.25f;
+            return 0.0f;
+        }
+
+        public float GetMultiplier()
+        {
+            return 1.5f;
         }
 
         public int GetExpiration()

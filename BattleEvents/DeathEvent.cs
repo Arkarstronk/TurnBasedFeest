@@ -35,13 +35,13 @@ namespace TurnBasedFeest.BattleEvents
 
                 deceased.giftedAttributes.ForEach(x => x.receiver.attributes.Remove(x.attribute));                
 
-                battle.currentActor.battleEvents.RemoveAt(battle.eventIndex);
+                battle.CurrentActor.battleEvents.RemoveAt(battle.eventIndex);
                 battle.eventIndex--;
 
                 // if the current player dies during his turn
-                if (battle.currentActor == deceased)
+                if (battle.CurrentActor == deceased)
                 {
-                    battle.currentActor = battle.getNextActor();
+                    battle.CurrentActor = battle.getNextActor();
                     // There is no event after the current actors death, therefore we dont want to signal that we should go to the next event
                     return false;
                 }

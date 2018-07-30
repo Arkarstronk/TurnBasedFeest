@@ -43,6 +43,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Actors\Actor.cs" />
+    <Compile Include="Actors\Stats.cs" />
     <Compile Include="Attributes\DefendAttribute.cs" />
     <Compile Include="Attributes\GivenAttribute.cs" />
     <Compile Include="Attributes\IAttribute.cs" />
