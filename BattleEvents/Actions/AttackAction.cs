@@ -92,7 +92,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
             }
 
             targetHP = (int) ((target.health.CurrentHealth - damage <= 0) ? 0 : (target.health.CurrentHealth - damage));
-            target.health.color = Color.Yellow;
+            target.health.SetColor(Color.Yellow);
         }
 
         public bool Update(BattleTurnEvent battle, Input input)
@@ -104,7 +104,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
 
             if (elapsedTime >= eventTime)
             {
-                target.health.color = Color.White;
+                target.health.SetColor(Color.White);                
                 target.health.CurrentHealth = targetHP;
 
                 //if this attack killed its target

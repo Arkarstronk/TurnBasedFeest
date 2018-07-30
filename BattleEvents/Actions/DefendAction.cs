@@ -22,8 +22,8 @@ namespace TurnBasedFeest.BattleEvents.Actions
 
         public void Initialize()
         {
-            elapsedTime = 0;
-            this.target.health.color = Color.Violet;
+            elapsedTime = 0;            
+            target.health.SetColor(Color.Violet);
         }
 
         public bool Update(BattleTurnEvent battle, Input input)
@@ -37,7 +37,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
                 IAttribute newAttribute = new DefendAttribute(source);
                 source.giftedAttributes.Add(new GivenAttribute(newAttribute.GetExpiration(), newAttribute, target));
                 target.attributes.Add(newAttribute);
-                target.health.color = Color.White;
+                target.health.SetColor(Color.White);
                 battle.CurrentActor.battleEvents.RemoveAt(battle.eventIndex);
                 battle.eventIndex--;
                 return true;

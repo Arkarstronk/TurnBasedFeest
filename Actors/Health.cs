@@ -7,8 +7,8 @@ namespace TurnBasedFeest.Actors
     {
         public int MaxHealth;
         public float CurrentHealth;
-        public Color color = Color.White;
 
+        private Color color = Color.White;
         private Rectangle HealthBar;
         private Texture2D texture;
 
@@ -33,6 +33,11 @@ namespace TurnBasedFeest.Actors
             spritebatch.Draw(texture, HealthBar, color);
 
             spritebatch.DrawString(font, $"{((int) CurrentHealth).ToString()} / {((int)MaxHealth).ToString()}", position + new Vector2(0, -70), color);
+        }
+
+        public void SetColor(Color color)
+        {
+            this.color = color;
         }
 
     }

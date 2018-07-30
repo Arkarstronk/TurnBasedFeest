@@ -80,10 +80,11 @@ namespace TurnBasedFeest
                 .SetStat(StatisticAttribute.ATTACK_MAGIC, 10)
                 .SetStat(StatisticAttribute.SUPPORT_MAGIC, 30); ;
 
-            var heroSprite = CustomSprite.GetSprite("actor");
+            var ariSprite = CustomSprite.GetSprite("actor");
+            var zinoSprite = CustomSprite.GetSprite("actor");
             actors = new List<Actor> {
-                    new Actor("Ari", Color.Red, AriStats, heroSprite, new BattleUI(), true),
-                    new Actor("Zino", Color.Blue, ZinoStats, heroSprite, new BattleUI(), true)
+                    new Actor("Ari", Color.Red, AriStats, ariSprite, new BattleUI(), true),
+                    new Actor("Zino", Color.Blue, ZinoStats, zinoSprite, new BattleUI(), true)
             };
 
             eventCounter = 0;

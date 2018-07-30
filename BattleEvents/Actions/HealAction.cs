@@ -27,8 +27,8 @@ namespace TurnBasedFeest.BattleEvents.Actions
             elapsedTime = 0;
             heal = source.GetStats()[StatisticAttribute.SUPPORT_MAGIC];
             beginHP = (int)target.health.CurrentHealth;
-            targetHP = (int)((target.health.CurrentHealth + heal >= target.health.MaxHealth) ? target.health.MaxHealth : (target.health.CurrentHealth + heal));
-            target.health.color = Color.Green;
+            targetHP = (int)((target.health.CurrentHealth + heal >= target.health.MaxHealth) ? target.health.MaxHealth : (target.health.CurrentHealth + heal));            
+            target.health.SetColor(Color.Green);
         }
 
         public bool Update(BattleTurnEvent battle, Input input)
@@ -42,7 +42,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
             if (elapsedTime >= eventTime)
             {
                 target.health.CurrentHealth = targetHP;
-                target.health.color = Color.White;
+                target.health.SetColor(Color.White);
 
                 battle.CurrentActor.battleEvents.RemoveAt(battle.eventIndex);
                 battle.eventIndex--;

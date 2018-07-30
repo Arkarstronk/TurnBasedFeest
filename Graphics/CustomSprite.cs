@@ -11,9 +11,11 @@ namespace TurnBasedFeest.Graphics
     class CustomSprite
     {
         private Texture2D texture;
-        private SpriteDirection direction;        
+        private SpriteDirection direction;
+        private Color color;
 
-        
+        public Rectangle scale;
+
         public static CustomSprite GetSprite(string name)
         {
             return new CustomSprite(TextureFactory.Instance.GetTexture(name), SpriteDirection.RIGHT);
@@ -26,19 +28,37 @@ namespace TurnBasedFeest.Graphics
 
         private CustomSprite(Texture2D texture, SpriteDirection direction)
         {
+            this.color = Color.White;
             this.texture = texture;
             this.direction = direction;
+            this.scale = new Rectangle(0, 0, 1, 1);
+        }
+
+        public void SetColor(Color color)
+        {
+            this.color = color;
+        }
+
+        public void Scale(int x, int y)
+        {
+            this.scale = new Rectangle(0, 0, x, y);
         }
 
         public void Draw(SpriteBatch batch, float x, float y)
         {
+            var rectangle = new Rectangle();
+            rectangle.X = (int)x;
+            rectangle.Y = (int)y;
+            rectangle.Width = texture.Width * scale.Width;
+            rectangle.Height = texture.Height * scale.Height;
+
             if (direction == SpriteDirection.RIGHT)
             {
-                batch.Draw(texture, new Vector2(x, y), Color.White);
+                batch.Draw(texture, rectangle, color);
             }
             else
             {
-                batch.Draw(texture, new Vector2(x, y), null, Color.White, 0, new Vector2(), new Vector2(1, 1), SpriteEffects.FlipHorizontally, 0);                
+                batch.Draw(texture, rectangle, null, color, 0, new Vector2(0, 0), SpriteEffects.FlipHorizontally, 0);                
             }            
         }
     }
