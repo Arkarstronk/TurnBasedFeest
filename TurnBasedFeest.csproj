@@ -47,6 +47,7 @@
     <Compile Include="Attributes\DefendAttribute.cs" />
     <Compile Include="Attributes\GivenAttribute.cs" />
     <Compile Include="Attributes\IAttribute.cs" />
+    <Compile Include="BattleContainer.cs" />
     <Compile Include="BattleEvents\AttributeEvent.cs" />
     <Compile Include="GameEvents\Battle\BattleBeginEvent.cs" />
     <Compile Include="GameEvents\Battle\BattleEndEvent.cs" />
@@ -61,10 +62,12 @@
     <Compile Include="BattleEvents\ITurnEvent.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameEvents\Battle\BattleEvent.cs" />
-    <Compile Include="GameEvents\EventDeterminerEvent.cs" />
+    <Compile Include="UI\RestScreen.cs" />
+    <Compile Include="UI\WelcomeScreen.cs" />
     <Compile Include="GameEvents\IGameEvent.cs" />
-    <Compile Include="GameEvents\RestEvent.cs" />
     <Compile Include="GameEvents\UI\MultipleChoiceEvent.cs" />
+    <Compile Include="UI\BattleScreen.cs" />
+    <Compile Include="UI\UIScreen.cs" />
     <Compile Include="Graphics\CustomSprite.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

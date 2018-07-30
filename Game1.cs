@@ -7,6 +7,7 @@ using TurnBasedFeest.BattleEvents.Actions;
 using TurnBasedFeest.BattleEvents.TurnBehaviour;
 using TurnBasedFeest.GameEvents;
 using TurnBasedFeest.Graphics;
+using TurnBasedFeest.UI;
 using TurnBasedFeest.Utilities;
 
 namespace TurnBasedFeest
@@ -31,7 +32,9 @@ namespace TurnBasedFeest
         public IGameEvent nextEvent;
         public Dictionary<int, string> hardcodedEvents = new Dictionary<int, string> { {100, "OnTurn100ThisStubEventTakesPlace" } };
 
-        public List<Actor> actors;
+        private UIScreen currentScreen;
+
+        public List<Actor> heroes;
 
         public Game1()
         {
@@ -78,18 +81,23 @@ namespace TurnBasedFeest
                 .SetStat(StatisticAttribute.DEFENCE, 40)
                 .SetStat(StatisticAttribute.SPEED, 70)
                 .SetStat(StatisticAttribute.ATTACK_MAGIC, 10)
-                .SetStat(StatisticAttribute.SUPPORT_MAGIC, 30); ;
+                .SetStat(StatisticAttribute.SUPPORT_MAGIC, 30);
 
             var ariSprite = CustomSprite.GetSprite("actor");
             var zinoSprite = CustomSprite.GetSprite("actor");
-            actors = new List<Actor> {
+            heroes = new List<Actor> {
                     new Actor("Ari", Color.Red, AriStats, ariSprite, new BattleUI(), true),
                     new Actor("Zino", Color.Blue, ZinoStats, zinoSprite, new BattleUI(), true)
             };
 
-            eventCounter = 0;
-            currentEvent = new EventDeterminerEvent(this);    
-            currentEvent.Initialize(actors);
+            eventCounter = 0;            
+            SetUIScreen(new WelcomeScreen(this));            
+        }
+
+        public void SetUIScreen(UIScreen screen)
+        {
+            this.currentScreen = screen;
+            screen.Initialize();
         }
 
         /// <summary>
@@ -117,7 +125,7 @@ namespace TurnBasedFeest
                 currentEvent = nextEvent;
                 nextEvent = null;
 
-                currentEvent.Initialize(actors);
+                currentEvent.Initialize(heroes);
             }
 
             base.Update(gameTime);

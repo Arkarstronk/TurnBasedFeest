@@ -35,6 +35,8 @@ namespace TurnBasedFeest.Actors
             this.isPlayer = isPlayer;
         }
 
+        
+
         public void Initialize()
         {
             hasTurn = true;
@@ -57,6 +59,11 @@ namespace TurnBasedFeest.Actors
             }
 
             sprite.Draw(spritebatch, position.X, position.Y);            
+        }
+
+        public bool IsAlive()
+        {
+            return health.CurrentHealth > 0;
         }
 
         public List<IAction> GetActions()

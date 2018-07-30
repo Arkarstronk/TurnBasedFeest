@@ -47,8 +47,8 @@ namespace TurnBasedFeest.GameEvents.Battle
                     // TODO: go to a loot event, or a level event or something like that
                     if (battle.aliveActors.TrueForAll(x => x.isPlayer))
                     {
-                        game.actors = battle.actors.FindAll(x => x.isPlayer);
-                        game.nextEvent = new EventDeterminerEvent(game);
+                        game.heroes = battle.actors.FindAll(x => x.isPlayer);
+                        game.nextEvent = new WelcomeScreen(game);
                     }
 
                     // TODO: go to a game-over event, which on its turn can go to a load-save event or a quit event

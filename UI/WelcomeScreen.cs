@@ -9,20 +9,21 @@ using TurnBasedFeest.BattleEvents.TurnBehaviour;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using TurnBasedFeest.Graphics;
+using TurnBasedFeest.UI;
 
 namespace TurnBasedFeest.GameEvents
 {
-    class EventDeterminerEvent : IGameEvent
+    class WelcomeScreen : UIScreen
     {
-        IGameEvent nextEvent;
+        UIScreen nextScreen;
         Game1 game;
 
-        public EventDeterminerEvent(Game1 game)
+        public WelcomeScreen(Game1 game)
         {
             this.game = game;
         }
 
-        public void Initialize(List<Actor> actors)
+        public void Initialize()
         {
             if(game.hardcodedEvents.Where(x => x.Key <= game.eventCounter).ToList().Count > 0)
             {
@@ -37,15 +38,12 @@ namespace TurnBasedFeest.GameEvents
             }
         }
 
-        public bool Update(Game1 game, Input input)
+        public void Update(Game1 game, Input input)
         {
             if (input.Pressed(Keys.Enter))
             {
-                game.nextEvent = nextEvent;
-                return true;
+                game.SetUIScreen(nextScreen);                
             }
-
-            return false;
         }
 
         public void Draw(SpriteBatch spritebatch, SpriteFont font)
@@ -67,21 +65,23 @@ namespace TurnBasedFeest.GameEvents
         {
             int random = Game1.rnd.Next(100);
              
-            if(random < 50)
+            // With 80% probability, start a battle.
+            if(random <= 80)
             {
+                List<Actor> actors = new List<Actor>();
                 for(int i = 0; i < Game1.rnd.Next(2) + 1; i++)
                 {
                     var enemySprite = CustomSprite.GetSprite("actor", SpriteDirection.LEFT);
-                    var stats = Stats.GetRandom(Game1.rnd.Next(50, 100), Game1.rnd.Next(40, 60), new List<IAction> { new AttackAction(), new DefendAction() });
+                    var stats = Stats.GetRandom(Game1.rnd.Next(50, 100), Game1.rnd.Next(10, 20), new List<IAction> { new AttackAction(), new DefendAction() });
                     var actor = new Actor($"Battle Monkey {i + 1}", Color.Red, stats, enemySprite, new EfficientRandomAI(), false);
-                    game.actors.Add(actor);
+                    actors.Add(actor);
                 }
-                
-                nextEvent = new BattleEvent();
+                actors.AddRange(game.heroes);
+                nextScreen = new BattleScreen(game, actors);
             }
             else
             {
-                nextEvent = new RestEvent();
+                nextScreen = new RestScreen(game, game.heroes);                
             }
         }
 
