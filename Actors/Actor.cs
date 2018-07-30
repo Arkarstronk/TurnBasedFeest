@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using TurnBasedFeest.Attributes;
 using TurnBasedFeest.BattleEvents;
 using TurnBasedFeest.BattleEvents.Actions;
+using TurnBasedFeest.Graphics;
 
 namespace TurnBasedFeest.Actors
 {
@@ -21,15 +22,15 @@ namespace TurnBasedFeest.Actors
         public bool isPlayer;
         public Color color;
         private Stats stats;
-        private Texture2D texture;
+        private CustomSprite sprite;
 
-        public Actor(string name, Color color, Stats stats, Texture2D texture, ITurnEvent behaviourEvent, bool isPlayer)
+        public Actor(string name, Color color, Stats stats, CustomSprite sprite, ITurnEvent behaviourEvent, bool isPlayer)
         {
             this.name = name;
             this.color = color;
             this.stats = stats;
             this.health = new Health(stats.MaxHealth);
-            this.texture = texture;
+            this.sprite = sprite;
             battleEvents = new List<ITurnEvent> { new AttributeEvent(), behaviourEvent };
             this.isPlayer = isPlayer;
         }
@@ -55,14 +56,7 @@ namespace TurnBasedFeest.Actors
                 attributes[i].Draw(spritebatch, font, position + new Vector2(i * 12, 0));
             }
 
-            if (isPlayer)
-            {
-                spritebatch.Draw(texture, position, Color.White);
-            }
-            else
-            {
-                spritebatch.Draw(texture, position, null, Color.White, 0, new Vector2(), new Vector2(1,1), SpriteEffects.FlipHorizontally, 0);
-            }               
+            sprite.Draw(spritebatch, position.X, position.Y);            
         }
 
         public List<IAction> GetActions()

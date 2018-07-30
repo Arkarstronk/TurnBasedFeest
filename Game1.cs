@@ -6,6 +6,7 @@ using TurnBasedFeest.Actors;
 using TurnBasedFeest.BattleEvents.Actions;
 using TurnBasedFeest.BattleEvents.TurnBehaviour;
 using TurnBasedFeest.GameEvents;
+using TurnBasedFeest.Graphics;
 using TurnBasedFeest.Utilities;
 
 namespace TurnBasedFeest
@@ -79,9 +80,10 @@ namespace TurnBasedFeest
                 .SetStat(StatisticAttribute.ATTACK_MAGIC, 10)
                 .SetStat(StatisticAttribute.SUPPORT_MAGIC, 30); ;
 
+            var heroSprite = CustomSprite.GetSprite("actor");
             actors = new List<Actor> {
-                    new Actor("Ari", Color.Red, AriStats, actorPlaceHolderTexture, new BattleUI(), true),
-                    new Actor("Zino", Color.Blue, ZinoStats, actorPlaceHolderTexture, new BattleUI(), true)
+                    new Actor("Ari", Color.Red, AriStats, heroSprite, new BattleUI(), true),
+                    new Actor("Zino", Color.Blue, ZinoStats, heroSprite, new BattleUI(), true)
             };
 
             eventCounter = 0;

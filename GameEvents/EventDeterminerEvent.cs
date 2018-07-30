@@ -8,6 +8,7 @@ using TurnBasedFeest.BattleEvents.Actions;
 using TurnBasedFeest.BattleEvents.TurnBehaviour;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using TurnBasedFeest.Graphics;
 
 namespace TurnBasedFeest.GameEvents
 {
@@ -70,8 +71,9 @@ namespace TurnBasedFeest.GameEvents
             {
                 for(int i = 0; i < Game1.rnd.Next(2) + 1; i++)
                 {
+                    var enemySprite = CustomSprite.GetSprite("actor", SpriteDirection.LEFT);
                     var stats = Stats.GetRandom(Game1.rnd.Next(50, 100), Game1.rnd.Next(40, 60), new List<IAction> { new AttackAction(), new DefendAction() });
-                    var actor = new Actor($"Battle Monkey {i + 1}", Color.Red, stats, TextureFactory.Instance.GetTexture("actor"), new EfficientRandomAI(), false);
+                    var actor = new Actor($"Battle Monkey {i + 1}", Color.Red, stats, enemySprite, new EfficientRandomAI(), false);
                     game.actors.Add(actor);
                 }
                 
