@@ -49,8 +49,6 @@
     <Compile Include="Attributes\IAttribute.cs" />
     <Compile Include="BattleContainer.cs" />
     <Compile Include="BattleEvents\AttributeEvent.cs" />
-    <Compile Include="GameEvents\Battle\BattleBeginEvent.cs" />
-    <Compile Include="GameEvents\Battle\BattleEndEvent.cs" />
     <Compile Include="BattleEvents\DeathEvent.cs" />
     <Compile Include="BattleEvents\TurnBehaviour\EfficientRandomAI.cs" />
     <Compile Include="BattleEvents\TurnBehaviour\RandomAI.cs" />
@@ -61,6 +59,8 @@
     <Compile Include="BattleEvents\Actions\DefendAction.cs" />
     <Compile Include="BattleEvents\ITurnEvent.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="GameEvents\Battle\BattleEventAI.cs" />
+    <Compile Include="GameEvents\Battle\BattleEventSelection.cs" />
     <Compile Include="GameEvents\Battle\BattleEvent.cs" />
     <Compile Include="UI\RestScreen.cs" />
     <Compile Include="UI\WelcomeScreen.cs" />
@@ -71,7 +71,6 @@
     <Compile Include="Graphics\CustomSprite.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="GameEvents\Battle\BattleTurnEvent.cs" />
     <Compile Include="BattleEvents\TurnBehaviour\BattleUI.cs" />
     <Compile Include="TextureFactory.cs" />
     <Compile Include="Utilities\Input.cs" />

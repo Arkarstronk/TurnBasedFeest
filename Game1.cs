@@ -4,8 +4,8 @@ using System;
 using System.Collections.Generic;
 using TurnBasedFeest.Actors;
 using TurnBasedFeest.BattleEvents.Actions;
-using TurnBasedFeest.BattleEvents.TurnBehaviour;
 using TurnBasedFeest.GameEvents;
+using TurnBasedFeest.GameEvents.Battle;
 using TurnBasedFeest.Graphics;
 using TurnBasedFeest.UI;
 using TurnBasedFeest.Utilities;
@@ -27,9 +27,9 @@ namespace TurnBasedFeest
         public static int screenHeight = 720;
 
         public int eventCounter;
-        public IGameEvent previousEvent;
-        public IGameEvent currentEvent;
-        public IGameEvent nextEvent;
+        //public IGameEvent previousEvent;
+        //public IGameEvent currentEvent;
+        //public IGameEvent nextEvent;
         public Dictionary<int, string> hardcodedEvents = new Dictionary<int, string> { {100, "OnTurn100ThisStubEventTakesPlace" } };
 
         private UIScreen currentScreen;
@@ -86,8 +86,8 @@ namespace TurnBasedFeest
             var ariSprite = CustomSprite.GetSprite("actor");
             var zinoSprite = CustomSprite.GetSprite("actor");
             heroes = new List<Actor> {
-                    new Actor("Ari", Color.Red, AriStats, ariSprite, new BattleUI(), true),
-                    new Actor("Zino", Color.Blue, ZinoStats, zinoSprite, new BattleUI(), true)
+                    new Actor("Ari", Color.Red, AriStats, ariSprite, new BattleEventSelection(), true),
+                    new Actor("Zino", Color.Blue, ZinoStats, zinoSprite, new BattleEventSelection(), true)
             };
 
             eventCounter = 0;            
@@ -118,15 +118,16 @@ namespace TurnBasedFeest
         {
             time = gameTime;
             input.Update();
+            currentScreen.Update(gameTime, input);
 
-            if (currentEvent.Update(this, input))
+            /*if (currentEvent.Update(this, input))
             {
                 previousEvent = currentEvent;
                 currentEvent = nextEvent;
                 nextEvent = null;
 
                 currentEvent.Initialize(heroes);
-            }
+            }*/
 
             base.Update(gameTime);
         }
@@ -139,9 +140,9 @@ namespace TurnBasedFeest
         {
             GraphicsDevice.Clear(Color.Black);            
             spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            
-            currentEvent.Draw(spriteBatch, font);
 
+            //currentEvent.Draw(spriteBatch, font);
+            currentScreen.Draw(spriteBatch, font);
             spriteBatch.End();
             base.Draw(gameTime);
         }

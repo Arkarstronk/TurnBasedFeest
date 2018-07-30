@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using TurnBasedFeest.GameEvents.Battle;
 using TurnBasedFeest.Utilities;
 
@@ -7,7 +8,8 @@ namespace TurnBasedFeest.BattleEvents
     interface ITurnEvent
     {
         void Initialize();
-        bool Update(BattleTurnEvent battle, Input input);
-        void Draw(BattleTurnEvent battle, SpriteBatch spritebatch, SpriteFont font);
+        void Update(BattleContainer battle, GameTime gameTime, Input input);
+        void Draw(BattleContainer battle, SpriteBatch spritebatch, SpriteFont font);
+        bool HasCompleted();
     }
 }

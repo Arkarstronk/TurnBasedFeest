@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿/*using Microsoft.Xna.Framework.Input;
 using TurnBasedFeest.Utilities;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
@@ -35,7 +35,7 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
             chosenAction = null;
         }
 
-        public bool Update(BattleTurnEvent battle, Input input)
+        public void Update(BattleTurnEvent battle, Input input)
         {
             switch (currentState)
             {
@@ -188,3 +188,4 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
         }
     }
 }
+*/

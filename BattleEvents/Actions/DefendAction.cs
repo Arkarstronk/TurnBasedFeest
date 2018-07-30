@@ -23,29 +23,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
         public void Initialize()
         {
             elapsedTime = 0;            
-            target.health.SetColor(Color.Violet);
-        }
-
-        public bool Update(BattleTurnEvent battle, Input input)
-        {
-            battle.PushTextUpdate($"{source.name} used {GetName()}");
-
-            elapsedTime += (int) Game1.time.ElapsedGameTime.TotalMilliseconds;
-            
-            if (elapsedTime >= eventTime)
-            {
-                IAttribute newAttribute = new DefendAttribute(source);
-                source.giftedAttributes.Add(new GivenAttribute(newAttribute.GetExpiration(), newAttribute, target));
-                target.attributes.Add(newAttribute);
-                target.health.SetColor(Color.White);
-                battle.CurrentActor.battleEvents.RemoveAt(battle.eventIndex);
-                battle.eventIndex--;
-                return true;
-            }
-            else
-            {
-                return false;
-            }            
+            target.Health.SetColor(Color.Violet);
         }
 
         public string GetName()
@@ -58,8 +36,28 @@ namespace TurnBasedFeest.BattleEvents.Actions
             return true;
         }
 
-        public void Draw(BattleTurnEvent battle, SpriteBatch spritebatch, SpriteFont font)
+        public void Update(BattleContainer battle, GameTime gameTime, Input input)
         {
+            battle.PushSplashText($"{source.Name} used {GetName()}");
+
+            elapsedTime += (int)Game1.time.ElapsedGameTime.TotalMilliseconds;
+
+            if (HasCompleted())
+            {
+                IAttribute newAttribute = new DefendAttribute(source);
+                source.giftedAttributes.Add(new GivenAttribute(newAttribute.GetExpiration(), newAttribute, target));
+                target.attributes.Add(newAttribute);
+                target.Health.SetColor(Color.White);                
+            }            
+        }
+
+        public void Draw(BattleContainer battle, SpriteBatch spritebatch, SpriteFont font)
+        {         
+        }
+
+        public bool HasCompleted()
+        {
+            return elapsedTime >= eventTime;
         }
     }
 }

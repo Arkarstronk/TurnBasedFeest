@@ -18,7 +18,7 @@ namespace TurnBasedFeest.GameEvents.UI
             this.choices = choices;
         }
 
-        public int Update(Game1 game, Input input)
+        public int Update(GameTime gameTime, Input input)
         {
             //move index
             if (input.Pressed(Keys.Down))

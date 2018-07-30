@@ -28,7 +28,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
 
         public void Initialize()
         {
-            beginHP = (int)target.health.CurrentHealth;
+            beginHP = (int)target.Health.CurrentHealth;
             elapsedTime = 0;            
 
             int attack = source.GetStats()[StatisticAttribute.ATTACK];
@@ -77,65 +77,62 @@ namespace TurnBasedFeest.BattleEvents.Actions
 
                 if (isCritical)
                 {
-                    status = $"{source.name} used {GetName()}, Critical!";
+                    status = $"{source.Name} used {GetName()}, Critical!";
                     attack = (int)((damage + 1) * 1.5);
                 } else
                 {
-                    status = $"{source.name} used {GetName()}";
+                    status = $"{source.Name} used {GetName()}";
                 }
 
                 damage = Math.Max(1, attack - defence);
                 
             } else
             {
-                status = $"{source.name} used {GetName()} and missed!";
+                status = $"{source.Name} used {GetName()} and missed!";
             }
 
-            targetHP = (int) ((target.health.CurrentHealth - damage <= 0) ? 0 : (target.health.CurrentHealth - damage));
-            target.health.SetColor(Color.Yellow);
+            targetHP = (int) ((target.Health.CurrentHealth - damage <= 0) ? 0 : (target.Health.CurrentHealth - damage));
+            target.Health.SetColor(Color.Yellow);
         }
 
-        public bool Update(BattleTurnEvent battle, Input input)
-        {            
-            battle.PushTextUpdate(status);
+        public void Update(BattleContainer battle, GameTime gameTime, Input input)        
+        {               
+            battle.PushSplashText(status);
             elapsedTime += (int)Game1.time.ElapsedGameTime.TotalMilliseconds;
 
-            target.health.CurrentHealth = MathHelper.SmoothStep(beginHP, targetHP, (elapsedTime / (float)eventTime));
+            target.Health.CurrentHealth = MathHelper.SmoothStep(beginHP, targetHP, (elapsedTime / (float)eventTime));
 
-            if (elapsedTime >= eventTime)
+            if (HasCompleted())
             {
-                target.health.SetColor(Color.White);                
-                target.health.CurrentHealth = targetHP;
+                target.Health.SetColor(Color.White);                
+                target.Health.CurrentHealth = targetHP;
 
-                //if this attack killed its target
+                /*//if this attack killed its target
                 if (target.health.CurrentHealth == 0)
                 {
                     battle.CurrentActor.battleEvents.Insert(battle.eventIndex + 1, new DeathEvent(target));
-                }                
-
-                battle.CurrentActor.battleEvents.RemoveAt(battle.eventIndex);
-                battle.eventIndex--;
-                return true;
-            }
-            else
-            {
-                return false;
+                */
             }            
         }
 
         public string GetName()
         {
             return "Attack";
-        }
-
-        public void Draw(BattleTurnEvent battle, SpriteBatch spritebatch, SpriteFont font)
-        {
-            spritebatch.DrawString(font, damage.ToString(), target.position + new Vector2(0, -(elapsedTime / (float) eventTime) * 50 + 20), Color.White, 0, new Vector2(), 2, SpriteEffects.None, 1);
-        }
+        }        
 
         public bool IsSupportive()
         {
             return false;
+        }
+
+        public void Draw(BattleContainer battle, SpriteBatch spritebatch, SpriteFont font)
+        {
+            spritebatch.DrawString(font, damage.ToString(), target.Position + new Vector2(0, -(elapsedTime / (float)eventTime) * 50 + 20), Color.White, 0, new Vector2(), 2, SpriteEffects.None, 1);
+        }
+
+        public bool HasCompleted()
+        {
+            return elapsedTime >= eventTime;
         }
     }
 }

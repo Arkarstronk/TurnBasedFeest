@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace TurnBasedFeest.UI
     interface UIScreen
     {        
         void Initialize();
-        void Update(Game1 game, Input input);
+        void Update(GameTime game, Input input);
         void Draw(SpriteBatch spritebatch, SpriteFont font);
     }
 }

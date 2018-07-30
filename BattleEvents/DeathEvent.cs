@@ -22,39 +22,25 @@ namespace TurnBasedFeest.BattleEvents
             elapsedTime = 0;
         }
 
-        public bool Update(BattleTurnEvent battle, Input input)
+        public void Update(BattleContainer battle, GameTime gameTime, Input input)
         {
-            battle.PushTextUpdate($"{deceased.name} is critically wounded.");
+            battle.PushSplashText($"{deceased.Name} is critically wounded.");
 
             elapsedTime += (int)Game1.time.ElapsedGameTime.TotalMilliseconds;
 
-            if (elapsedTime >= eventTime)
+            if (HasCompleted())
             {
-                // potentially an extreme small amount of chance to cause an innocent bug if actors do not have to be unique
-                battle.aliveActors.Remove(deceased);
-
-                deceased.giftedAttributes.ForEach(x => x.receiver.attributes.Remove(x.attribute));                
-
-                battle.CurrentActor.battleEvents.RemoveAt(battle.eventIndex);
-                battle.eventIndex--;
-
-                // if the current player dies during his turn
-                if (battle.CurrentActor == deceased)
-                {
-                    battle.CurrentActor = battle.getNextActor();
-                    // There is no event after the current actors death, therefore we dont want to signal that we should go to the next event
-                    return false;
-                }
-
-                return true;
+                deceased.giftedAttributes.ForEach(x => x.receiver.attributes.Remove(x.attribute));
             }
-
-            return false;
         }
 
-        public void Draw(BattleTurnEvent battle, SpriteBatch spritebatch, SpriteFont font)
+        public void Draw(BattleContainer battle, SpriteBatch spritebatch, SpriteFont font)
         {
         }
 
+        public bool HasCompleted()
+        {
+            return elapsedTime >= eventTime;
+        }
     }
 }

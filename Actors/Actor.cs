@@ -5,33 +5,38 @@ using System.Collections.Generic;
 using TurnBasedFeest.Attributes;
 using TurnBasedFeest.BattleEvents;
 using TurnBasedFeest.BattleEvents.Actions;
+using TurnBasedFeest.GameEvents.Battle;
 using TurnBasedFeest.Graphics;
 
 namespace TurnBasedFeest.Actors
 {
     class Actor
     {
-        public string name;
-        public Vector2 position;
-        public Health health;
+        public BattleEvent StartEvent { get; }
+        public string Name;
+        public Vector2 Position;
+        public Health Health;
         public List<GivenAttribute> giftedAttributes = new List<GivenAttribute>();
         public List<IAttribute> attributes = new List<IAttribute>();
         //public List<IAction> actions;
-        public List<ITurnEvent> battleEvents;
+        //public List<ITurnEvent> battleEvents;
         public bool hasTurn;
         public bool isPlayer;
         public Color color;
         private Stats stats;
         private CustomSprite sprite;
 
-        public Actor(string name, Color color, Stats stats, CustomSprite sprite, ITurnEvent behaviourEvent, bool isPlayer)
+        
+
+        public Actor(string name, Color color, Stats stats, CustomSprite sprite, BattleEvent behaviourEvent, bool isPlayer)
         {
-            this.name = name;
+            this.Name = name;
             this.color = color;
             this.stats = stats;
-            this.health = new Health(stats.MaxHealth);
+            this.Health = new Health(stats.MaxHealth);
             this.sprite = sprite;
-            battleEvents = new List<ITurnEvent> { new AttributeEvent(), behaviourEvent };
+            this.StartEvent = behaviourEvent;
+            //battleEvents = new List<ITurnEvent> { new AttributeEvent(), behaviourEvent };
             this.isPlayer = isPlayer;
         }
 
@@ -44,26 +49,26 @@ namespace TurnBasedFeest.Actors
 
         public void Update()
         {
-            health.Update();   
+            Health.Update();   
         }
 
         public void Draw(SpriteBatch spritebatch, SpriteFont font)
         {
             // TODO: do not hardcode offset size            
-            spritebatch.DrawString(font, name, position + new Vector2(0,-90), Color.White);            
-            health.Draw(spritebatch, position, font);
+            spritebatch.DrawString(font, Name, Position + new Vector2(0,-90), Color.White);            
+            Health.Draw(spritebatch, Position, font);
 
             for (int i = 0; i < attributes.Count; i++)
             {
-                attributes[i].Draw(spritebatch, font, position + new Vector2(i * 12, 0));
+                attributes[i].Draw(spritebatch, font, Position + new Vector2(i * 12, 0));
             }
 
-            sprite.Draw(spritebatch, position.X, position.Y);            
+            sprite.Draw(spritebatch, Position.X, Position.Y);            
         }
 
         public bool IsAlive()
         {
-            return health.CurrentHealth > 0;
+            return Health.CurrentHealth > 0;
         }
 
         public List<IAction> GetActions()

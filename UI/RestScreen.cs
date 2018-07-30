@@ -30,18 +30,18 @@ namespace TurnBasedFeest.UI
         {            
         }
         
-        public void Update(Game1 game, Input input)
+        public void Update(GameTime gameTime, Input input)
         {
-            int choiceIndex = choice.Update(game, input);
+            int choiceIndex = choice.Update(gameTime, input);
             if (choiceIndex >= 0)
             {
                 switch (choiceIndex)
                 {
                     case 0:
                         heroes.ForEach(x => {
-                            x.health.CurrentHealth = x.health.MaxHealth;
+                            x.Health.CurrentHealth = x.Health.MaxHealth;
                         });
-                        game.SetUIScreen(new RestScreen(game, heroes));
+                        game.SetUIScreen(new WelcomeScreen(game));
                         break;
                     case 1:
                         // get some loot or exp with some chance
