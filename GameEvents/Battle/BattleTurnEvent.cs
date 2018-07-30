@@ -8,7 +8,7 @@ namespace TurnBasedFeest.GameEvents.Battle
 {
     class BattleTurnEvent : IGameEvent
     {
-        public BattleEvent battle;
+        private BattleEvent battle;
         public List<Actor> allActors;
         public List<Actor> aliveActors;
         public Actor CurrentActor;
@@ -56,6 +56,11 @@ namespace TurnBasedFeest.GameEvents.Battle
                 return true;
             }
             return false;
+        }
+
+        public void PushTextUpdate(string text)
+        {
+            this.battle.battleText = text;
         }
 
         public void Draw(SpriteBatch spritebatch, SpriteFont font)

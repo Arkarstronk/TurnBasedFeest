@@ -54,7 +54,7 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
                                 break;
                         }                        
                     }
-                    battle.battle.battleText = $"What will {battle.CurrentActor.name} do?";
+                    battle.PushTextUpdate($"What will {battle.CurrentActor.name} do?");
                     break;
                 case state.FIGHT:
                     Navigation(input, ref actionIndex, battle.CurrentActor.GetActions().FindAll(x => !x.IsSupportive()).Count);
@@ -70,7 +70,7 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
                         chosenAction = null;
                         actionIndex = 0;
                     }
-                    battle.battle.battleText = $"How will {battle.CurrentActor.name} fight?";
+                    battle.PushTextUpdate($"How will {battle.CurrentActor.name} fight?");
                     break;
                 case state.SUPPORT:
                     Navigation(input, ref actionIndex, battle.CurrentActor.GetActions().FindAll(x => x.IsSupportive()).Count);
@@ -86,7 +86,7 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
                         chosenAction = null;
                         actionIndex = 0;
                     }
-                    battle.battle.battleText = $"How will {battle.CurrentActor.name} support?";
+                    battle.PushTextUpdate($"How will {battle.CurrentActor.name} support?");
                     break;
                 case state.TARGET:
                     Navigation(input, ref targetIndex, chosenAction.IsSupportive() ? battle.aliveActors.FindAll(x => x.isPlayer).Count : battle.aliveActors.FindAll(x => !x.isPlayer).Count);
@@ -101,7 +101,7 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
                         targetIndex = 0;
                     }
 
-                    battle.battle.battleText = $"Select a target.";
+                    battle.PushTextUpdate($"Select a target.");
                     break;
                 case state.FINISH:
                     chosenAction.SetActors(battle.CurrentActor, chosenAction.IsSupportive() ? battle.aliveActors.FindAll(x => x.isPlayer)[targetIndex] : battle.aliveActors.FindAll(x => !x.isPlayer)[targetIndex]);

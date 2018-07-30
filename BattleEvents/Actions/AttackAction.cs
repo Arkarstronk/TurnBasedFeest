@@ -96,8 +96,8 @@ namespace TurnBasedFeest.BattleEvents.Actions
         }
 
         public bool Update(BattleTurnEvent battle, Input input)
-        {
-            battle.battle.battleText = status;
+        {            
+            battle.PushTextUpdate(status);
             elapsedTime += (int)Game1.time.ElapsedGameTime.TotalMilliseconds;
 
             target.health.CurrentHealth = MathHelper.SmoothStep(beginHP, targetHP, (elapsedTime / (float)eventTime));

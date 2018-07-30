@@ -28,7 +28,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
 
         public bool Update(BattleTurnEvent battle, Input input)
         {
-            battle.battle.battleText = $"{source.name} used {GetName()}";
+            battle.PushTextUpdate($"{source.name} used {GetName()}");
 
             elapsedTime += (int) Game1.time.ElapsedGameTime.TotalMilliseconds;
             

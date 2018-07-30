@@ -24,7 +24,7 @@ namespace TurnBasedFeest.BattleEvents
 
         public bool Update(BattleTurnEvent battle, Input input)
         {
-            battle.battle.battleText = $"{deceased.name} is critically wounded.";
+            battle.PushTextUpdate($"{deceased.name} is critically wounded.");
 
             elapsedTime += (int)Game1.time.ElapsedGameTime.TotalMilliseconds;
 
