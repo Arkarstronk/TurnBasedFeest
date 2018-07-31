@@ -21,10 +21,10 @@ namespace TurnBasedFeest.BattleEvents.Actions
         private ITurnEvent nextEvent = null;
         private string status;
 
-        public void SetActors(Actor source, Actor target)
+        public void SetActors(Actor source, params Actor[] target)
         {
             this.source = source;
-            this.target = target;
+            this.target = target[0];
         }
 
         public void Initialize()
@@ -33,16 +33,10 @@ namespace TurnBasedFeest.BattleEvents.Actions
             elapsedTime = 0;
             damage = 0;
 
-            int attack = source.GetStats()[StatisticAttribute.ATTACK];
-            int defence = target.GetStats()[StatisticAttribute.DEFENCE];
-            int sourceSpeed = source.GetStats()[StatisticAttribute.SPEED];
-            int targetSpeed = target.GetStats()[StatisticAttribute.SPEED];
-
-
-            foreach (IAttribute attribute in target.Attributes.FindAll(x => x.GetAttributeType() == attributeType.INCOMING))
-            {
-                defence = (int) (defence * attribute.GetMultiplier()) + (int)attribute.GetAddition();
-            }
+            int attack = source.GetStats()[StatisticAttribute.ATTACK, source.Attributes];            
+            int sourceSpeed = source.GetStats()[StatisticAttribute.SPEED, source.Attributes];
+            int targetSpeed = target.GetStats()[StatisticAttribute.SPEED, target.Attributes];
+            int defence = target.GetStats()[StatisticAttribute.DEFENCE, target.Attributes];            
 
             // Using attack, defence, source and target speeds.
             // Basically, if the target is too fast it is unlikely to hit. But if the source is way faster, critical!
@@ -80,7 +74,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
                 if (isCritical)
                 {
                     status = $"{source.Name} used {GetName()}, Critical!";
-                    attack = (int)((damage + 1) * 1.5);
+                    attack = (int)((attack + 2) * 1.5);
                 } else
                 {
                     status = $"{source.Name} used {GetName()}";

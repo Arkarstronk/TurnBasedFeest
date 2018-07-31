@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TurnBasedFeest.Attributes;
 using TurnBasedFeest.BattleEvents.Actions;
 
 namespace TurnBasedFeest.Actors
@@ -15,6 +16,23 @@ namespace TurnBasedFeest.Actors
         public List<IAction> Actions;
         private Dictionary<StatisticAttribute, int> stats;
         
+        public int this[StatisticAttribute key, List<IAttribute> attributes]
+        {
+            get
+            {
+                if (stats.ContainsKey(key))
+                {
+                    var applicableAttributes = attributes.Where(x => x.getStatistic() == key);
+                    float multiplied = applicableAttributes.Select(x => x.GetMultiplier()).Aggregate((float)stats[key], (acc, x) => acc * x);
+                    float added = applicableAttributes.Select(x => x.GetAddition()).Sum();
+                    return (int)(multiplied + added);
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }
         public int this[StatisticAttribute key]
         {
             get

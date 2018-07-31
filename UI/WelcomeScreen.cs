@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Input;
 using TurnBasedFeest.Graphics;
 using TurnBasedFeest.UI;
 using TurnBasedFeest.BattleEvents.Battle;
+using TurnBasedFeest.BattleEvents.Gorilla;
 
 namespace TurnBasedFeest.GameEvents
 {
@@ -65,12 +66,13 @@ namespace TurnBasedFeest.GameEvents
             int random = Game1.rnd.Next(100);
 
             // With 50% probability, start a boss battle.
-            if (random <= 20)
+            if (random <= 50)
             {
                 List<Actor> actors = new List<Actor>();
                 actors.AddRange(game.heroes);
 
-                var enemySprite = CustomSprite.GetSprite("actor", SpriteDirection.LEFT);
+                var enemySprite = CustomSprite.GetSprite("monkey", SpriteDirection.LEFT);
+                enemySprite.Scale(4, 5);
                 var stats = new Stats(1000, new List<IAction> {
                     new AttackAction(),
                     new DefendAction(),
@@ -78,9 +80,10 @@ namespace TurnBasedFeest.GameEvents
                 })
                 .SetStat(StatisticAttribute.ATTACK, 100)
                 .SetStat(StatisticAttribute.DEFENCE, 30)
-                .SetStat(StatisticAttribute.SUPPORT_MAGIC, 3)
+                .SetStat(StatisticAttribute.SUPPORT_MAGIC, 10)
+                .SetStat(StatisticAttribute.ATTACK_MAGIC, 20)
                 .SetStat(StatisticAttribute.SPEED, 20);
-                var actor = new Actor($"Battle Gorilla", Color.Red, stats, enemySprite, new BattleEventAI(), false);
+                var actor = new Actor($"Battle Gorilla", Color.Red, stats, enemySprite, new GorillaAI(), false);
                 actors.Add(actor);
 
 
@@ -93,7 +96,8 @@ namespace TurnBasedFeest.GameEvents
                 actors.AddRange(game.heroes);
                 for (int i = 0; i < Game1.rnd.Next(2) + 1; i++)
                 {
-                    var enemySprite = CustomSprite.GetSprite("actor", SpriteDirection.LEFT);
+                    var enemySprite = CustomSprite.GetSprite("monkey", SpriteDirection.LEFT);
+                    enemySprite.Scale(2, 2);
                     var stats = Stats.GetRandom(Game1.rnd.Next(50, 100), Game1.rnd.Next(10, 20), new List<IAction> { new AttackAction(), new DefendAction() });
                     var actor = new Actor($"Battle Monkey {i + 1}", Color.Red, stats, enemySprite, new BattleEventAI(), false);
                     actors.Add(actor);

@@ -15,10 +15,10 @@ namespace TurnBasedFeest.BattleEvents.Actions
         int targetHP;
         int heal = 0;
 
-        public void SetActors(Actor source, Actor target)
+        public void SetActors(Actor source, params Actor[] target)
         {
             this.source = source;
-            this.target = target;
+            this.target = target[0];
         }
 
         public void Initialize()

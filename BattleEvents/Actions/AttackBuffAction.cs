@@ -6,7 +6,7 @@ using TurnBasedFeest.Attributes;
 
 namespace TurnBasedFeest.BattleEvents.Actions
 {
-    class DefendAction : IAction
+    class AttackBuffAction : IAction
     {
         int eventTime = 1000;
         int elapsedTime;
@@ -27,7 +27,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
 
         public string GetName()
         {
-            return "Guard";
+            return "Buff";
         }
 
         public bool IsSupportive()
@@ -43,7 +43,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
 
             if (HasCompleted())
             {
-                IAttribute newAttribute = new DefendAttribute(source);
+                IAttribute newAttribute = new AttackAttribute(source);
                 source.HandedOutAttributes.Add(new GivenAttribute(newAttribute.GetExpiration(), newAttribute, target));
                 target.Attributes.Add(newAttribute);
                 target.Health.SetColor(Color.White);                

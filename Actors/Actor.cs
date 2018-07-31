@@ -65,8 +65,10 @@ namespace TurnBasedFeest.Actors
 
             for (int i = 0; i < Attributes.Count; i++)
             {
-                Attributes[i].Draw(spritebatch, font, Position + new Vector2(i * 12, 0));
+                Attributes[i].Draw(spritebatch, font, Position + new Vector2(i * 17, 0));
             }
+
+            if (!IsAlive()) sprite.SetColor(Color.DarkSlateGray);
 
             sprite.Draw(spritebatch, Position.X, Position.Y);            
         }

@@ -76,7 +76,7 @@ namespace TurnBasedFeest
                 .SetStat(StatisticAttribute.SPEED, 700)
                 .SetStat(StatisticAttribute.ATTACK_MAGIC, 90)
                 .SetStat(StatisticAttribute.SUPPORT_MAGIC, 5);
-            var ZinoStats = new Stats(100, new List<IAction> { new AttackAction(), new HealAction(), new DefendAction() })
+            var ZinoStats = new Stats(100, new List<IAction> { new AttackAction(), new HealAction(), new DefendAction(), new AttackBuffAction() })
                 .SetStat(StatisticAttribute.ATTACK, 80)
                 .SetStat(StatisticAttribute.DEFENCE, 50)
                 .SetStat(StatisticAttribute.SPEED, 700)
