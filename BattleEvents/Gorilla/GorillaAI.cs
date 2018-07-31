@@ -46,7 +46,7 @@ namespace TurnBasedFeest.BattleEvents.Gorilla
                 this.chargingCount--;
                 battle.PushSplashText($"{(int)(((maxCharge - chargingCount)/(double)maxCharge) * 100)}% charged");
 
-                if (chargingCount <= 0 || true)
+                if (chargingCount <= 0)
                 {
                     state = GorillaState.FIGHTING;
                     var action = new GorillaMeteorAction();
@@ -71,8 +71,8 @@ namespace TurnBasedFeest.BattleEvents.Gorilla
                     {
                         // 50% Go charge
                         state = GorillaState.CHARGING;
-                        chargingCount = 2;
-                        maxCharge = 2;
+                        chargingCount = 4;
+                        maxCharge = 4;
                         this.action = new TimerAction(1200);
                         this.action.Initialize();
                         this.battle.PushSplashText($"{actor.Name} is starting to charge...");

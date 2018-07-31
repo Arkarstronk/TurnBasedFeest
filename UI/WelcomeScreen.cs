@@ -66,7 +66,7 @@ namespace TurnBasedFeest.GameEvents
             int random = Game1.rnd.Next(100);
 
             // With 50% probability, start a boss battle.
-            if (random <= 100)
+            if (random <= 30)
             {
                 List<Actor> actors = new List<Actor>();
                 actors.AddRange(game.heroes);
@@ -91,7 +91,7 @@ namespace TurnBasedFeest.GameEvents
             }
             else if (random <= 80)
             {
-                // With 80% probability, start a boss battle.
+                // With 50% probability, start a boss battle.
                 List<Actor> actors = new List<Actor>();
                 actors.AddRange(game.heroes);
                 for (int i = 0; i < Game1.rnd.Next(2) + 1; i++)
