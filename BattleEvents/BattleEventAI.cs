@@ -32,11 +32,11 @@ namespace TurnBasedFeest.BattleEvents.Battle
             List<Actor> possibleTargets;
             if (action.IsSupportive())
             {
-                possibleTargets = battle.GetAliveActors().FindAll(x => !x.isPlayer);
+                possibleTargets = battle.GetAliveActors().FindAll(x => !x.IsPlayer);
             }
             else
             {
-                possibleTargets = battle.GetAliveActors().FindAll(x => x.isPlayer);
+                possibleTargets = battle.GetAliveActors().FindAll(x => x.IsPlayer);
             }
 
             // Select a random target

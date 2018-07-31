@@ -39,7 +39,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
             int targetSpeed = target.GetStats()[StatisticAttribute.SPEED];
 
 
-            foreach (IAttribute attribute in target.attributes.FindAll(x => x.GetAttributeType() == attributeType.INCOMING))
+            foreach (IAttribute attribute in target.Attributes.FindAll(x => x.GetAttributeType() == attributeType.INCOMING))
             {
                 defence = (int) (defence * attribute.GetMultiplier()) + (int)attribute.GetAddition();
             }

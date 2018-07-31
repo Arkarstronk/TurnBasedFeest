@@ -147,9 +147,9 @@ namespace TurnBasedFeest.BattleEvents.Battle
             switch(targets)
             {
                 case Targets.ENEMY:
-                    return alive.FindAll(x => !x.isPlayer);                
+                    return alive.FindAll(x => !x.IsPlayer);                
                 case Targets.FRIENDLY:
-                    return alive.FindAll(x => x.isPlayer);
+                    return alive.FindAll(x => x.IsPlayer);
             }
             return new List<Actor>();            
         }

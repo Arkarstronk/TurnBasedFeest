@@ -48,16 +48,16 @@ namespace TurnBasedFeest
 
         private void calculateDistances(List<Actor> actors)
         {
-            int parseDistanceAlly = (int)((0.7f * Game1.screenHeight) / (actors.FindAll(x => x.isPlayer).Count + 1));
-            for (int i = 0; i < actors.FindAll(x => x.isPlayer).Count; i++)
+            int parseDistanceAlly = (int)((0.7f * Game1.screenHeight) / (actors.FindAll(x => x.IsPlayer).Count + 1));
+            for (int i = 0; i < actors.FindAll(x => x.IsPlayer).Count; i++)
             {
-                actors.FindAll(x => x.isPlayer)[i].Position = new Vector2(Game1.screenWidth - 50 - 0.8f * Game1.screenWidth, 0.1f * Game1.screenHeight + (i + 1) * parseDistanceAlly);
+                actors.FindAll(x => x.IsPlayer)[i].Position = new Vector2(Game1.screenWidth - 50 - 0.8f * Game1.screenWidth, 0.1f * Game1.screenHeight + (i + 1) * parseDistanceAlly);
             }
 
-            int parseDistanceEnemies = (int)((0.7f * Game1.screenHeight) / (actors.FindAll(x => !x.isPlayer).Count + 1));
-            for (int i = 0; i < actors.FindAll(x => !x.isPlayer).Count; i++)
+            int parseDistanceEnemies = (int)((0.7f * Game1.screenHeight) / (actors.FindAll(x => !x.IsPlayer).Count + 1));
+            for (int i = 0; i < actors.FindAll(x => !x.IsPlayer).Count; i++)
             {
-                actors.FindAll(x => !x.isPlayer)[i].Position = new Vector2(Game1.screenWidth - 50 - 0.2f * Game1.screenWidth, 0.1f * Game1.screenHeight + (i + 1) * parseDistanceEnemies);
+                actors.FindAll(x => !x.IsPlayer)[i].Position = new Vector2(Game1.screenWidth - 50 - 0.2f * Game1.screenWidth, 0.1f * Game1.screenHeight + (i + 1) * parseDistanceEnemies);
             }
         }
 
@@ -128,7 +128,7 @@ namespace TurnBasedFeest
         {
             foreach (Actor actor in actors)
             {
-                actor.attributes.RemoveAll(x => true);
+                actor.Attributes.RemoveAll(x => true);
                 actor.HandedOutAttributes.RemoveAll(x => true);
             }
 
@@ -144,21 +144,21 @@ namespace TurnBasedFeest
                 CurrentActor = null;             
             } else
             {
-                List<Actor> actorsWithTurn = aliveActors.FindAll(x => x.hasTurn);
+                List<Actor> actorsWithTurn = aliveActors.FindAll(x => x.HasTurn);
 
                 
 
                 // if all the actors have done their turn
                 if (actorsWithTurn.Count == 0)
                 {
-                    aliveActors.ForEach(x => x.hasTurn = true);
+                    aliveActors.ForEach(x => x.HasTurn = true);
                     CurrentActor = aliveActors[0];
                 } else
                 {                    
                     CurrentActor = actorsWithTurn[0];
                 }
 
-                CurrentActor.hasTurn = false;                
+                CurrentActor.HasTurn = false;                
             }
             return CurrentActor;
         }
@@ -192,11 +192,11 @@ namespace TurnBasedFeest
                 return Victors.NONE;
             }
 
-            if (actors.FindAll(x => x.isPlayer).TrueForAll(x => !x.IsAlive()))
+            if (actors.FindAll(x => x.IsPlayer).TrueForAll(x => !x.IsAlive()))
             {
                 return Victors.ENEMY;
             }
-            if (actors.FindAll(x => !x.isPlayer).TrueForAll(x => !x.IsAlive()))
+            if (actors.FindAll(x => !x.IsPlayer).TrueForAll(x => !x.IsAlive()))
             {
                 return Victors.HEROES;
             }

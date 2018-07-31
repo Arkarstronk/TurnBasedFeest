@@ -45,7 +45,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
             {
                 IAttribute newAttribute = new DefendAttribute(source);
                 source.HandedOutAttributes.Add(new GivenAttribute(newAttribute.GetExpiration(), newAttribute, target));
-                target.attributes.Add(newAttribute);
+                target.Attributes.Add(newAttribute);
                 target.Health.SetColor(Color.White);                
 
             }            

@@ -29,7 +29,7 @@ namespace TurnBasedFeest.BattleEvents
 
             if (HasCompleted())
             {
-                deceased.HandedOutAttributes.ForEach(x => x.receiver.attributes.Remove(x.attribute));
+                deceased.HandedOutAttributes.ForEach(x => x.receiver.Attributes.Remove(x.attribute));
             }
         }
 
