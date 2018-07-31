@@ -16,11 +16,13 @@ namespace TurnBasedFeest.UI
         private Game1 game;
         
         private BattleContainer battle;
+        private Texture2D background;
 
         public BattleScreen(Game1 game, List<Actor> actors)
         {
             this.game = game;        
             this.battle = BattleContainer.CreateBattle(actors);
+            this.background = TextureFactory.Instance.GetTexture("background");
         }
 
         public void Initialize()
@@ -30,6 +32,7 @@ namespace TurnBasedFeest.UI
 
         public void Draw(SpriteBatch batch, SpriteFont font)
         {
+            batch.Draw(background, new Rectangle(0, 0, game.Window.ClientBounds.Width, game.Window.ClientBounds.Height), new Color(0.1f, 0.1f, 0.2f));
             battle.Draw(batch, font);
         }
 

@@ -48,6 +48,7 @@ namespace TurnBasedFeest
             textures.Add("buff", content.Load<Texture2D>("graphics/buff"));
             textures.Add("guard", content.Load<Texture2D>("graphics/guard"));
             textures.Add("monkey", content.Load<Texture2D>("graphics/monkey"));
+            textures.Add("background", content.Load<Texture2D>("graphics/background"));
         }
 
         // TODO: Should probably be changed to something like an enum, and then register all textures in the enum?
