@@ -14,7 +14,9 @@ namespace TurnBasedFeest.Graphics
         private SpriteDirection direction;
         private Color color;
 
-        public Rectangle scale;
+        private Vector2 scale;
+        private float depth = 0;
+
 
         public static CustomSprite GetSprite(string name)
         {
@@ -31,7 +33,7 @@ namespace TurnBasedFeest.Graphics
             this.color = Color.White;
             this.texture = texture;
             this.direction = direction;
-            this.scale = new Rectangle(0, 0, 1, 1);
+            Scale(1, 1);
         }
 
         public void SetColor(Color color)
@@ -39,9 +41,15 @@ namespace TurnBasedFeest.Graphics
             this.color = color;
         }
 
-        public void Scale(int x, int y)
+        public void SetDepth(float depth)
         {
-            this.scale = new Rectangle(0, 0, x, y);
+            this.depth = Math.Max(0, Math.Min(1, depth)) + 0.01f;
+            
+        }
+
+        public void Scale(float x, float y)
+        {
+            this.scale = new Vector2(x, y);
         }
 
         public void Draw(SpriteBatch batch, float x, float y)
@@ -49,16 +57,16 @@ namespace TurnBasedFeest.Graphics
             var rectangle = new Rectangle();
             rectangle.X = (int)x;
             rectangle.Y = (int)y;
-            rectangle.Width = texture.Width * scale.Width;
-            rectangle.Height = texture.Height * scale.Height;
+            rectangle.Width = (int)(texture.Width * scale.X);
+            rectangle.Height = (int)(texture.Height * scale.Y);
 
             if (direction == SpriteDirection.RIGHT)
             {
-                batch.Draw(texture, rectangle, color);
+                batch.Draw(texture, rectangle, null, color, 0, new Vector2(0, 0), SpriteEffects.None, depth);
             }
             else
             {
-                batch.Draw(texture, rectangle, null, color, 0, new Vector2(0, 0), SpriteEffects.FlipHorizontally, 0);                
+                batch.Draw(texture, rectangle, null, color, 0, new Vector2(0, 0), SpriteEffects.FlipHorizontally, depth);                
             }            
         }
     }

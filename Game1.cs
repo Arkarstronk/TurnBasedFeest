@@ -120,15 +120,6 @@ namespace TurnBasedFeest
             input.Update();
             currentScreen.Update(gameTime, input);
 
-            /*if (currentEvent.Update(this, input))
-            {
-                previousEvent = currentEvent;
-                currentEvent = nextEvent;
-                nextEvent = null;
-
-                currentEvent.Initialize(heroes);
-            }*/
-
             base.Update(gameTime);
         }
 
@@ -139,7 +130,7 @@ namespace TurnBasedFeest
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);            
-            spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.FrontToBack);
 
             //currentEvent.Draw(spriteBatch, font);
             currentScreen.Draw(spriteBatch, font);

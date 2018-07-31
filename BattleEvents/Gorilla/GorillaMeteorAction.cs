@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TurnBasedFeest.Actors;
 using TurnBasedFeest.BattleEvents.Actions;
+using TurnBasedFeest.Graphics;
 using TurnBasedFeest.Utilities;
 
 namespace TurnBasedFeest.BattleEvents.Gorilla
@@ -19,6 +20,13 @@ namespace TurnBasedFeest.BattleEvents.Gorilla
 
         private AnimationHelper animationHelper;
 
+        private CustomSprite meteorSprite;
+        private double[] scales;
+        private Vector2[] positions;
+        private Vector2[] speeds;
+
+        private const int MAX_METEORS = 2000;
+
         public string GetName()
         {
             return "Gorilla Meteor";
@@ -26,7 +34,23 @@ namespace TurnBasedFeest.BattleEvents.Gorilla
 
         public void Initialize()
         {
-            
+            // Initiate meteors
+            meteorSprite = CustomSprite.GetSprite("meteor");
+            scales = new double[MAX_METEORS];
+            positions = new Vector2[MAX_METEORS];
+            speeds = new Vector2[MAX_METEORS];
+
+            for (int i = 0; i < MAX_METEORS; i++)
+            {
+                int distance = Game1.rnd.Next((int)(2000 * 4 * scales[i]));
+                scales[i] = Game1.rnd.NextDouble() + 0.5;
+                positions[i] = new Vector2(distance + 800 + Game1.rnd.Next(-8000, 800), -20 + distance - Game1.rnd.Next(500));
+                speeds[i] = new Vector2((float)(-1.1 + 0.2 * Game1.rnd.NextDouble()), (float)(1.1 + 0.2 * Game1.rnd.NextDouble()));
+                speeds[i].Normalize();
+                speeds[i].X *= 1400 * (float)(1.6 - scales[i]);
+                speeds[i].Y *= 1400 * (float)(1.6 - scales[i]);
+            }
+
             foreach(Actor target in this.targets)
             {
                 target.Health.SetColor(Color.DarkRed);
@@ -44,7 +68,7 @@ namespace TurnBasedFeest.BattleEvents.Gorilla
                 })
                 .ToArray();
 
-            animationHelper = new AnimationHelper(1000, percentage => {
+            animationHelper = new AnimationHelper(3000, percentage => {
                 for (int i = 0; i < targets.Length; i++)
                 {
                     Actor target = targets[i];
@@ -67,13 +91,26 @@ namespace TurnBasedFeest.BattleEvents.Gorilla
         }
 
         public void Draw(BattleContainer battle, SpriteBatch spritebatch, SpriteFont font)
-        {           
-            
+        {            
+            for (int i = 0; i < MAX_METEORS; i++)
+            {
+                meteorSprite.Scale(2.5f * (float)scales[i], 2.5f * (float)scales[i]);
+                var v = Math.Max(0.4f, 1.6f - (float)scales[i]);
+                meteorSprite.SetColor(new Color(v, v, v));
+                //meteorSprite.SetDepth((float)scales[i]);
+                meteorSprite.Draw(spritebatch, positions[i].X, positions[i].Y);
+            }         
         }
 
         public void Update(BattleContainer battle, GameTime gameTime, Input input)
         {
             animationHelper.Update(gameTime);
+
+            for (int i = 0; i < MAX_METEORS; i++)
+            {
+                positions[i].X += speeds[i].X * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                positions[i].Y += speeds[i].Y * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
 
             if (animationHelper.HasCompleted())
             {
