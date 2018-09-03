@@ -61,9 +61,9 @@
     <Compile Include="BattleEvents\Actions\HealAction.cs" />
     <Compile Include="BattleEvents\Actions\AttackAction.cs" />
     <Compile Include="BattleEvents\Actions\DefendAction.cs" />
-    <Compile Include="BattleEvents\Gorilla\GorillaAI.cs" />
-    <Compile Include="BattleEvents\Gorilla\GorillaMeteorAction.cs" />
-    <Compile Include="BattleEvents\Gorilla\GorillaSweepAction.cs" />
+    <Compile Include="Actors\npcs\Gorilla\GorillaAI.cs" />
+    <Compile Include="Actors\npcs\Gorilla\GorillaMeteorAction.cs" />
+    <Compile Include="Actors\npcs\Gorilla\GorillaSweepAction.cs" />
     <Compile Include="BattleEvents\ITurnEvent.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="BattleEvents\BattleEventAI.cs" />

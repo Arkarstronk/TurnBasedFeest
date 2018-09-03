@@ -49,11 +49,11 @@ namespace TurnBasedFeest.Graphics
         
         private float age;
         private readonly float maxAge;
-        private CustomSprite sprite;
+        public CustomSprite sprite;
 
         protected Vector2 position;
         protected Vector2 direction;
-
+        protected Action<Particle, double> extraAction;
         public bool IsDead => age >= maxAge;
 
         public Particle(CustomSprite sprite, float maxAge, Vector2 position, Vector2 direction)
@@ -65,10 +65,17 @@ namespace TurnBasedFeest.Graphics
             this.direction = direction;
         }
 
+        public void SetExtra(Action<Particle, double> action)
+        {
+            extraAction = action;
+        }
+
         public void Update(GameTime gameTime)
         {            
             position += direction * (float)gameTime.ElapsedGameTime.TotalSeconds * (maxAge - age) / 1000;
             age += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            
+            extraAction?.Invoke(this, age / maxAge);
         }
 
         public virtual void Draw(SpriteBatch batch, SpriteFont font)

@@ -47,7 +47,7 @@ namespace TurnBasedFeest.UI
 
             // Finally, if heroes are dead, end the battle.
             var victors = battle.GetVictors();
-            if (victors != BattleContainer.Victors.NONE)
+            if (battle.CanEndBattle())
             {
                 EndBattle(victors);
             }

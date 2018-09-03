@@ -13,17 +13,15 @@ using TurnBasedFeest.Utilities;
 namespace TurnBasedFeest.BattleEvents.Actions
 {
     class AtombBombMagicAction : IAction
-    {
-        int eventTime = 1000;
-        int elapsedTime;
-
+    {        
         private Actor source;
         private Actor[] targets;
-        private float[] beginHps;
-        private float[] targetsHps;
+
+        private CustomSprite meteorSprite;
+
 
         public string GetName() => "Atomb Bomb";
-        public bool HasCompleted() => elapsedTime >= eventTime;
+        public bool HasCompleted() => true;
         public ActionTarget GetTarget() => new ActionTarget(ActionTarget.TargetSide.ENEMY, ActionTarget.TargetAmount.ALL);
 
         public void SetActors(Actor source, params Actor[] targets)
@@ -34,51 +32,45 @@ namespace TurnBasedFeest.BattleEvents.Actions
 
         public void Initialize(BattleContainer battle)
         {
-            elapsedTime = 0;
-
+            meteorSprite = CustomSprite.GetSprite("meteor");
             int attackMagicStat = source.GetStats()[StatisticAttribute.ATTACK_MAGIC] * 3;
 
-            beginHps = targets.Select(x => x.Health.CurrentHealth).ToArray();
-            targetsHps = targets.Select(x => Math.Max(0, x.Health.CurrentHealth - attackMagicStat)).ToArray();
+            float[] beginHps = targets.Select(x => x.Health.CurrentHealth).ToArray();
+
+
+            battle.Animations.Add(new AnimationTimer(3000));
+
+            for (int i = 0; i < 7; i++)
+            {
+                for (int j = 0; j < 100; j++)
+                {
+                    float dx = (float)Math.Sin(j * Math.PI / 50);
+                    float dy = (float)Math.Cos(j * Math.PI / 50);
+
+                    Vector2 direction = new Vector2(dx, dy) * (i + 2) * 7;
+
+                    Particle particle = new Particle(meteorSprite, 2000 + Game1.rnd.Next(1000), source.Position, direction);
+                    
+                    battle.ParticleHelper.Add(particle);
+                }
+            }
 
             for (int i = 0; i < targets.Length; i++)
             {
                 battle.ParticleHelper.Add(new TextParticle($"-{attackMagicStat}", 1500, targets[i].Position + new Vector2(0, -30), new Vector2(30f, -30f)));
                 targets[i].Health.SetColor(Color.Red);                
                 targets[i].Health.Shake = true;
+                battle.Animations.Add(new AnimationHealthChange(targets[i], beginHps[i], attackMagicStat));
             }
         }
 
         public void Update(BattleContainer battle, GameTime gameTime, Input input)
         {
-            battle.PushSplashText($"{source.Name} has cast a nuclear bomb!");
-
-            elapsedTime += (int)Game1.time.ElapsedGameTime.TotalMilliseconds;
-
-            for (int i = 0; i < targets.Length; i++)
-            {
-                targets[i].Health.CurrentHealth = MathHelper.SmoothStep(beginHps[i], targetsHps[i], (elapsedTime / (float)eventTime));
-            }
-            
-
-            if (HasCompleted())
-            {
-
-                for (int i = 0; i < targets.Length; i++)
-                {
-                    targets[i].Health.SetColor(Color.White);
-                    targets[i].Health.CurrentHealth = targetsHps[i];
-                    targets[i].Health.Shake = false;
-                }                
-            }
+            battle.PushSplashText($"{source.Name} has cast a nuclear bomb!");            
         }
 
         public void Draw(BattleContainer battle, SpriteBatch spritebatch, SpriteFont font)
         {
-
         }
-
-        
-        
     }
 }

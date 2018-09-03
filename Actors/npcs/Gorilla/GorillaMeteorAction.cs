@@ -17,9 +17,6 @@ namespace TurnBasedFeest.BattleEvents.Gorilla
     {        
         private Actor source;
         private Actor[] targets;
-        private int[] targetsHP;
-
-        private AnimationHelper animationHelper;
 
         private CustomSprite meteorSprite;        
 
@@ -31,7 +28,9 @@ namespace TurnBasedFeest.BattleEvents.Gorilla
         public void Initialize(BattleContainer battle)
         {
             // Initiate meteors
-            meteorSprite = CustomSprite.GetSprite("meteor");            
+            meteorSprite = CustomSprite.GetSprite("meteor");
+
+            battle.Animations.Add(new AnimationTimer(3000));
 
             for (int i = 0; i < MAX_METEORS; i++)
             {                
@@ -49,40 +48,17 @@ namespace TurnBasedFeest.BattleEvents.Gorilla
 
             int attack = source.GetStats()[StatisticAttribute.ATTACK_MAGIC] * 4;
 
-            this.targetsHP = targets
+            int[] targetsHP = targets
                 .Select(x =>
                 {
                     int defence = x.GetStats()[StatisticAttribute.DEFENCE, x.Attributes];
                     int damage = Math.Max(2, attack - defence);
 
                     battle.ParticleHelper.Add(new TextParticle($"-{damage}", 1200, x.Position, new Vector2(30.0f, -30.0f)));
+                    battle.Animations.Add(new AnimationHealthChange(x, x.Health.CurrentHealth, damage));
 
                     return Math.Max(0, (int)(x.Health.CurrentHealth - damage));
-                })
-                .ToArray();
-
-            animationHelper = new AnimationHelper(3000, percentage => {
-                for (int i = 0; i < targets.Length; i++)
-                {
-                    Actor target = targets[i];
-                    int targetHP = targetsHP[i];
-                    int difference = (int)(target.Health.CurrentHealth - targetHP);
-                    target.Health.CurrentHealth = targetHP + (int)(difference * percentage);
-                }
-            });
-
-            foreach (Actor target in this.targets)
-            {
-                target.Health.SetColor(Color.DarkRed);
-                target.Health.Shake = true;
-
-                
-            }
-        }
-
-        public bool IsSupportive()
-        {
-            return false;
+                }).ToArray();
         }
 
         public void SetActors(Actor source, params Actor[] targets)
@@ -98,30 +74,12 @@ namespace TurnBasedFeest.BattleEvents.Gorilla
 
         public void Update(BattleContainer battle, GameTime gameTime, Input input)
         {
-            animationHelper.Update(gameTime);           
-
-            if (animationHelper.HasCompleted())
-            {
-                for (int i = 0; i < targets.Length; i++)
-                {
-                    Actor target = targets[i];
-                    int targetHP = targetsHP[i];
-                    target.Health.Shake = false;
-                    target.Health.SetColor(Color.White);
-                    target.Health.CurrentHealth = targetHP;
-                    target.Health.Shake = false;
-
-                    if (!target.IsAlive())
-                    {
-                        //nextEvent = new DeathEvent(target);
-                    }
-                }
-            }                        
+                         
         }
 
         public bool HasCompleted()
         {
-            return animationHelper.HasCompleted();
+            return true;
         }
     }
 }

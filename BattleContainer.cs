@@ -18,8 +18,9 @@ namespace TurnBasedFeest
         public Actor CurrentActor;
 
         public ParticleHelper ParticleHelper { get; }
+        public List<IAnimation> Animations;
 
-        private List<Actor> actors;        
+        private List<Actor> actors;
         private Queue<BattleEvent> battleEvents = new Queue<BattleEvent>();
         private BattleEvent CurrentEvent => battleEvents.Peek();
         private String splashText = "A new fight awaits~!";
@@ -33,6 +34,7 @@ namespace TurnBasedFeest
 
         private BattleContainer(ParticleHelper particleHelper, List<Actor> actors)
         {
+            this.Animations = new List<IAnimation>();
             this.ParticleHelper = particleHelper;
             this.actors = actors;
             this.actors.ForEach(x =>
@@ -79,6 +81,11 @@ namespace TurnBasedFeest
 
         public void Update(GameTime gameTime, Input input)
         {
+
+            // Handle health animations
+            Animations.ForEach(x => x.Update(gameTime));
+            Animations.RemoveAll(x => x.IsComplete());
+
             // Handle the battle events
             if (battleEvents.Count > 0)
             {
@@ -90,7 +97,7 @@ namespace TurnBasedFeest
                 {                    
                     battleEvents.Dequeue();
                 }
-            } else
+            } else if (Animations.Count == 0)
             {
                 // No more battle events are left,
                 // Go to the next actor
@@ -103,7 +110,6 @@ namespace TurnBasedFeest
 
             // Update all the actors
             actors.ForEach(x => x.Update(gameTime));
-
         }
 
         public void Draw(SpriteBatch batch, SpriteFont font)
@@ -174,40 +180,25 @@ namespace TurnBasedFeest
             return CurrentActor;
         }
 
-        /*private IEnumerator<Actor> GetCyclicAutorList()
+        
+        public bool CanEndBattle()
         {
-            while(true)
-            {
-                if (actors.Count(x => x.IsAlive()) == 0)
-                {
-                    yield return null;
-                }
-
-                foreach(Actor actor in this.actors.FindAll(x => x.IsAlive()))
-                {
-                    yield return actor;
-                }
-            }
-        }*/
-
+            return GetVictors() != Victors.NONE && Animations.Count == 0;
+        }
         public enum Victors
         {
             ENEMY, HEROES, NONE
         }
 
         public Victors GetVictors()
-        {
-            // If there is still events to be processed, we are not done yet then.
-            if (battleEvents.Count > 0)
-            {
-                return Victors.NONE;
-            }
-
-            if (actors.FindAll(x => x.IsPlayer()).TrueForAll(x => !x.IsAlive()))
+        {            
+            if (GetAliveActors().TrueForAll(x => !x.IsPlayer()))
+            
             {
                 return Victors.ENEMY;
             }
-            if (actors.FindAll(x => !x.IsPlayer()).TrueForAll(x => !x.IsAlive()))
+
+            if (GetAliveActors().TrueForAll(x => x.IsPlayer()))
             {
                 return Victors.HEROES;
             }

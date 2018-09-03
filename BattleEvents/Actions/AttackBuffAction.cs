@@ -9,7 +9,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
 {
     class AttackBuffAction : IAction
     {
-        int eventTime = 1000;
+        int eventTime = 500;
         int elapsedTime;
         Actor source;
         Actor target;

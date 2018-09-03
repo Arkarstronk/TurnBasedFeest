@@ -11,14 +11,8 @@ namespace TurnBasedFeest.BattleEvents.Actions
 {
     class AttackAction : IAction, IContinueableAction
     {
-        int eventTime = 1000;
-        int elapsedTime;
         Actor source;
         Actor target;
-        int beginHP;
-        int targetHP;
-        int damage;
-
 
         private ITurnEvent nextEvent = null;
         private string status;
@@ -31,10 +25,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
 
         public void Initialize(BattleContainer battle)
         {
-            beginHP = (int)target.Health.CurrentHealth;
-            elapsedTime = 0;
-            damage = 0;
-
+            int damage = 0;
             int attack = source.GetStats()[StatisticAttribute.ATTACK, source.Attributes];            
             int sourceSpeed = source.GetStats()[StatisticAttribute.SPEED, source.Attributes];
             int targetSpeed = target.GetStats()[StatisticAttribute.SPEED, target.Attributes];
@@ -90,49 +81,33 @@ namespace TurnBasedFeest.BattleEvents.Actions
                 damage = Math.Max(1, (int)(damage * damageMultiplier));
 
 
-                targetHP = (int)((beginHP - damage <= 0) ? 0 : (beginHP - damage));
                 target.Health.SetColor(Color.DarkRed);
                 battle.ParticleHelper.Add(new TextParticle($"-{damage}", 1200, target.Position, new Vector2(30.0f, -30.0f)));
+                battle.Animations.Add(new AnimationHealthChange(target, target.Health.CurrentHealth, damage));                
 
             } else
             {
                 damage = 0;
                 status = $"{source.Name} used {GetName()} and missed!";
-                target.Health.SetColor(Color.CornflowerBlue);
-                targetHP = beginHP;
+                target.Health.SetColor(Color.CornflowerBlue);                
             }
         }
 
         public void Update(BattleContainer battle, GameTime gameTime, Input input)        
         {               
-            battle.PushSplashText(status);
-            elapsedTime += (int)Game1.time.ElapsedGameTime.TotalMilliseconds;
-
-            target.Health.CurrentHealth = MathHelper.SmoothStep(beginHP, targetHP, (elapsedTime / (float)eventTime));
-
-            if (HasCompleted())
-            {
-                target.Health.SetColor(Color.White);                
-                target.Health.CurrentHealth = targetHP;
-                target.Health.Shake = false;
-
-                if (!target.IsAlive())
-                {
-                    nextEvent = new DeathEvent(target);
-                }
-            }            
+            battle.PushSplashText(status);  
         }
 
         public string GetName() => "Attack";
         public ActionTarget GetTarget() => new ActionTarget(ActionTarget.TargetSide.ENEMY);
-        public bool HasCompleted() => elapsedTime >= eventTime;
+        public bool HasCompleted() => true;
 
         public ITurnEvent NextEvent() => nextEvent;
         public bool HasNextEvent() => nextEvent != null;
 
         public void Draw(BattleContainer battle, SpriteBatch spritebatch, SpriteFont font)
         {
-            //spritebatch.DrawString(font, damage.ToString(), target.Position + new Vector2(0, -(elapsedTime / (float)eventTime) * 50 + 20), Color.White, 0, new Vector2(), 2, SpriteEffects.None, 1);
+            
         }
 
 
