@@ -31,20 +31,4 @@ namespace TurnBasedFeest.Utilities
 
         public bool HasCompleted() => elapsedTime >= animationTime;
     }
-
-    // The animation where health jumps up
-    class HealthAnimation : AnimationHelper
-    {
-        private int health;
-
-        public HealthAnimation(double animationTime, int health) : base(animationTime, null)
-        {
-            this.health = health;
-        }
-
-        public void Draw(SpriteBatch batch, SpriteFont font, Vector2 position)
-        {
-            batch.DrawString(font, health.ToString(), position + new Vector2(0, -(float)(elapsedTime / animationTime) * 50 + 20), Color.White, 0, new Vector2(), 2, SpriteEffects.None, 1);
-        }
-    }
 }
