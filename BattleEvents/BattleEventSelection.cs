@@ -11,7 +11,8 @@ using TurnBasedFeest.Utilities;
 
 namespace TurnBasedFeest.BattleEvents.Battle
 {
-    public enum Targets { ENEMY, FRIENDLY }
+    //public enum Targets { ENEMY, FRIENDLY, ALL_ENEMY, ALL_FRIENDLY }
+
     class BattleEventSelection : BattleEvent
     {
         private BattleContainer battle;
@@ -42,11 +43,11 @@ namespace TurnBasedFeest.BattleEvents.Battle
             {
                 if (result == 0)
                 {
-                    battle.Enqueue(new BattleEventActionSelection(Targets.ENEMY, battle.CurrentActor.GetStats().Actions.FindAll(x => !x.IsSupportive())));
+                    battle.Enqueue(new BattleEventActionSelection(battle.CurrentActor.GetStats().Actions.FindAll(x => x.GetTarget().Side == ActionTarget.TargetSide.ENEMY)));
                     hasCompleted = true;
                 } else
                 {
-                    battle.Enqueue(new BattleEventActionSelection(Targets.FRIENDLY, battle.CurrentActor.GetStats().Actions.FindAll(x => x.IsSupportive())));
+                    battle.Enqueue(new BattleEventActionSelection(battle.CurrentActor.GetStats().Actions.FindAll(x => x.GetTarget().Side == ActionTarget.TargetSide.FRIENDLY)));
                     hasCompleted = true;
                 }
             }
@@ -65,12 +66,10 @@ namespace TurnBasedFeest.BattleEvents.Battle
 
         private bool hasCompleted = false;
         private List<IAction> possibleActions;
-        private Targets target;
         
 
-        public BattleEventActionSelection(Targets target, List<IAction> possibleActions)
+        public BattleEventActionSelection(List<IAction> possibleActions)
         {
-            this.target = target;
             this.possibleActions = possibleActions;            
         }
 
@@ -97,7 +96,7 @@ namespace TurnBasedFeest.BattleEvents.Battle
                 int result = multipleChoiceEvent.Update(gameTime, input);                
                 if (result >= 0)
                 {
-                    battle.Enqueue(new BattleEventTarget(this, possibleActions[result], target));
+                    battle.Enqueue(new BattleEventTarget(this, possibleActions[result]));
                     hasCompleted = true;
                 }
             }
@@ -118,18 +117,16 @@ namespace TurnBasedFeest.BattleEvents.Battle
     class BattleEventTarget : BattleEvent
     {
         private BattleEvent previous;
-        private IAction action;
-        private Targets targets;
+        private IAction action;        
         private List<Actor> possibleTargets;
         private BattleContainer battle;
         private MultipleChoiceUI multipleChoiceEvent;
         private bool hasCompleted = false;
 
-        public BattleEventTarget(BattleEvent previous, IAction action, Targets targets)
+        public BattleEventTarget(BattleEvent previous, IAction action)
         {
             this.previous = previous;
-            this.action = action;
-            this.targets = targets;
+            this.action = action;            
         }
 
         public void Initialize(BattleContainer battle)
@@ -137,21 +134,21 @@ namespace TurnBasedFeest.BattleEvents.Battle
             this.hasCompleted = false;
             this.battle = battle;
             this.possibleTargets = getTargets();
-            this.multipleChoiceEvent = new MultipleChoiceUI(possibleTargets.Select(x => x.Name).ToList());
+
+            if (action.GetTarget().Amount == ActionTarget.TargetAmount.ALL)            
+            {
+                this.multipleChoiceEvent = new MultipleChoiceUI(new List<String>{ "All" });
+            }   
+            else
+            {
+                this.multipleChoiceEvent = new MultipleChoiceUI(possibleTargets.Select(x => x.Name).ToList());
+            }
         }
 
         private List<Actor> getTargets()
         {
             List<Actor> alive = battle.GetAliveActors();
-
-            switch(targets)
-            {
-                case Targets.ENEMY:
-                    return alive.FindAll(x => !x.IsPlayer);                
-                case Targets.FRIENDLY:
-                    return alive.FindAll(x => x.IsPlayer);
-            }
-            return new List<Actor>();            
+            return action.GetTarget().GetPossibleTargets(battle.CurrentActor, alive);
         }
 
         public void Draw(SpriteBatch batch, SpriteFont font)
@@ -171,8 +168,10 @@ namespace TurnBasedFeest.BattleEvents.Battle
                 int result = multipleChoiceEvent.Update(gameTime, input);
                 if (result >= 0)
                 {
-                    action.SetActors(battle.CurrentActor, possibleTargets[result]);
-                    battle.Enqueue(new BattleEventFight(action, possibleTargets[result]));
+                    // TODO: Change this to more general approach.
+                    var targets = action.GetTarget().GetTargets(battle.CurrentActor, possibleTargets, result);
+                    action.SetActors(battle.CurrentActor, targets.ToArray());
+                    battle.Enqueue(new BattleEventFight(action));                    
                     hasCompleted = true;
                 }
             }
@@ -186,19 +185,18 @@ namespace TurnBasedFeest.BattleEvents.Battle
     class BattleEventFight : BattleEvent
     {
         private ITurnEvent action;
-        private Actor target;
+        
         private BattleContainer battle;
 
-        public BattleEventFight(IAction action, Actor target)
+        public BattleEventFight(IAction action)
         {
-            this.action = action;
-            this.target = target;
+            this.action = action;        
         }
 
         public void Initialize(BattleContainer battle)
         {            
             this.battle = battle;            
-            this.action.Initialize();            
+            this.action.Initialize(battle);
         }
 
         public void Draw(SpriteBatch batch, SpriteFont font)

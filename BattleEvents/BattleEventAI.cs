@@ -29,22 +29,14 @@ namespace TurnBasedFeest.BattleEvents.Battle
             IAction action = actions[Game1.rnd.Next(actions.Count)];
 
             // Get the possible targets
-            List<Actor> possibleTargets;
-            if (action.IsSupportive())
-            {
-                possibleTargets = battle.GetAliveActors().FindAll(x => !x.IsPlayer);
-            }
-            else
-            {
-                possibleTargets = battle.GetAliveActors().FindAll(x => x.IsPlayer);
-            }
+            List<Actor> possibleTargets = action.GetTarget().GetPossibleTargets(battle.CurrentActor, battle.GetAliveActors());
 
             // Select a random target
             Actor randomActor = possibleTargets[Game1.rnd.Next(possibleTargets.Count)];
 
 
             action.SetActors(battle.CurrentActor, randomActor);
-            action.Initialize();
+            action.Initialize(battle);
 
             this.action = action;
         }

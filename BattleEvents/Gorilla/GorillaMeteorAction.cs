@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TurnBasedFeest.Actors;
 using TurnBasedFeest.BattleEvents.Actions;
+using TurnBasedFeest.BattleEvents.Battle;
 using TurnBasedFeest.Graphics;
 using TurnBasedFeest.Utilities;
 
@@ -20,42 +21,31 @@ namespace TurnBasedFeest.BattleEvents.Gorilla
 
         private AnimationHelper animationHelper;
 
-        private CustomSprite meteorSprite;
-        private double[] scales;
-        private Vector2[] positions;
-        private Vector2[] speeds;
+        private CustomSprite meteorSprite;        
 
         private const int MAX_METEORS = 2000;
 
-        public string GetName()
-        {
-            return "Gorilla Meteor";
-        }
+        public string GetName() => "Gorilla Meteor";
+        public ActionTarget GetTarget() => new ActionTarget(ActionTarget.TargetSide.ENEMY, ActionTarget.TargetAmount.ALL);
 
-        public void Initialize()
+        public void Initialize(BattleContainer battle)
         {
             // Initiate meteors
-            meteorSprite = CustomSprite.GetSprite("meteor");
-            scales = new double[MAX_METEORS];
-            positions = new Vector2[MAX_METEORS];
-            speeds = new Vector2[MAX_METEORS];
+            meteorSprite = CustomSprite.GetSprite("meteor");            
 
             for (int i = 0; i < MAX_METEORS; i++)
-            {
-                int distance = Game1.rnd.Next((int)(2000 * 4 * scales[i]));
-                scales[i] = Game1.rnd.NextDouble() + 0.5;
-                positions[i] = new Vector2(distance + 800 + Game1.rnd.Next(-8000, 800), -20 + distance - Game1.rnd.Next(500));
-                speeds[i] = new Vector2((float)(-1.1 + 0.2 * Game1.rnd.NextDouble()), (float)(1.1 + 0.2 * Game1.rnd.NextDouble()));
-                speeds[i].Normalize();
-                speeds[i].X *= 1400 * (float)(1.6 - scales[i]);
-                speeds[i].Y *= 1400 * (float)(1.6 - scales[i]);
+            {                
+                var direction = new Vector2((float)(-1.1 + 0.2 * Game1.rnd.NextDouble()), (float)(1.1 + 0.2 * Game1.rnd.NextDouble()));
+                direction.Normalize();
+                direction.X *= 240;
+                direction.Y *= 240;
+
+                var particle = new Particle(meteorSprite, 2000 + Game1.rnd.Next(1000), new Vector2(800 + Game1.rnd.Next(-8000, 800), -20 - Game1.rnd.Next(240)), direction);
+
+                battle.ParticleHelper.Add(particle);
             }
 
-            foreach(Actor target in this.targets)
-            {
-                target.Health.SetColor(Color.DarkRed);
-                target.Health.Shake = true;
-            }
+            
 
             int attack = source.GetStats()[StatisticAttribute.ATTACK_MAGIC] * 4;
 
@@ -64,6 +54,9 @@ namespace TurnBasedFeest.BattleEvents.Gorilla
                 {
                     int defence = x.GetStats()[StatisticAttribute.DEFENCE, x.Attributes];
                     int damage = Math.Max(2, attack - defence);
+
+                    battle.ParticleHelper.Add(new TextParticle($"-{damage}", 1200, x.Position, new Vector2(30.0f, -30.0f)));
+
                     return Math.Max(0, (int)(x.Health.CurrentHealth - damage));
                 })
                 .ToArray();
@@ -77,6 +70,14 @@ namespace TurnBasedFeest.BattleEvents.Gorilla
                     target.Health.CurrentHealth = targetHP + (int)(difference * percentage);
                 }
             });
+
+            foreach (Actor target in this.targets)
+            {
+                target.Health.SetColor(Color.DarkRed);
+                target.Health.Shake = true;
+
+                
+            }
         }
 
         public bool IsSupportive()
@@ -91,26 +92,13 @@ namespace TurnBasedFeest.BattleEvents.Gorilla
         }
 
         public void Draw(BattleContainer battle, SpriteBatch spritebatch, SpriteFont font)
-        {            
-            for (int i = 0; i < MAX_METEORS; i++)
-            {
-                meteorSprite.Scale(2.5f * (float)scales[i], 2.5f * (float)scales[i]);
-                var v = Math.Max(0.4f, 1.6f - (float)scales[i]);
-                meteorSprite.SetColor(new Color(v, v, v));
-                //meteorSprite.SetDepth((float)scales[i]);
-                meteorSprite.Draw(spritebatch, positions[i].X, positions[i].Y);
-            }         
+        {           
+            
         }
 
         public void Update(BattleContainer battle, GameTime gameTime, Input input)
         {
-            animationHelper.Update(gameTime);
-
-            for (int i = 0; i < MAX_METEORS; i++)
-            {
-                positions[i].X += speeds[i].X * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                positions[i].Y += speeds[i].Y * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            }
+            animationHelper.Update(gameTime);           
 
             if (animationHelper.HasCompleted())
             {

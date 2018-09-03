@@ -3,6 +3,7 @@ using TurnBasedFeest.Actors;
 using Microsoft.Xna.Framework.Graphics;
 using TurnBasedFeest.Utilities;
 using TurnBasedFeest.Attributes;
+using TurnBasedFeest.BattleEvents.Battle;
 
 namespace TurnBasedFeest.BattleEvents.Actions
 {
@@ -19,21 +20,16 @@ namespace TurnBasedFeest.BattleEvents.Actions
             this.target = target[0];
         }
 
-        public void Initialize()
+        public void Initialize(BattleContainer battle)
         {
             elapsedTime = 0;            
             target.Health.SetColor(Color.Violet);
         }
 
-        public string GetName()
-        {
-            return "Guard";
-        }
 
-        public bool IsSupportive()
-        {
-            return true;
-        }
+        public string GetName() => "Guard";
+        public bool HasCompleted() => elapsedTime >= eventTime;
+        public ActionTarget GetTarget() => new ActionTarget(ActionTarget.TargetSide.FRIENDLY);
 
         public void Update(BattleContainer battle, GameTime gameTime, Input input)
         {
@@ -55,9 +51,6 @@ namespace TurnBasedFeest.BattleEvents.Actions
         {         
         }
 
-        public bool HasCompleted()
-        {
-            return elapsedTime >= eventTime;
-        }
+        
     }
 }

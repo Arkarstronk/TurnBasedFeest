@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TurnBasedFeest.Actors;
 using TurnBasedFeest.GameEvents;
+using TurnBasedFeest.Graphics;
 using TurnBasedFeest.Utilities;
 
 namespace TurnBasedFeest.UI
@@ -14,15 +15,16 @@ namespace TurnBasedFeest.UI
     class BattleScreen : UIScreen
     {
         private Game1 game;
-        
+        private ParticleHelper particleHelper;
         private BattleContainer battle;
         private Texture2D background;
 
         public BattleScreen(Game1 game, List<Actor> actors)
         {
-            this.game = game;        
-            this.battle = BattleContainer.CreateBattle(actors);
-            this.background = TextureFactory.Instance.GetTexture("background");
+            this.game = game;
+            this.particleHelper = new ParticleHelper();
+            this.battle = BattleContainer.CreateBattle(this.particleHelper, actors);
+            this.background = TextureFactory.Instance.GetTexture("background");            
         }
 
         public void Initialize()
@@ -34,13 +36,14 @@ namespace TurnBasedFeest.UI
         {
             batch.Draw(background, new Rectangle(0, 0, game.Window.ClientBounds.Width, game.Window.ClientBounds.Height), new Color(0.1f, 0.1f, 0.2f));
             battle.Draw(batch, font);
+            particleHelper.Draw(batch, font);
         }
 
         public void Update(GameTime gameTime, Input input)
         {
             // Update everything regarding the battle
             battle.Update(gameTime, input);
-
+            particleHelper.Update(gameTime);
 
             // Finally, if heroes are dead, end the battle.
             var victors = battle.GetVictors();
@@ -51,13 +54,40 @@ namespace TurnBasedFeest.UI
         }
 
         private void EndBattle(BattleContainer.Victors victors)
-        {
-            battle.EndBattle();
+        {            
             if (victors == BattleContainer.Victors.ENEMY)
             {
                 game.Exit();
+            } else
+            {
+                int experienceGained = calculateGainedExperience();
+                var alivePlayers = battle.GetAliveActors().FindAll(x => x.IsPlayer());
+
+                List<ExperienceResult> results = new List<ExperienceResult>();
+
+                alivePlayers.ForEach(x => {
+                    var result = x.GetStats().AddExperience(experienceGained / alivePlayers.Count, ((PlayerInfo)x.Info).GetLevelingScheme());
+
+                    if (result.LeveledUp)
+                    {
+                        Console.WriteLine($"{x.Name} Leveled up to {result.NewLevel}");
+
+                        x.Health.MaxHealth = x.GetStats().MaxHealth;
+                    }
+
+                    results.Add(result);
+                });
+                Console.WriteLine($"Gained {experienceGained}");
+
+                battle.EndBattle();
+                game.SetUIScreen(new ExperienceScreen(game, alivePlayers, results));
             }
-            game.SetUIScreen(new WelcomeScreen(game));
+        }
+
+        private int calculateGainedExperience()
+        {
+            var enemyActors = battle.GetActors().FindAll(x => !x.IsPlayer());
+            return enemyActors.Sum(x => ((EnemyInfo)x.Info).GetXP());
         }
     }
 }

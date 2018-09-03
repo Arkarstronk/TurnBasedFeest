@@ -4,6 +4,8 @@ using TurnBasedFeest.Utilities;
 using Microsoft.Xna.Framework.Graphics;
 using TurnBasedFeest.Attributes;
 using System;
+using TurnBasedFeest.BattleEvents.Battle;
+using TurnBasedFeest.Graphics;
 
 namespace TurnBasedFeest.BattleEvents.Actions
 {
@@ -27,7 +29,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
             this.target = target[0];
         }
 
-        public void Initialize()
+        public void Initialize(BattleContainer battle)
         {
             beginHP = (int)target.Health.CurrentHealth;
             elapsedTime = 0;
@@ -62,7 +64,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
                 // Calculate a chance to hit the target based on a log
                 // If the source is faster than target, chance to hit should be higher
                 // and vice versa
-                hitChance = ((difference) / 140.0) * 0.87 + 0.6;             
+                hitChance = ((difference) / 140.0) * 0.87 + 0.7;             
             }
 
             
@@ -90,6 +92,8 @@ namespace TurnBasedFeest.BattleEvents.Actions
 
                 targetHP = (int)((beginHP - damage <= 0) ? 0 : (beginHP - damage));
                 target.Health.SetColor(Color.DarkRed);
+                battle.ParticleHelper.Add(new TextParticle($"-{damage}", 1200, target.Position, new Vector2(30.0f, -30.0f)));
+
             } else
             {
                 damage = 0;
@@ -119,33 +123,21 @@ namespace TurnBasedFeest.BattleEvents.Actions
             }            
         }
 
-        public string GetName()
-        {
-            return "Attack";
-        }        
+        public string GetName() => "Attack";
+        public ActionTarget GetTarget() => new ActionTarget(ActionTarget.TargetSide.ENEMY);
+        public bool HasCompleted() => elapsedTime >= eventTime;
 
-        public bool IsSupportive()
-        {
-            return false;
-        }
+        public ITurnEvent NextEvent() => nextEvent;
+        public bool HasNextEvent() => nextEvent != null;
 
         public void Draw(BattleContainer battle, SpriteBatch spritebatch, SpriteFont font)
         {
-            spritebatch.DrawString(font, damage.ToString(), target.Position + new Vector2(0, -(elapsedTime / (float)eventTime) * 50 + 20), Color.White, 0, new Vector2(), 2, SpriteEffects.None, 1);
+            //spritebatch.DrawString(font, damage.ToString(), target.Position + new Vector2(0, -(elapsedTime / (float)eventTime) * 50 + 20), Color.White, 0, new Vector2(), 2, SpriteEffects.None, 1);
         }
 
-        public bool HasCompleted()
-        {
-            return elapsedTime >= eventTime;
-        }
 
-        public bool HasNextEvent()
-        {
-            return nextEvent != null;
-        }
-        public ITurnEvent NextEvent()
-        {
-            return nextEvent;
-        }
+        
+
+        
     }
 }

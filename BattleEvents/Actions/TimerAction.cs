@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TurnBasedFeest.Actors;
+using TurnBasedFeest.BattleEvents.Battle;
 using TurnBasedFeest.Utilities;
 
 namespace TurnBasedFeest.BattleEvents.Actions
@@ -26,10 +27,10 @@ namespace TurnBasedFeest.BattleEvents.Actions
 
         public string GetName() => "";
         public bool HasCompleted() => elapsedTime >= animationTime;
-        public bool IsSupportive() => true;
+        public ActionTarget GetTarget() => new ActionTarget(ActionTarget.TargetSide.FRIENDLY);
         public void SetActors(Actor source, params Actor[] targets) { }
 
-        public void Initialize()
+        public void Initialize(BattleContainer battle)
         {
             elapsedTime = 0;
         }

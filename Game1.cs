@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using TurnBasedFeest.Actors;
 using TurnBasedFeest.BattleEvents.Actions;
 using TurnBasedFeest.BattleEvents.Battle;
+using TurnBasedFeest.BattleEvents.Gorilla;
 using TurnBasedFeest.GameEvents;
 using TurnBasedFeest.Graphics;
 using TurnBasedFeest.UI;
@@ -25,6 +26,20 @@ namespace TurnBasedFeest
         public static GameTime time;     
         public static int screenWidth = 1280;
         public static int screenHeight = 720;
+
+        Stats AriStats = new Stats(11, new List<IAction> { new AttackAction(), new HealAction(), new DefendAction(), new AtombBombMagicAction(), new GorillaMeteorAction() })
+            .SetStat(StatisticAttribute.ATTACK, 11)
+            .SetStat(StatisticAttribute.DEFENCE, 8)
+            .SetStat(StatisticAttribute.SPEED, 8)
+            .SetStat(StatisticAttribute.ATTACK_MAGIC, 2)
+            .SetStat(StatisticAttribute.SUPPORT_MAGIC, 3);
+        Stats ZinoStats = new Stats(10, new List<IAction> { new AttackAction(), new HealAction(), new DefendAction(), new AttackBuffAction(), new AtombBombMagicAction(), new GorillaMeteorAction() })
+            .SetStat(StatisticAttribute.ATTACK, 4)
+            .SetStat(StatisticAttribute.DEFENCE, 5)
+            .SetStat(StatisticAttribute.SPEED, 9)
+            .SetStat(StatisticAttribute.ATTACK_MAGIC, 7)
+            .SetStat(StatisticAttribute.SUPPORT_MAGIC, 7);
+
 
         public int eventCounter;
         //public IGameEvent previousEvent;
@@ -70,24 +85,29 @@ namespace TurnBasedFeest
 
             var actorPlaceHolderTexture = factory.GetTexture("actor");
 
-            var AriStats = new Stats(100, new List<IAction> { new AttackAction(), new HealAction(), new DefendAction() })
-                .SetStat(StatisticAttribute.ATTACK, 80)
-                .SetStat(StatisticAttribute.DEFENCE, 50)
-                .SetStat(StatisticAttribute.SPEED, 700)
-                .SetStat(StatisticAttribute.ATTACK_MAGIC, 90)
-                .SetStat(StatisticAttribute.SUPPORT_MAGIC, 5);
-            var ZinoStats = new Stats(100, new List<IAction> { new AttackAction(), new HealAction(), new DefendAction(), new AttackBuffAction() })
-                .SetStat(StatisticAttribute.ATTACK, 80)
-                .SetStat(StatisticAttribute.DEFENCE, 50)
-                .SetStat(StatisticAttribute.SPEED, 700)
-                .SetStat(StatisticAttribute.ATTACK_MAGIC, 10)
-                .SetStat(StatisticAttribute.SUPPORT_MAGIC, 30);
+            var ariDict = new Dictionary<StatisticAttribute, double>();
+            ariDict.Add(StatisticAttribute.ATTACK, 1);
+            ariDict.Add(StatisticAttribute.ATTACK_MAGIC, 0.1);
+            ariDict.Add(StatisticAttribute.DEFENCE, 0.9);
+            ariDict.Add(StatisticAttribute.SPEED, 0.5);
+            ariDict.Add(StatisticAttribute.SUPPORT_MAGIC, 0.1);
+
+            var zinoDict = new Dictionary<StatisticAttribute, double>();
+            zinoDict.Add(StatisticAttribute.ATTACK, 0.4);
+            zinoDict.Add(StatisticAttribute.ATTACK_MAGIC, 0.9);
+            zinoDict.Add(StatisticAttribute.DEFENCE, 0.5);
+            zinoDict.Add(StatisticAttribute.SPEED, 0.7);
+            zinoDict.Add(StatisticAttribute.SUPPORT_MAGIC, 1);
 
             var ariSprite = CustomSprite.GetSprite("actor");
+            var ariLevelingScheme = new LevelingScheme(ariDict);
+
             var zinoSprite = CustomSprite.GetSprite("actor");
+            var zinoLevelingScheme = new LevelingScheme(zinoDict);
+
             heroes = new List<Actor> {
-                    new Actor("Ari", Color.Red, AriStats, ariSprite, new BattleEventSelection(), true),
-                    new Actor("Zino", Color.Blue, ZinoStats, zinoSprite, new BattleEventSelection(), true)
+                    new Actor("Ari", Color.Red, AriStats, ariSprite, new BattleEventSelection(), new PlayerInfo(ariLevelingScheme)),
+                    new Actor("Zino", Color.Blue, ZinoStats, zinoSprite, new BattleEventSelection(), new PlayerInfo(zinoLevelingScheme))
             };
 
             eventCounter = 0;            

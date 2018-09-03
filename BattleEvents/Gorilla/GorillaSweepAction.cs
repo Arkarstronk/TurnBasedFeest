@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TurnBasedFeest.Actors;
 using TurnBasedFeest.BattleEvents.Actions;
+using TurnBasedFeest.BattleEvents.Battle;
 using TurnBasedFeest.Utilities;
 
 namespace TurnBasedFeest.BattleEvents.Gorilla
@@ -18,12 +19,10 @@ namespace TurnBasedFeest.BattleEvents.Gorilla
         private int[] targetsHP;
         private AnimationHelper animationHelper;
 
-        public string GetName()
-        {
-            return "Gorilla Sweep";
-        }
+        public string GetName() => "Gorilla Sweep";
+        public ActionTarget GetTarget() => new ActionTarget(ActionTarget.TargetSide.ENEMY, ActionTarget.TargetAmount.ALL);
 
-        public void Initialize()
+        public void Initialize(BattleContainer battle)
         {            
             foreach (Actor target in this.targets)
             {
@@ -50,11 +49,6 @@ namespace TurnBasedFeest.BattleEvents.Gorilla
                     target.Health.CurrentHealth = targetHP + (int)(difference * percentage);
                 }
             });
-        }
-
-        public bool IsSupportive()
-        {
-            return false;
         }
 
         public void SetActors(Actor source, params Actor[] targets)

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TurnBasedFeest.Actors;
 using TurnBasedFeest.BattleEvents.Battle;
+using TurnBasedFeest.Graphics;
 using TurnBasedFeest.Utilities;
 
 namespace TurnBasedFeest
@@ -15,21 +16,24 @@ namespace TurnBasedFeest
     class BattleContainer
     {
         public Actor CurrentActor;
-        
+
+        public ParticleHelper ParticleHelper { get; }
+
         private List<Actor> actors;        
         private Queue<BattleEvent> battleEvents = new Queue<BattleEvent>();
         private BattleEvent CurrentEvent => battleEvents.Peek();
         private String splashText = "A new fight awaits~!";
 
-        public static BattleContainer CreateBattle(List<Actor> actors)
+        public static BattleContainer CreateBattle(ParticleHelper particleHelper, List<Actor> actors)
         {
-            BattleContainer battle = new BattleContainer(actors);
+            BattleContainer battle = new BattleContainer(particleHelper, actors);
 
             return battle;
         }
 
-        private BattleContainer(List<Actor> actors)
+        private BattleContainer(ParticleHelper particleHelper, List<Actor> actors)
         {
+            this.ParticleHelper = particleHelper;
             this.actors = actors;
             this.actors.ForEach(x =>
             {
@@ -48,22 +52,29 @@ namespace TurnBasedFeest
 
         private void calculateDistances(List<Actor> actors)
         {
-            int parseDistanceAlly = (int)((0.7f * Game1.screenHeight) / (actors.FindAll(x => x.IsPlayer).Count + 1));
-            for (int i = 0; i < actors.FindAll(x => x.IsPlayer).Count; i++)
+            List<Actor> playerActors = actors.FindAll(x => x.IsPlayer());
+            List<Actor> npcActors = actors.FindAll(x => !x.IsPlayer());
+            int parseDistanceAlly = (int)((0.7f * Game1.screenHeight) / (playerActors.Count + 1));
+            for (int i = 0; i < playerActors.Count; i++)
             {
-                actors.FindAll(x => x.IsPlayer)[i].Position = new Vector2(Game1.screenWidth - 50 - 0.8f * Game1.screenWidth, 0.1f * Game1.screenHeight + (i + 1) * parseDistanceAlly);
+                playerActors[i].Position = new Vector2(Game1.screenWidth - 50 - 0.8f * Game1.screenWidth, 0.1f * Game1.screenHeight + (i + 1) * parseDistanceAlly);
             }
 
-            int parseDistanceEnemies = (int)((0.7f * Game1.screenHeight) / (actors.FindAll(x => !x.IsPlayer).Count + 1));
-            for (int i = 0; i < actors.FindAll(x => !x.IsPlayer).Count; i++)
+            int parseDistanceEnemies = (int)((0.7f * Game1.screenHeight) / (npcActors.Count + 1));
+            for (int i = 0; i < npcActors.Count; i++)
             {
-                actors.FindAll(x => !x.IsPlayer)[i].Position = new Vector2(Game1.screenWidth - 50 - 0.2f * Game1.screenWidth, 0.1f * Game1.screenHeight + (i + 1) * parseDistanceEnemies);
+                npcActors[i].Position = new Vector2(Game1.screenWidth - 50 - 0.2f * Game1.screenWidth, 0.1f * Game1.screenHeight + (i + 1) * parseDistanceEnemies);
             }
         }
 
         public List<Actor> GetAliveActors()
         {
             return actors.FindAll(x => x.IsAlive());
+        }
+
+        public List<Actor> GetActors()
+        {
+            return actors;
         }
 
         public void Update(GameTime gameTime, Input input)
@@ -192,11 +203,11 @@ namespace TurnBasedFeest
                 return Victors.NONE;
             }
 
-            if (actors.FindAll(x => x.IsPlayer).TrueForAll(x => !x.IsAlive()))
+            if (actors.FindAll(x => x.IsPlayer()).TrueForAll(x => !x.IsAlive()))
             {
                 return Victors.ENEMY;
             }
-            if (actors.FindAll(x => !x.IsPlayer).TrueForAll(x => !x.IsAlive()))
+            if (actors.FindAll(x => !x.IsPlayer()).TrueForAll(x => !x.IsAlive()))
             {
                 return Victors.HEROES;
             }

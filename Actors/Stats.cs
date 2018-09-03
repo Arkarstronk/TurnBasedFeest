@@ -12,6 +12,8 @@ namespace TurnBasedFeest.Actors
     // Stats are like attack, defence or maybe even speed points.
     class Stats
     {
+        public int Level;
+        public int ExperiencePoints;
         public int MaxHealth;
         public List<IAction> Actions;
         private Dictionary<StatisticAttribute, int> stats;
@@ -61,6 +63,8 @@ namespace TurnBasedFeest.Actors
 
             return stats;
         }
+
+
         public Stats(int health, List<IAction> actions)
         {
             this.stats = new Dictionary<StatisticAttribute, int>();
@@ -73,10 +77,78 @@ namespace TurnBasedFeest.Actors
             stats[attributes] = value;
             return this;
         }
+
+        // Add experience to the player, and if enough experience is gained level up.
+        public ExperienceResult AddExperience(int experience, LevelingScheme levelingSlate)
+        {
+            ExperienceResult result = new ExperienceResult(experience, Level);
+            // Add experience points
+            ExperiencePoints += experience;
+                        
+
+            // If enough experience is gained
+            while(ExperiencePoints >= levelingSlate[Level + 1].XP)
+            {
+                // Level up
+                Level++;
+
+                // Subtract experience points to reset, otherwise you would level up too quickly
+                ExperiencePoints -= levelingSlate[Level + 1].XP;
+
+                // For each stat attribute there is a probability it increases
+                levelingSlate[Level + 1].LevelUpProbabilities.ToList().ForEach(pair => {
+                    StatisticAttribute attribute = pair.Key;
+                    double probability = pair.Value;
+
+                    if (Game1.rnd.NextDouble() <= probability)
+                    {
+                        int oldStat = this[attribute];                        
+                        SetStat(attribute, oldStat + 1);
+
+                        if (result.statups.ContainsKey(attribute))
+                        {
+                            result.statups[attribute] = new Tuple<int, int>(result.statups[attribute].Item1, result.statups[attribute].Item2 + 1);
+                        } else
+                        {
+                            result.statups.Add(attribute, new Tuple<int, int>(oldStat, oldStat + 1));
+                        }
+                    }
+                });
+
+                // Increase the max health with each level up.
+                MaxHealth += Game1.rnd.Next(5, 8);
+
+                // Notify the result that we leveled up
+                result.LeveledUp = true;
+                result.NewLevel = Level;
+            }
+
+            return result;
+        }
     }
 
-    enum StatisticAttribute
+    public enum StatisticAttribute
     {
         ATTACK, DEFENCE, SPEED, ATTACK_MAGIC, SUPPORT_MAGIC
+    }
+
+    public class ExperienceResult
+    {
+        public int Level;
+        public int NewLevel;
+        public int Experience;
+        public bool LeveledUp;
+
+        public Dictionary<StatisticAttribute, Tuple<int, int>> statups;
+
+        public ExperienceResult(int experience, int level)
+        {
+            this.Level = level;
+            this.NewLevel = Level;
+            this.Experience = experience;
+            this.LeveledUp = false;
+
+            statups = new Dictionary<StatisticAttribute, Tuple<int, int>>();
+        }
     }
 }

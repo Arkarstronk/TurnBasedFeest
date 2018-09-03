@@ -50,14 +50,14 @@ namespace TurnBasedFeest.BattleEvents.Gorilla
                 {
                     state = GorillaState.FIGHTING;
                     var action = new GorillaMeteorAction();
-                    action.SetActors(actor, battle.GetAliveActors().FindAll(x => x.IsPlayer).ToArray());
-                    action.Initialize();
+                    action.SetActors(actor, battle.GetAliveActors().FindAll(x => x.IsPlayer()).ToArray());
+                    action.Initialize(battle);
 
                     this.action = action;
                 } else
                 {
                     action = new TimerAction(1000);
-                    action.Initialize();
+                    action.Initialize(battle);
                 }                
             }
             else
@@ -74,7 +74,7 @@ namespace TurnBasedFeest.BattleEvents.Gorilla
                         chargingCount = 4;
                         maxCharge = 4;
                         this.action = new TimerAction(1200);
-                        this.action.Initialize();
+                        this.action.Initialize(battle);
                         this.battle.PushSplashText($"{actor.Name} is starting to charge...");
                     }
                     else if (chance <= 70)
@@ -83,7 +83,7 @@ namespace TurnBasedFeest.BattleEvents.Gorilla
                         // 20% chance heal
                         var action = new HealAction();
                         action.SetActors(actor, actor);
-                        action.Initialize();
+                        action.Initialize(battle);
                         this.action = action;
                         this.battle.PushSplashText($"{actor.Name} is healing");
                     }
@@ -91,8 +91,8 @@ namespace TurnBasedFeest.BattleEvents.Gorilla
                     {
                         // 30% chance attack everyone
                         var action = new GorillaSweepAction();
-                        action.SetActors(actor, battle.GetAliveActors().FindAll(x => x.IsPlayer).ToArray());
-                        action.Initialize();
+                        action.SetActors(actor, battle.GetAliveActors().FindAll(x => x.IsPlayer()).ToArray());
+                        action.Initialize(battle);
                         this.action = action;
                         this.battle.PushSplashText($"{actor.Name} takes a sweep");
                     }
@@ -111,7 +111,7 @@ namespace TurnBasedFeest.BattleEvents.Gorilla
 
                         battle.PushSplashText($"{actor.Name} is getting serious!");
                         this.action = new TimerAction(1200);
-                        this.action.Initialize();
+                        this.action.Initialize(battle);
                     }
                     else
                     {
@@ -122,13 +122,13 @@ namespace TurnBasedFeest.BattleEvents.Gorilla
                             chargingCount = 3;
                             maxCharge = 3;
                             this.action = new TimerAction(1200);
-                            this.action.Initialize();
+                            this.action.Initialize(battle);
                             this.battle.PushSplashText($"{actor.Name} is starting to charge...");
                         } else
                         {                            
                             var action = new GorillaSweepAction();
-                            action.SetActors(actor, battle.GetAliveActors().FindAll(x => x.IsPlayer).ToArray());
-                            action.Initialize();
+                            action.SetActors(actor, battle.GetAliveActors().FindAll(x => x.IsPlayer()).ToArray());
+                            action.Initialize(battle);
                             this.action = action;
                             this.battle.PushSplashText($"{actor.Name} takes a sweep");
                         }

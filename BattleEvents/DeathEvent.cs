@@ -16,7 +16,7 @@ namespace TurnBasedFeest.BattleEvents
             this.deceased = deceased;
         }
 
-        public void Initialize()
+        public void Initialize(BattleContainer battle)
         {
             elapsedTime = 0;
         }

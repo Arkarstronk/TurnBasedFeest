@@ -2,6 +2,8 @@
 using TurnBasedFeest.Actors;
 using TurnBasedFeest.Utilities;
 using Microsoft.Xna.Framework.Graphics;
+using TurnBasedFeest.BattleEvents.Battle;
+using TurnBasedFeest.Graphics;
 
 namespace TurnBasedFeest.BattleEvents.Actions
 {
@@ -21,24 +23,20 @@ namespace TurnBasedFeest.BattleEvents.Actions
             this.target = target[0];
         }
 
-        public void Initialize()
+        public void Initialize(BattleContainer battle)
         {
             elapsedTime = 0;
             heal = source.GetStats()[StatisticAttribute.SUPPORT_MAGIC];
             beginHP = (int)target.Health.CurrentHealth;
             targetHP = (int)((target.Health.CurrentHealth + heal >= target.Health.MaxHealth) ? target.Health.MaxHealth : (target.Health.CurrentHealth + heal));            
             target.Health.SetColor(Color.Green);
+            battle.ParticleHelper.Add(new TextParticle($"+{targetHP - beginHP}", 1200, target.Position, new Vector2(30.0f, -30.0f)));
         }
 
-        public bool IsSupportive()
-        {
-            return true;
-        }
+        public string GetName() => "Heal";
+        public ActionTarget GetTarget() => new ActionTarget(ActionTarget.TargetSide.FRIENDLY);
 
-        public string GetName()
-        {
-            return "Heal";
-        }
+
 
         public void Update(BattleContainer battle, GameTime gameTime, Input input)
         {
@@ -56,8 +54,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
         }
 
         public void Draw(BattleContainer battle, SpriteBatch spritebatch, SpriteFont font)
-        {
-            spritebatch.DrawString(font, heal.ToString(), target.Position + new Vector2(0, -(elapsedTime / (float)eventTime) * 50 + 20), Color.White, 0, new Vector2(), 2, SpriteEffects.None, 1);
+        {         
         }
 
         public bool HasCompleted()

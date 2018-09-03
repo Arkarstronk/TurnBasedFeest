@@ -43,6 +43,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Actors\Actor.cs" />
+    <Compile Include="Actors\Leveling.cs" />
+    <Compile Include="Actors\npcs\Enemy.cs" />
     <Compile Include="Actors\Stats.cs" />
     <Compile Include="Attributes\AttackMagicAttribute.cs" />
     <Compile Include="Attributes\AttackAttribute.cs" />
@@ -50,6 +52,7 @@
     <Compile Include="Attributes\GivenAttribute.cs" />
     <Compile Include="Attributes\IAttribute.cs" />
     <Compile Include="BattleContainer.cs" />
+    <Compile Include="BattleEvents\Actions\AtombBombMagicAction.cs" />
     <Compile Include="BattleEvents\Actions\AttackBuffAction.cs" />
     <Compile Include="BattleEvents\Actions\TimerAction.cs" />
     <Compile Include="BattleEvents\DeathEvent.cs" />
@@ -67,6 +70,8 @@
     <Compile Include="BattleEvents\BattleEventSelection.cs" />
     <Compile Include="BattleEvents\BattleEvent.cs" />
     <Compile Include="BattleEvents\Actions\IContinueableAction.cs" />
+    <Compile Include="Graphics\ParticleHelper.cs" />
+    <Compile Include="UI\ExperienceScreen.cs" />
     <Compile Include="UI\RestScreen.cs" />
     <Compile Include="UI\WelcomeScreen.cs" />
     <Compile Include="UI\MultipleChoiceEvent.cs" />

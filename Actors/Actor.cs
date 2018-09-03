@@ -10,6 +10,41 @@ using TurnBasedFeest.Graphics;
 
 namespace TurnBasedFeest.Actors
 {
+    abstract class ActorInfo
+    {
+        public virtual bool IsPlayer() => false;
+    }
+
+    class EnemyInfo : ActorInfo
+    {
+        private int experience;
+
+        public EnemyInfo(int experience)
+        {
+            this.experience = experience;
+        }
+        public int GetXP()
+        {            
+            return this.experience;
+        }
+    }
+
+    class PlayerInfo : ActorInfo
+    {
+        private LevelingScheme levelingScheme;
+
+        public PlayerInfo(LevelingScheme levelingScheme)
+        {
+            this.levelingScheme = levelingScheme;
+        }
+
+        public override bool IsPlayer() => true;
+
+        public LevelingScheme GetLevelingScheme()
+        {
+            return levelingScheme;    
+        }
+    }
     class Actor
     {
         public string Name;
@@ -20,21 +55,22 @@ namespace TurnBasedFeest.Actors
         public List<GivenAttribute> HandedOutAttributes = new List<GivenAttribute>();
         public List<IAttribute> Attributes = new List<IAttribute>();        
         public bool HasTurn;
-        public bool IsPlayer;
+        //public bool IsPlayer;
+        public ActorInfo Info;
         public Color Color;
 
         private Stats stats;
         private CustomSprite sprite;
 
-        public Actor(string name, Color color, Stats stats, CustomSprite sprite, BattleEvent behaviourEvent, bool isPlayer)
+        public Actor(string name, Color color, Stats stats, CustomSprite sprite, BattleEvent behaviourEvent, ActorInfo info)
         {
             this.Name = name;
             this.Color = color;
             this.stats = stats;
             this.Health = new Health(stats.MaxHealth);
             this.sprite = sprite;
-            this.StartEvent = behaviourEvent;            
-            this.IsPlayer = isPlayer;
+            this.StartEvent = behaviourEvent;
+            this.Info = info;
         }
 
         public void Initialize()
@@ -86,6 +122,11 @@ namespace TurnBasedFeest.Actors
         public Stats GetStats()
         {
             return this.stats;
+        }
+
+        public bool IsPlayer()
+        {
+            return Info.IsPlayer();
         }
     }
 }
