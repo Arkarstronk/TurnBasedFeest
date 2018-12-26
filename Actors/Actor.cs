@@ -1,67 +1,91 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using TurnBasedFeest.Attributes;
 using TurnBasedFeest.BattleEvents;
 using TurnBasedFeest.BattleEvents.Actions;
+using TurnBasedFeest.BattleEvents.Battle;
+using TurnBasedFeest.Graphics;
 
 namespace TurnBasedFeest.Actors
 {
     class Actor
     {
-        public string name;
-        public Vector2 position;
-        public Health health;
-        public List<GivenAttribute> giftedAttributes = new List<GivenAttribute>();
-        public List<IAttribute> attributes = new List<IAttribute>();
-        public List<IAction> actions;
-        public List<ITurnEvent> battleEvents;
-        public bool hasTurn;
-        public bool isPlayer;
-        public Color color;
+        public string Name;
+        public Vector2 Position;
+        public Health Health;
+        public BattleEvent StartEvent { get; }        
+        
+        public List<GivenAttribute> HandedOutAttributes = new List<GivenAttribute>();
+        public List<IAttribute> Attributes = new List<IAttribute>();        
+        public bool HasTurn;
+        public bool IsPlayer;
+        public Color Color;
 
-        private Texture2D texture;
+        private Stats stats;
+        private CustomSprite sprite;
 
-        public Actor(string name, Color color, int maxHealth, List<IAction> actions, Texture2D texture, ITurnEvent behaviourEvent, bool isPlayer)
+        public Actor(string name, Color color, Stats stats, CustomSprite sprite, BattleEvent behaviourEvent, bool isPlayer)
         {
-            this.name = name;
-            this.color = color;
-            this.health = new Health(maxHealth);
-            this.actions = actions;
-            this.texture = texture;
-            battleEvents = new List<ITurnEvent> { new AttributeEvent(), behaviourEvent };
-            this.isPlayer = isPlayer;
+            this.Name = name;
+            this.Color = color;
+            this.stats = stats;
+            this.Health = new Health(stats.MaxHealth);
+            this.sprite = sprite;
+            this.StartEvent = behaviourEvent;            
+            this.IsPlayer = isPlayer;
         }
 
         public void Initialize()
         {
-            hasTurn = true;
+            HasTurn = true;
         }
 
-        public void Update()
+        // The actor starts its turn here
+        public void OnTurnStart()
         {
-            health.Update();   
+            // Handle attributes expiration
+            HandedOutAttributes.ForEach(x => x.Expiration--);
+            HandedOutAttributes.FindAll(x => x.Expiration <= 0).ForEach(x => {
+                x.receiver.Attributes.Remove(x.attribute);
+            });
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            Health.Update();   
         }
 
         public void Draw(SpriteBatch spritebatch, SpriteFont font)
         {
             // TODO: do not hardcode offset size            
-            spritebatch.DrawString(font, name, position + new Vector2(0,-90), Color.White);            
-            health.Draw(spritebatch, position, font);
+            spritebatch.DrawString(font, Name, Position + new Vector2(0,-90), Color.White);            
+            Health.Draw(spritebatch, Position, font);
 
-            for (int i = 0; i < attributes.Count; i++)
+            for (int i = 0; i < Attributes.Count; i++)
             {
-                attributes[i].Draw(spritebatch, font, position + new Vector2(i * 12, 0));
+                Attributes[i].Draw(spritebatch, font, Position + new Vector2(i * 17, 0));
             }
 
-            if (isPlayer)
-            {
-                spritebatch.Draw(texture, position, Color.White);
-            }
-            else
-            {
-                spritebatch.Draw(texture, position, null, Color.White, 0, new Vector2(), new Vector2(1,1), SpriteEffects.FlipHorizontally, 0);
-            }               
+            if (!IsAlive()) sprite.SetColor(Color.DarkSlateGray);
+
+            sprite.Draw(spritebatch, Position.X, Position.Y);            
+        }
+
+        public bool IsAlive()
+        {
+            return Health.CurrentHealth > 0;
+        }
+
+        public List<IAction> GetActions()
+        {
+            return stats.Actions;
+        }
+
+        public Stats GetStats()
+        {
+            return this.stats;
         }
     }
 }

@@ -1,19 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using TurnBasedFeest.Actors;
 
 namespace TurnBasedFeest.Attributes
 {
-    public enum attributeType
-    {
-        EVENT,
-        INCOMING,
-        OUTGOING
-    }
     interface IAttribute
-    {
-        attributeType GetAttributeType();
+    {        
         int GetExpiration();
-        float GetDamageMultiplier();
+        float GetAddition();
+        float GetMultiplier();
+        StatisticAttribute getStatistic();
         void Draw(SpriteBatch spritebatch, SpriteFont font, Vector2 position);
     }
 }
