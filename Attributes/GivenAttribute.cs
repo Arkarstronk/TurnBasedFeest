@@ -4,13 +4,13 @@ namespace TurnBasedFeest.Attributes
 {
     class GivenAttribute
     {
-        public int expiration;
+        public int Expiration;
         public IAttribute attribute;
         public Actor receiver;
 
         public GivenAttribute(int expiration, IAttribute attribute, Actor receiver)
         {
-            this.expiration = expiration;
+            this.Expiration = expiration;
             this.attribute = attribute;
             this.receiver = receiver;
         }

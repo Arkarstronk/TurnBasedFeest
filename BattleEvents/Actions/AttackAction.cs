@@ -2,12 +2,12 @@
 using TurnBasedFeest.Actors;
 using TurnBasedFeest.Utilities;
 using Microsoft.Xna.Framework.Graphics;
-using TurnBasedFeest.GameEvents.Battle;
 using TurnBasedFeest.Attributes;
+using System;
 
 namespace TurnBasedFeest.BattleEvents.Actions
 {
-    class AttackAction : IAction
+    class AttackAction : IAction, IContinueableAction
     {
         int eventTime = 1000;
         int elapsedTime;
@@ -17,6 +17,10 @@ namespace TurnBasedFeest.BattleEvents.Actions
         int targetHP;
         int damage;
 
+
+        private ITurnEvent nextEvent = null;
+        private string status;
+
         public void SetActors(Actor source, Actor target)
         {
             this.source = source;
@@ -25,59 +29,129 @@ namespace TurnBasedFeest.BattleEvents.Actions
 
         public void Initialize()
         {
+            beginHP = (int)target.Health.CurrentHealth;
             elapsedTime = 0;
-            damage = 25;
-            beginHP = (int) target.health.CurrentHealth;
+            damage = 0;
 
-            foreach(IAttribute attribute in target.attributes.FindAll(x => x.GetAttributeType() == attributeType.INCOMING))
+            int attack = source.GetStats()[StatisticAttribute.ATTACK];
+            int defence = target.GetStats()[StatisticAttribute.DEFENCE];
+            int sourceSpeed = source.GetStats()[StatisticAttribute.SPEED];
+            int targetSpeed = target.GetStats()[StatisticAttribute.SPEED];
+
+
+            foreach (IAttribute attribute in target.Attributes.FindAll(x => x.GetAttributeType() == attributeType.INCOMING))
             {
-                damage = (int) (damage * attribute.GetDamageMultiplier());
+                defence = (int) (defence * attribute.GetMultiplier()) + (int)attribute.GetAddition();
             }
-            targetHP = (int) ((target.health.CurrentHealth - damage <= 0) ? 0 : (target.health.CurrentHealth - damage));
-            target.health.color = Color.Yellow;
+
+            // Using attack, defence, source and target speeds.
+            // Basically, if the target is too fast it is unlikely to hit. But if the source is way faster, critical!
+            //
+
+            double hitChance = 0.0;
+            bool isCritical = false;
+            int difference = sourceSpeed - targetSpeed;
+            
+
+            // If the source is way faster than the target, critical!
+            if (difference >= 70)
+            {
+                hitChance = 0.97;
+                isCritical = true;
+            } else if (difference <= -70)
+            {
+                // The target is way faster than the source...
+                isCritical = false;
+                hitChance = 0.03;
+            } else {
+                // The difference cap is 70
+                // Calculate a chance to hit the target based on a log
+                // If the source is faster than target, chance to hit should be higher
+                // and vice versa
+                hitChance = ((difference) / 140.0) * 0.87 + 0.6;             
+            }
+
+            
+            if (Game1.rnd.NextDouble() <= hitChance)
+            {
+                target.Health.Shake = true;
+                isCritical = Game1.rnd.NextDouble() >= 0.9;
+
+                if (isCritical)
+                {
+                    status = $"{source.Name} used {GetName()}, Critical!";
+                    attack = (int)((damage + 1) * 1.5);
+                } else
+                {
+                    status = $"{source.Name} used {GetName()}";
+                }
+                
+                damage = Math.Max(1, attack - defence);
+
+                double randomDamageRange = 0.2;
+                double damageMultiplier = (Game1.rnd.NextDouble()) * randomDamageRange + (1 - randomDamageRange / 2);
+                Console.WriteLine($"Multiplier: {damageMultiplier}");
+                damage = Math.Max(1, (int)(damage * damageMultiplier));
+
+
+                targetHP = (int)((beginHP - damage <= 0) ? 0 : (beginHP - damage));
+                target.Health.SetColor(Color.DarkRed);
+            } else
+            {
+                damage = 0;
+                status = $"{source.Name} used {GetName()} and missed!";
+                target.Health.SetColor(Color.CornflowerBlue);
+                targetHP = beginHP;
+            }
         }
 
-        public bool Update(BattleTurnEvent battle, Input input)
-        {
-            battle.battle.battleText = $"{source.name} used {GetName()}";
+        public void Update(BattleContainer battle, GameTime gameTime, Input input)        
+        {               
+            battle.PushSplashText(status);
             elapsedTime += (int)Game1.time.ElapsedGameTime.TotalMilliseconds;
 
-            target.health.CurrentHealth = MathHelper.SmoothStep(beginHP, targetHP, (elapsedTime / (float)eventTime));
+            target.Health.CurrentHealth = MathHelper.SmoothStep(beginHP, targetHP, (elapsedTime / (float)eventTime));
 
-            if (elapsedTime >= eventTime)
+            if (HasCompleted())
             {
-                target.health.color = Color.White;
-                target.health.CurrentHealth = targetHP;
+                target.Health.SetColor(Color.White);                
+                target.Health.CurrentHealth = targetHP;
+                target.Health.Shake = false;
 
-                //if this attack killed its target
-                if (target.health.CurrentHealth == 0)
+                if (!target.IsAlive())
                 {
-                    battle.currentActor.battleEvents.Insert(battle.eventIndex + 1, new DeathEvent(target));
-                }                
-
-                battle.currentActor.battleEvents.RemoveAt(battle.eventIndex);
-                battle.eventIndex--;
-                return true;
-            }
-            else
-            {
-                return false;
+                    nextEvent = new DeathEvent(target);
+                }
             }            
         }
 
         public string GetName()
         {
             return "Attack";
-        }
-
-        public void Draw(BattleTurnEvent battle, SpriteBatch spritebatch, SpriteFont font)
-        {
-            spritebatch.DrawString(font, damage.ToString(), target.position + new Vector2(0, -(elapsedTime / (float) eventTime) * 50 + 20), Color.White, 0, new Vector2(), 2, SpriteEffects.None, 1);
-        }
+        }        
 
         public bool IsSupportive()
         {
             return false;
+        }
+
+        public void Draw(BattleContainer battle, SpriteBatch spritebatch, SpriteFont font)
+        {
+            spritebatch.DrawString(font, damage.ToString(), target.Position + new Vector2(0, -(elapsedTime / (float)eventTime) * 50 + 20), Color.White, 0, new Vector2(), 2, SpriteEffects.None, 1);
+        }
+
+        public bool HasCompleted()
+        {
+            return elapsedTime >= eventTime;
+        }
+
+        public bool HasNextEvent()
+        {
+            return nextEvent != null;
+        }
+        public ITurnEvent NextEvent()
+        {
+            return nextEvent;
         }
     }
 }

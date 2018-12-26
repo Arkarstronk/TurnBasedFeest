@@ -2,7 +2,6 @@
 using TurnBasedFeest.Actors;
 using Microsoft.Xna.Framework.Graphics;
 using TurnBasedFeest.Utilities;
-using TurnBasedFeest.GameEvents.Battle;
 using TurnBasedFeest.Attributes;
 
 namespace TurnBasedFeest.BattleEvents.Actions
@@ -22,30 +21,8 @@ namespace TurnBasedFeest.BattleEvents.Actions
 
         public void Initialize()
         {
-            elapsedTime = 0;
-            this.target.health.color = Color.Violet;
-        }
-
-        public bool Update(BattleTurnEvent battle, Input input)
-        {
-            battle.battle.battleText = $"{source.name} used {GetName()}";
-
-            elapsedTime += (int) Game1.time.ElapsedGameTime.TotalMilliseconds;
-            
-            if (elapsedTime >= eventTime)
-            {
-                IAttribute newAttribute = new DefendAttribute(source);
-                source.giftedAttributes.Add(new GivenAttribute(newAttribute.GetExpiration(), newAttribute, target));
-                target.attributes.Add(newAttribute);
-                target.health.color = Color.White;
-                battle.currentActor.battleEvents.RemoveAt(battle.eventIndex);
-                battle.eventIndex--;
-                return true;
-            }
-            else
-            {
-                return false;
-            }            
+            elapsedTime = 0;            
+            target.Health.SetColor(Color.Violet);
         }
 
         public string GetName()
@@ -58,8 +35,29 @@ namespace TurnBasedFeest.BattleEvents.Actions
             return true;
         }
 
-        public void Draw(BattleTurnEvent battle, SpriteBatch spritebatch, SpriteFont font)
+        public void Update(BattleContainer battle, GameTime gameTime, Input input)
         {
+            battle.PushSplashText($"{source.Name} used {GetName()}");
+
+            elapsedTime += (int)Game1.time.ElapsedGameTime.TotalMilliseconds;
+
+            if (HasCompleted())
+            {
+                IAttribute newAttribute = new DefendAttribute(source);
+                source.HandedOutAttributes.Add(new GivenAttribute(newAttribute.GetExpiration(), newAttribute, target));
+                target.Attributes.Add(newAttribute);
+                target.Health.SetColor(Color.White);                
+
+            }            
+        }
+
+        public void Draw(BattleContainer battle, SpriteBatch spritebatch, SpriteFont font)
+        {         
+        }
+
+        public bool HasCompleted()
+        {
+            return elapsedTime >= eventTime;
         }
     }
 }

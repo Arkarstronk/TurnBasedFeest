@@ -13,7 +13,8 @@ namespace TurnBasedFeest.Attributes
     {
         attributeType GetAttributeType();
         int GetExpiration();
-        float GetDamageMultiplier();
+        float GetAddition();
+        float GetMultiplier();
         void Draw(SpriteBatch spritebatch, SpriteFont font, Vector2 position);
     }
 }
