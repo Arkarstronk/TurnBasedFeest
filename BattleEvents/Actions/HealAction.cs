@@ -2,71 +2,50 @@
 using TurnBasedFeest.Actors;
 using TurnBasedFeest.Utilities;
 using Microsoft.Xna.Framework.Graphics;
-using TurnBasedFeest.GameEvents.Battle;
+using TurnBasedFeest.BattleEvents.Battle;
+using TurnBasedFeest.Graphics;
+using System;
 
 namespace TurnBasedFeest.BattleEvents.Actions
 {
     class HealAction : IAction
     {
-        int eventTime = 1000;
-        int elapsedTime;
+        
         Actor source;
-        Actor target;
-        int beginHP;
-        int targetHP;
-        int heal = 20;
+        Actor target;        
 
-        public void SetActors(Actor source, Actor target)
+        public void SetActors(Actor source, params Actor[] target)
         {
             this.source = source;
-            this.target = target;
+            this.target = target[0];
         }
 
-        public void Initialize()
-        {
-            elapsedTime = 0;
-            beginHP = (int)target.health.CurrentHealth;
-            targetHP = (int)((target.health.CurrentHealth + heal >= target.health.MaxHealth) ? target.health.MaxHealth : (target.health.CurrentHealth + heal));
-            target.health.color = Color.Green;
-        }
+        public void Initialize(BattleContainer battle)
+        {            
+            int heal = source.GetStats()[StatisticAttribute.SUPPORT_MAGIC];
+            int beginHP = (int)target.Health.CurrentHealth;
 
-        public bool Update(BattleTurnEvent battle, Input input)
-        {
-            battle.battle.battleText = $"{source.name} used {GetName()}";
-
-            elapsedTime += (int)Game1.time.ElapsedGameTime.TotalMilliseconds;
-
-            target.health.CurrentHealth = MathHelper.SmoothStep(beginHP, targetHP, (elapsedTime / (float)eventTime));
-
-            if (elapsedTime >= eventTime)
-            {
-                target.health.CurrentHealth = targetHP;
-                target.health.color = Color.White;
-
-                battle.currentActor.battleEvents.RemoveAt(battle.eventIndex);
-                battle.eventIndex--;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            heal = Math.Min(target.Health.MaxHealth, beginHP + heal) - beginHP;
             
+            
+            battle.ParticleHelper.Add(new TextParticle($"+{beginHP + heal}", 1200, target.Position, new Vector2(30.0f, -30.0f)));
+            battle.Animations.Add(new AnimationHealthChange(target, beginHP, -heal));
         }
 
-        public bool IsSupportive()
+        public string GetName() => "Heal";
+        public ActionTarget GetTarget() => new ActionTarget(ActionTarget.TargetSide.FRIENDLY);
+
+
+
+        public void Update(BattleContainer battle, GameTime gameTime, Input input)
         {
-            return true;
+            battle.PushSplashText($"{source.Name} used {GetName()}");
         }
 
-        public string GetName()
-        {
-            return "Heal";
+        public void Draw(BattleContainer battle, SpriteBatch spritebatch, SpriteFont font)
+        {         
         }
 
-        public void Draw(BattleTurnEvent battle, SpriteBatch spritebatch, SpriteFont font)
-        {
-            spritebatch.DrawString(font, heal.ToString(), target.position + new Vector2(0, -(elapsedTime / (float)eventTime) * 50 + 20), Color.White, 0, new Vector2(), 2, SpriteEffects.None, 1);
-        }
+        public bool HasCompleted() => true;
     }
 }

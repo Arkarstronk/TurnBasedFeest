@@ -5,16 +5,16 @@ using TurnBasedFeest.Graphics;
 
 namespace TurnBasedFeest.Attributes
 {
-    class DefendAttribute : IAttribute
+    class AttackMagicAttribute : IAttribute
     {
         int expiration = 1;        
         Actor gifter;
         private CustomSprite sprite;
 
-        public DefendAttribute(Actor gifter)
+        public AttackMagicAttribute(Actor gifter)
         {
             this.gifter = gifter;
-            this.sprite = CustomSprite.GetSprite("guard");
+            this.sprite = CustomSprite.GetSprite("buff");
             this.sprite.SetColor(gifter.Color);
         }
 
@@ -30,7 +30,7 @@ namespace TurnBasedFeest.Attributes
 
         public float GetMultiplier()
         {
-            return 1.5f;
+            return 1.2f;
         }
 
         public int GetExpiration()
@@ -40,7 +40,7 @@ namespace TurnBasedFeest.Attributes
 
         public StatisticAttribute getStatistic()
         {
-            return StatisticAttribute.DEFENCE;
+            return StatisticAttribute.ATTACK_MAGIC;
         }
     }
 }

@@ -43,32 +43,45 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Actors\Actor.cs" />
+    <Compile Include="Actors\Leveling.cs" />
+    <Compile Include="Actors\npcs\Enemy.cs" />
+    <Compile Include="Actors\Stats.cs" />
+    <Compile Include="Attributes\AttackMagicAttribute.cs" />
+    <Compile Include="Attributes\AttackAttribute.cs" />
     <Compile Include="Attributes\DefendAttribute.cs" />
     <Compile Include="Attributes\GivenAttribute.cs" />
     <Compile Include="Attributes\IAttribute.cs" />
-    <Compile Include="BattleEvents\AttributeEvent.cs" />
-    <Compile Include="GameEvents\Battle\BattleBeginEvent.cs" />
-    <Compile Include="GameEvents\Battle\BattleEndEvent.cs" />
+    <Compile Include="BattleContainer.cs" />
+    <Compile Include="BattleEvents\Actions\AtombBombMagicAction.cs" />
+    <Compile Include="BattleEvents\Actions\AttackBuffAction.cs" />
+    <Compile Include="BattleEvents\Actions\TimerAction.cs" />
     <Compile Include="BattleEvents\DeathEvent.cs" />
-    <Compile Include="BattleEvents\TurnBehaviour\EfficientRandomAI.cs" />
-    <Compile Include="BattleEvents\TurnBehaviour\RandomAI.cs" />
     <Compile Include="Actors\Health.cs" />
     <Compile Include="BattleEvents\Actions\IAction.cs" />
     <Compile Include="BattleEvents\Actions\HealAction.cs" />
     <Compile Include="BattleEvents\Actions\AttackAction.cs" />
     <Compile Include="BattleEvents\Actions\DefendAction.cs" />
+    <Compile Include="Actors\npcs\Gorilla\GorillaAI.cs" />
+    <Compile Include="Actors\npcs\Gorilla\GorillaMeteorAction.cs" />
+    <Compile Include="Actors\npcs\Gorilla\GorillaSweepAction.cs" />
     <Compile Include="BattleEvents\ITurnEvent.cs" />
     <Compile Include="Game1.cs" />
-    <Compile Include="GameEvents\Battle\BattleEvent.cs" />
-    <Compile Include="GameEvents\EventDeterminerEvent.cs" />
-    <Compile Include="GameEvents\IGameEvent.cs" />
-    <Compile Include="GameEvents\RestEvent.cs" />
-    <Compile Include="GameEvents\UI\MultipleChoiceEvent.cs" />
+    <Compile Include="BattleEvents\BattleEventAI.cs" />
+    <Compile Include="BattleEvents\BattleEventSelection.cs" />
+    <Compile Include="BattleEvents\BattleEvent.cs" />
+    <Compile Include="BattleEvents\Actions\IContinueableAction.cs" />
+    <Compile Include="Graphics\ParticleHelper.cs" />
+    <Compile Include="UI\ExperienceScreen.cs" />
+    <Compile Include="UI\RestScreen.cs" />
+    <Compile Include="UI\WelcomeScreen.cs" />
+    <Compile Include="UI\MultipleChoiceEvent.cs" />
+    <Compile Include="UI\BattleScreen.cs" />
+    <Compile Include="UI\UIScreen.cs" />
+    <Compile Include="Graphics\CustomSprite.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="GameEvents\Battle\BattleTurnEvent.cs" />
-    <Compile Include="BattleEvents\TurnBehaviour\BattleUI.cs" />
     <Compile Include="TextureFactory.cs" />
+    <Compile Include="Utilities\AnimationHelper.cs" />
     <Compile Include="Utilities\Input.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-
+using TurnBasedFeest.Graphics;
 
 namespace TurnBasedFeest
 {
@@ -45,6 +45,12 @@ namespace TurnBasedFeest
 
             textures.Add("health", healthTexture);
             textures.Add("actor", content.Load<Texture2D>("graphics/actor"));
+            textures.Add("buff", content.Load<Texture2D>("graphics/buff"));
+            textures.Add("guard", content.Load<Texture2D>("graphics/guard"));
+            textures.Add("monkey", content.Load<Texture2D>("graphics/monkey"));
+            textures.Add("background", content.Load<Texture2D>("graphics/background"));
+            textures.Add("meteor", content.Load<Texture2D>("graphics/meteor"));
+
         }
 
         // TODO: Should probably be changed to something like an enum, and then register all textures in the enum?
@@ -58,6 +64,5 @@ namespace TurnBasedFeest
                 throw new Exception("Texture is not registered");
             }
         }
-
     }
 }

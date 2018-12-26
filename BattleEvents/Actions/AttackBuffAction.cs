@@ -7,7 +7,7 @@ using TurnBasedFeest.BattleEvents.Battle;
 
 namespace TurnBasedFeest.BattleEvents.Actions
 {
-    class DefendAction : IAction
+    class AttackBuffAction : IAction
     {
         int eventTime = 500;
         int elapsedTime;
@@ -26,10 +26,9 @@ namespace TurnBasedFeest.BattleEvents.Actions
             target.Health.SetColor(Color.Violet);
         }
 
-
-        public string GetName() => "Guard";
-        public bool HasCompleted() => elapsedTime >= eventTime;
+        public string GetName() => "Buff";
         public ActionTarget GetTarget() => new ActionTarget(ActionTarget.TargetSide.FRIENDLY);
+        public bool HasCompleted() => elapsedTime >= eventTime;
 
         public void Update(BattleContainer battle, GameTime gameTime, Input input)
         {
@@ -39,7 +38,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
 
             if (HasCompleted())
             {
-                IAttribute newAttribute = new DefendAttribute(source);
+                IAttribute newAttribute = new AttackAttribute(source);
                 source.HandedOutAttributes.Add(new GivenAttribute(newAttribute.GetExpiration(), newAttribute, target));
                 target.Attributes.Add(newAttribute);
                 target.Health.SetColor(Color.White);                

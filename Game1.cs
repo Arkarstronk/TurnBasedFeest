@@ -4,8 +4,11 @@ using System;
 using System.Collections.Generic;
 using TurnBasedFeest.Actors;
 using TurnBasedFeest.BattleEvents.Actions;
-using TurnBasedFeest.BattleEvents.TurnBehaviour;
+using TurnBasedFeest.BattleEvents.Battle;
+using TurnBasedFeest.BattleEvents.Gorilla;
 using TurnBasedFeest.GameEvents;
+using TurnBasedFeest.Graphics;
+using TurnBasedFeest.UI;
 using TurnBasedFeest.Utilities;
 
 namespace TurnBasedFeest
@@ -24,13 +27,29 @@ namespace TurnBasedFeest
         public static int screenWidth = 1280;
         public static int screenHeight = 720;
 
+        Stats AriStats = new Stats(11, new List<IAction> { new AttackAction(), new HealAction(), new DefendAction(), new AtombBombMagicAction(), new GorillaMeteorAction() })
+            .SetStat(StatisticAttribute.ATTACK, 11)
+            .SetStat(StatisticAttribute.DEFENCE, 8)
+            .SetStat(StatisticAttribute.SPEED, 8)
+            .SetStat(StatisticAttribute.ATTACK_MAGIC, 2)
+            .SetStat(StatisticAttribute.SUPPORT_MAGIC, 3);
+        Stats ZinoStats = new Stats(10, new List<IAction> { new AttackAction(), new HealAction(), new DefendAction(), new AttackBuffAction(), new AtombBombMagicAction(), new GorillaMeteorAction() })
+            .SetStat(StatisticAttribute.ATTACK, 4)
+            .SetStat(StatisticAttribute.DEFENCE, 5)
+            .SetStat(StatisticAttribute.SPEED, 9)
+            .SetStat(StatisticAttribute.ATTACK_MAGIC, 7)
+            .SetStat(StatisticAttribute.SUPPORT_MAGIC, 7);
+
+
         public int eventCounter;
-        public IGameEvent previousEvent;
-        public IGameEvent currentEvent;
-        public IGameEvent nextEvent;
+        //public IGameEvent previousEvent;
+        //public IGameEvent currentEvent;
+        //public IGameEvent nextEvent;
         public Dictionary<int, string> hardcodedEvents = new Dictionary<int, string> { {100, "OnTurn100ThisStubEventTakesPlace" } };
 
-        public List<Actor> actors;
+        private UIScreen currentScreen;
+
+        public List<Actor> heroes;
 
         public Game1()
         {
@@ -65,15 +84,40 @@ namespace TurnBasedFeest
             font = Content.Load<SpriteFont>("Fonts/default");
 
             var actorPlaceHolderTexture = factory.GetTexture("actor");
-            actors = new List<Actor> {
-                    new Actor("Ari", Color.Red, 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, actorPlaceHolderTexture, new BattleUI(), true),
-                    new Actor("Zino", Color.Blue, 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, actorPlaceHolderTexture, new BattleUI(), true)
 
+            var ariDict = new Dictionary<StatisticAttribute, double>();
+            ariDict.Add(StatisticAttribute.ATTACK, 1);
+            ariDict.Add(StatisticAttribute.ATTACK_MAGIC, 0.1);
+            ariDict.Add(StatisticAttribute.DEFENCE, 0.9);
+            ariDict.Add(StatisticAttribute.SPEED, 0.5);
+            ariDict.Add(StatisticAttribute.SUPPORT_MAGIC, 0.1);
+
+            var zinoDict = new Dictionary<StatisticAttribute, double>();
+            zinoDict.Add(StatisticAttribute.ATTACK, 0.4);
+            zinoDict.Add(StatisticAttribute.ATTACK_MAGIC, 0.9);
+            zinoDict.Add(StatisticAttribute.DEFENCE, 0.5);
+            zinoDict.Add(StatisticAttribute.SPEED, 0.7);
+            zinoDict.Add(StatisticAttribute.SUPPORT_MAGIC, 1);
+
+            var ariSprite = CustomSprite.GetSprite("actor");
+            var ariLevelingScheme = new LevelingScheme(ariDict);
+
+            var zinoSprite = CustomSprite.GetSprite("actor");
+            var zinoLevelingScheme = new LevelingScheme(zinoDict);
+
+            heroes = new List<Actor> {
+                    new Actor("Ari", Color.Red, AriStats, ariSprite, new BattleEventSelection(), new PlayerInfo(ariLevelingScheme)),
+                    new Actor("Zino", Color.Blue, ZinoStats, zinoSprite, new BattleEventSelection(), new PlayerInfo(zinoLevelingScheme))
             };
 
-            eventCounter = 0;
-            currentEvent = new EventDeterminerEvent(this);    
-            currentEvent.Initialize(actors);
+            eventCounter = 0;            
+            SetUIScreen(new WelcomeScreen(this));            
+        }
+
+        public void SetUIScreen(UIScreen screen)
+        {
+            this.currentScreen = screen;
+            screen.Initialize();
         }
 
         /// <summary>
@@ -94,15 +138,7 @@ namespace TurnBasedFeest
         {
             time = gameTime;
             input.Update();
-
-            if (currentEvent.Update(this, input))
-            {
-                previousEvent = currentEvent;
-                currentEvent = nextEvent;
-                nextEvent = null;
-
-                currentEvent.Initialize(actors);
-            }
+            currentScreen.Update(gameTime, input);
 
             base.Update(gameTime);
         }
@@ -114,10 +150,10 @@ namespace TurnBasedFeest
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);            
-            spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            
-            currentEvent.Draw(spriteBatch, font);
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.FrontToBack);
 
+            //currentEvent.Draw(spriteBatch, font);
+            currentScreen.Draw(spriteBatch, font);
             spriteBatch.End();
             base.Draw(gameTime);
         }
