@@ -28,7 +28,7 @@ namespace TurnBasedFeest.Actors
             this.name = name;
             this.color = color;
             this.stats = stats;
-            this.health = new Health(stats.MaxHealth);
+            this.health = new Health(stats[StatAttribute.HP] * 10);
             this.texture = texture;
             battleEvents = new List<ITurnEvent> { new AttributeEvent(), behaviourEvent };
             this.isPlayer = isPlayer;
@@ -57,11 +57,12 @@ namespace TurnBasedFeest.Actors
 
             if (isPlayer)
             {
-                spritebatch.Draw(texture, position, Color.White);
+                spritebatch.Draw(texture, position, color);
             }
             else
             {
-                spritebatch.Draw(texture, position, null, Color.White, 0, new Vector2(), new Vector2(1,1), SpriteEffects.FlipHorizontally, 0);
+                spritebatch.Draw(texture, position, null, color, 0, new Vector2(), new Vector2(1,1), SpriteEffects.FlipHorizontally, 0);
+                Console.WriteLine(color.ToString());
             }               
         }
 

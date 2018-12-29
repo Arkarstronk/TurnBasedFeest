@@ -70,6 +70,7 @@
     <Compile Include="GameEvents\Battle\BattleTurnEvent.cs" />
     <Compile Include="BattleEvents\TurnBehaviour\BattleUI.cs" />
     <Compile Include="TextureFactory.cs" />
+    <Compile Include="Utilities\HSV.cs" />
     <Compile Include="Utilities\Input.cs" />
   </ItemGroup>
   <ItemGroup>

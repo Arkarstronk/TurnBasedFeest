@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TurnBasedFeest.BattleEvents.Actions;
 
 namespace TurnBasedFeest.Actors
@@ -11,11 +9,10 @@ namespace TurnBasedFeest.Actors
     // Stats are like attack, defence or maybe even speed points.
     class Stats
     {
-        public int MaxHealth;
         public List<IAction> Actions;
-        private Dictionary<StatisticAttribute, int> stats;
+        private Dictionary<StatAttribute, int> stats;
         
-        public int this[StatisticAttribute key]
+        public int this[StatAttribute key]
         {
             get
             {
@@ -34,31 +31,38 @@ namespace TurnBasedFeest.Actors
             }
         }
 
-        public static Stats GetRandom(int health, int distributionPoints, List<IAction> actions)
+        public Stats(List<IAction> actions)
         {
-            Stats stats = new Stats(health, actions);
-            Random rnd = new Random();
-            new List<StatisticAttribute>(Enum.GetValues(typeof(StatisticAttribute)).Cast<StatisticAttribute>())
-                .ForEach(x => stats[x] = rnd.Next(distributionPoints));
+            this.stats = new Dictionary<StatAttribute, int>();
+            this.Actions = actions; 
+        }
 
+        public static Stats GetUniformRandom(int averagePoints, int divergence, List<IAction> actions)
+        {
+            Stats stats = new Stats(actions);
+            stats[StatAttribute.HP] = Game1.rnd.Next(averagePoints - divergence, averagePoints + divergence);
+            stats[StatAttribute.ATTACK] = Game1.rnd.Next(averagePoints - divergence, averagePoints + divergence);
+            stats[StatAttribute.DEFENCE] = Game1.rnd.Next(averagePoints - divergence, averagePoints + divergence);
+            stats[StatAttribute.CHROMA] = Game1.rnd.Next(averagePoints - divergence, averagePoints + divergence);
+            stats[StatAttribute.SPEED] = Game1.rnd.Next(averagePoints - divergence, averagePoints + divergence);
+            
             return stats;
         }
-        public Stats(int health, List<IAction> actions)
-        {
-            this.stats = new Dictionary<StatisticAttribute, int>();
-            this.MaxHealth = health;
-            this.Actions = actions;
-        }
 
-        public Stats SetStat(StatisticAttribute attributes, int value)
+        public Stats SetStat(StatAttribute attributes, int value)
         {
             stats[attributes] = value;
             return this;
         }
     }
 
-    enum StatisticAttribute
+    public enum StatAttribute
     {
-        ATTACK, DEFENCE, SPEED, ATTACK_MAGIC, SUPPORT_MAGIC
+        HP, ATTACK, DEFENCE, CHROMA, SPEED
     }
+    //HP is for maximum hp 
+    //Attack is for flat damage infliction
+    //Defence is for flat damage absorbtion
+    //Chroma is for weakness effectiveness/multiplier and maximum chroma
+    //Speed is for turn speed and crit 
 }

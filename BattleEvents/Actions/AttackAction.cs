@@ -4,7 +4,6 @@ using TurnBasedFeest.Utilities;
 using Microsoft.Xna.Framework.Graphics;
 using TurnBasedFeest.GameEvents.Battle;
 using TurnBasedFeest.Attributes;
-using System;
 
 namespace TurnBasedFeest.BattleEvents.Actions
 {
@@ -31,10 +30,10 @@ namespace TurnBasedFeest.BattleEvents.Actions
             beginHP = (int)target.health.CurrentHealth;
             elapsedTime = 0;            
 
-            int attack = source.GetStats()[StatisticAttribute.ATTACK];
-            int defence = target.GetStats()[StatisticAttribute.DEFENCE];
-            int sourceSpeed = source.GetStats()[StatisticAttribute.SPEED];
-            int targetSpeed = target.GetStats()[StatisticAttribute.SPEED];
+            int attack = source.GetStats()[StatAttribute.ATTACK];
+            int defence = target.GetStats()[StatAttribute.DEFENCE];
+            int sourceSpeed = source.GetStats()[StatAttribute.SPEED];
+            int targetSpeed = target.GetStats()[StatAttribute.SPEED];
 
 
             foreach (IAttribute attribute in target.attributes.FindAll(x => x.GetAttributeType() == attributeType.INCOMING))
@@ -42,54 +41,8 @@ namespace TurnBasedFeest.BattleEvents.Actions
                 defence = (int) (defence * attribute.GetMultiplier()) + (int)attribute.GetAddition();
             }
 
-            // Using attack, defence, source and target speeds.
-            // Basically, if the target is too fast it is unlikely to hit. But if the source is way faster, critical!
-            //
-
-            double hitChance = 0.0;
-            bool isCritical = false;
-            int difference = sourceSpeed - targetSpeed;
-            
-
-            // If the source is way faster than the target, critical!
-            if (difference >= 70)
-            {
-                hitChance = 0.97;
-                isCritical = true;
-            } else if (difference <= -70)
-            {
-                // The target is way faster than the source...
-                isCritical = false;
-                hitChance = 0.03;
-            } else {
-                // The difference cap is 70
-                // Calculate a chance to hit the target based on a log
-                // If the source is faster than target, chance to hit should be higher
-                // and vice versa
-                hitChance = ((difference) / 140.0) * 0.87 + 0.6;
-                Console.WriteLine($"hit: {hitChance}, diff: {difference}");
-            }
-
-            
-            if (Game1.rnd.NextDouble() <= hitChance)
-            {
-                isCritical = Game1.rnd.NextDouble() >= 0.9;
-
-                if (isCritical)
-                {
-                    status = $"{source.name} used {GetName()}, Critical!";
-                    attack = (int)((damage + 1) * 1.5);
-                } else
-                {
-                    status = $"{source.name} used {GetName()}";
-                }
-
-                damage = Math.Max(1, attack - defence);
-                
-            } else
-            {
-                status = $"{source.name} used {GetName()} and missed!";
-            }
+            damage = (int) (10 * (attack / (float) defence));
+            status = $"{source.name} used Attack on {target.name}";
 
             targetHP = (int) ((target.health.CurrentHealth - damage <= 0) ? 0 : (target.health.CurrentHealth - damage));
             target.health.color = Color.Yellow;

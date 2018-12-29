@@ -25,7 +25,7 @@ namespace TurnBasedFeest.BattleEvents.Actions
         public void Initialize()
         {
             elapsedTime = 0;
-            heal = source.GetStats()[StatisticAttribute.SUPPORT_MAGIC];
+            heal = 10;
             beginHP = (int)target.health.CurrentHealth;
             targetHP = (int)((target.health.CurrentHealth + heal >= target.health.MaxHealth) ? target.health.MaxHealth : (target.health.CurrentHealth + heal));
             target.health.color = Color.Green;

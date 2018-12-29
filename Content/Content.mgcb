@@ -32,3 +32,9 @@
 /processorParam:TextureFormat=Color
 /build:graphics/actor.png
 
+#begin Shaders/ColorReplacement.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/ColorReplacement.fx
+

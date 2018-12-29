@@ -60,6 +60,13 @@ namespace TurnBasedFeest.GameEvents
 
             spritebatch.DrawString(font, $"Turn count : {game.eventCounter.ToString()}", new Vector2(Game1.screenWidth * 0.45f, 0), Color.Red);
 
+            for(int i = 0; i < 12; i++)
+            {
+                int col = i * 30;
+                spritebatch.DrawString(font, $"deg : {col.ToString()}", new Vector2(Game1.screenWidth * 0.45f, 20 * i), HSV.FromHue(col));
+
+            }
+
         }
 
         private void setRandomEvent()
@@ -68,10 +75,13 @@ namespace TurnBasedFeest.GameEvents
              
             if(random < 50)
             {
-                for(int i = 0; i < Game1.rnd.Next(2) + 1; i++)
+                int randomDegree = Game1.rnd.Next(0, 360);
+                for (int i = 0; i < Game1.rnd.Next(2) + 1; i++)
                 {
-                    var stats = Stats.GetRandom(Game1.rnd.Next(50, 100), Game1.rnd.Next(40, 60), new List<IAction> { new AttackAction(), new DefendAction() });
-                    var actor = new Actor($"Battle Monkey {i + 1}", Color.Red, stats, TextureFactory.Instance.GetTexture("actor"), new EfficientRandomAI(), false);
+                    var stats = Stats.GetUniformRandom(10, 2, new List<IAction> { new AttackAction(), new HealAction(), new DefendAction() });
+                    int col = (i * 180 + randomDegree) % 360;
+
+                    var actor = new Actor($"Battle Monkey {col}", HSV.FromHue(col), stats, TextureFactory.Instance.GetTexture("actor"), new EfficientRandomAI(), false);
                     game.actors.Add(actor);
                 }
                 

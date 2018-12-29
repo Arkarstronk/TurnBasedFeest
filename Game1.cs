@@ -18,6 +18,7 @@ namespace TurnBasedFeest
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         SpriteFont font;
+        Effect replacementEffect;
         Input input;  
         public static Random rnd = new Random();
         public static GameTime time;     
@@ -63,25 +64,16 @@ namespace TurnBasedFeest
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("Fonts/default");
+            replacementEffect = Content.Load<Effect>("Shaders/ColorReplacement");
 
             var actorPlaceHolderTexture = factory.GetTexture("actor");
 
-            var AriStats = new Stats(100, new List<IAction> { new AttackAction(), new HealAction(), new DefendAction() })
-                .SetStat(StatisticAttribute.ATTACK, 60)
-                .SetStat(StatisticAttribute.DEFENCE, 50)
-                .SetStat(StatisticAttribute.SPEED, 20)
-                .SetStat(StatisticAttribute.ATTACK_MAGIC, 90)
-                .SetStat(StatisticAttribute.SUPPORT_MAGIC, 5);
-            var ZinoStats = new Stats(100, new List<IAction> { new AttackAction(), new HealAction(), new DefendAction() })
-                .SetStat(StatisticAttribute.ATTACK, 10)
-                .SetStat(StatisticAttribute.DEFENCE, 40)
-                .SetStat(StatisticAttribute.SPEED, 70)
-                .SetStat(StatisticAttribute.ATTACK_MAGIC, 10)
-                .SetStat(StatisticAttribute.SUPPORT_MAGIC, 30); ;
+            var AriStats = Stats.GetUniformRandom(15, 2, new List<IAction> { new AttackAction(), new HealAction(), new DefendAction() });
+            var ZinoStats = Stats.GetUniformRandom(15, 2, new List<IAction> { new AttackAction(), new HealAction(), new DefendAction() });
 
             actors = new List<Actor> {
-                    new Actor("Ari", Color.Red, AriStats, actorPlaceHolderTexture, new BattleUI(), true),
-                    new Actor("Zino", Color.Blue, ZinoStats, actorPlaceHolderTexture, new BattleUI(), true)
+                    new Actor("Ari", HSV.FromHue(120), AriStats, actorPlaceHolderTexture, new BattleUI(), true),
+                    new Actor("Zino", HSV.FromHue(300), ZinoStats, actorPlaceHolderTexture, new BattleUI(), true)
             };
 
             eventCounter = 0;
@@ -127,7 +119,7 @@ namespace TurnBasedFeest
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);            
-            spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp, effect: replacementEffect);
             
             currentEvent.Draw(spriteBatch, font);
 
