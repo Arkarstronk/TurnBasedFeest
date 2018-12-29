@@ -68,8 +68,13 @@ namespace TurnBasedFeest.GameEvents
              
             if(random < 50)
             {
-                game.actors.Add(new Actor("RandomName1", Color.White, Game1.rnd.Next(50, 100), new List<IAction> { new AttackAction() }, TextureFactory.Instance.GetTexture("actor"), new EfficientRandomAI(), false));
-                game.actors.Add(new Actor("RandomName2", Color.White, Game1.rnd.Next(50, 100), new List<IAction> { new AttackAction() }, TextureFactory.Instance.GetTexture("actor"), new EfficientRandomAI(), false));
+                for(int i = 0; i < Game1.rnd.Next(2) + 1; i++)
+                {
+                    var stats = Stats.GetRandom(Game1.rnd.Next(50, 100), Game1.rnd.Next(40, 60), new List<IAction> { new AttackAction(), new DefendAction() });
+                    var actor = new Actor($"Battle Monkey {i + 1}", Color.Red, stats, TextureFactory.Instance.GetTexture("actor"), new EfficientRandomAI(), false);
+                    game.actors.Add(actor);
+                }
+                
                 nextEvent = new BattleEvent();
             }
             else

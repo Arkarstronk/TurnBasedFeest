@@ -65,10 +65,23 @@ namespace TurnBasedFeest
             font = Content.Load<SpriteFont>("Fonts/default");
 
             var actorPlaceHolderTexture = factory.GetTexture("actor");
-            actors = new List<Actor> {
-                    new Actor("Ari", Color.Red, 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, actorPlaceHolderTexture, new BattleUI(), true),
-                    new Actor("Zino", Color.Blue, 100, new List<IAction> { new AttackAction() , new HealAction(), new DefendAction() }, actorPlaceHolderTexture, new BattleUI(), true)
 
+            var AriStats = new Stats(100, new List<IAction> { new AttackAction(), new HealAction(), new DefendAction() })
+                .SetStat(StatisticAttribute.ATTACK, 60)
+                .SetStat(StatisticAttribute.DEFENCE, 50)
+                .SetStat(StatisticAttribute.SPEED, 20)
+                .SetStat(StatisticAttribute.ATTACK_MAGIC, 90)
+                .SetStat(StatisticAttribute.SUPPORT_MAGIC, 5);
+            var ZinoStats = new Stats(100, new List<IAction> { new AttackAction(), new HealAction(), new DefendAction() })
+                .SetStat(StatisticAttribute.ATTACK, 10)
+                .SetStat(StatisticAttribute.DEFENCE, 40)
+                .SetStat(StatisticAttribute.SPEED, 70)
+                .SetStat(StatisticAttribute.ATTACK_MAGIC, 10)
+                .SetStat(StatisticAttribute.SUPPORT_MAGIC, 30); ;
+
+            actors = new List<Actor> {
+                    new Actor("Ari", Color.Red, AriStats, actorPlaceHolderTexture, new BattleUI(), true),
+                    new Actor("Zino", Color.Blue, ZinoStats, actorPlaceHolderTexture, new BattleUI(), true)
             };
 
             eventCounter = 0;

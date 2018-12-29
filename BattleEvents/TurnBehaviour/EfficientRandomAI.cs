@@ -17,22 +17,23 @@ namespace TurnBasedFeest.BattleEvents.TurnBehaviour
 
         public bool Update(BattleTurnEvent battle, Input input)
         {
-            IAction randomAction = battle.currentActor.actions[Game1.rnd.Next(battle.currentActor.actions.Count)];
+            var actions = battle.CurrentActor.GetActions();
+            IAction randomAction = actions[Game1.rnd.Next(actions.Count)];
 
             List<Actor> possibleTargets;
             if (randomAction.IsSupportive())
             {
-                possibleTargets = battle.aliveActors.FindAll(x => x.isPlayer == battle.currentActor.isPlayer);
+                possibleTargets = battle.aliveActors.FindAll(x => x.isPlayer == battle.CurrentActor.isPlayer);
             }
             else
             {
-                possibleTargets = battle.aliveActors.FindAll(x => x.isPlayer != battle.currentActor.isPlayer);
+                possibleTargets = battle.aliveActors.FindAll(x => x.isPlayer != battle.CurrentActor.isPlayer);
             }
 
             Actor randomActor = possibleTargets[Game1.rnd.Next(possibleTargets.Count)];
-            randomAction.SetActors(battle.currentActor, randomActor);
+            randomAction.SetActors(battle.CurrentActor, randomActor);
 
-            battle.currentActor.battleEvents.Insert(battle.eventIndex + 1, randomAction);
+            battle.CurrentActor.battleEvents.Insert(battle.eventIndex + 1, randomAction);
 
             return true;
         }

@@ -11,7 +11,7 @@ namespace TurnBasedFeest.GameEvents.Battle
         public BattleEvent battle;
         public List<Actor> allActors;
         public List<Actor> aliveActors;
-        public Actor currentActor;
+        public Actor CurrentActor;
         public int eventIndex;
 
         public BattleTurnEvent(BattleEvent battle)
@@ -24,25 +24,25 @@ namespace TurnBasedFeest.GameEvents.Battle
             allActors = new List<Actor>(aliveActors);
             this.aliveActors = aliveActors;
             this.aliveActors.ForEach(x => x.Initialize());
-            currentActor = getNextActor();
+            CurrentActor = getNextActor();
         }
 
         public bool Update(Game1 game, Input input)
         {
             // preform the event AND if the current event is done
-            if (currentActor.battleEvents[eventIndex].Update(this, input))
+            if (CurrentActor.battleEvents[eventIndex].Update(this, input))
             {
                 // go to the next event
                 eventIndex++;
                 // and initialize it if it exists
-                if (eventIndex < currentActor.battleEvents.Count)
+                if (eventIndex < CurrentActor.battleEvents.Count)
                 {
-                    currentActor.battleEvents[eventIndex].Initialize();
+                    CurrentActor.battleEvents[eventIndex].Initialize();
                 }
                 // if it does not exist, go to the next actor
                 else
                 {
-                    currentActor = getNextActor();
+                    CurrentActor = getNextActor();
                 }
             }
 
@@ -61,19 +61,19 @@ namespace TurnBasedFeest.GameEvents.Battle
         public void Draw(SpriteBatch spritebatch, SpriteFont font)
         {
             //draws debug
-            for (int i = 0; i < currentActor.battleEvents.Count; i++)
+            for (int i = 0; i < CurrentActor.battleEvents.Count; i++)
             {
-                spritebatch.DrawString(font, currentActor.battleEvents[i].ToString(), new Vector2(Game1.screenWidth - 400, 15 * i), i == eventIndex ? Color.Red: Color.White);
+                spritebatch.DrawString(font, CurrentActor.battleEvents[i].ToString(), new Vector2(Game1.screenWidth - 400, 15 * i), i == eventIndex ? Color.Red: Color.White);
             }
 
             //draws the current event
-            if (eventIndex < currentActor.battleEvents.Count)
+            if (eventIndex < CurrentActor.battleEvents.Count)
             {
-                currentActor.battleEvents[eventIndex].Draw(this, spritebatch, font);
+                CurrentActor.battleEvents[eventIndex].Draw(this, spritebatch, font);
             }
 
             //draws an indication of the current player
-            spritebatch.DrawString(font, ">", currentActor.position - new Vector2(35, 0), Color.White);
+            spritebatch.DrawString(font, ">", CurrentActor.position - new Vector2(35, 0), Color.White);
         }
 
         public Actor getNextActor()
