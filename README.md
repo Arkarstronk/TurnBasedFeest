@@ -1,4 +1,6 @@
 # TurnBasedFeest
+This code is not to be used for any purpose by someone else
+
 A big party
 
 To remember get on track on where development ended, below is a summary of the current master branch version.
