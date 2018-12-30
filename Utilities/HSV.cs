@@ -10,10 +10,9 @@ namespace TurnBasedFeest.Utilities
     class HSV
     {
         //nitpicked code from internet
-
-        public static Color FromHue(double h, double saturation = 0.8, double value = 0.85)
+        public static Color FromHue(double h, double saturation = 0.6, double value = 0.85)
         {
-            double hue = ToLegacyHue(h);
+            double hue = FromLegacyHue(h);
             int hi = Convert.ToInt32(Math.Floor(hue / 60)) % 6;
             double f = hue / 60 - Math.Floor(hue / 60);
 
@@ -36,43 +35,36 @@ namespace TurnBasedFeest.Utilities
             else
                 return new Color(v, p, q, 255);
         }
-
-        static double ToLegacyHue(double modernHue)
+                
+        //lineair gradient the hue from human perception angles to hsl hue colorspace. 
+        public static double FromLegacyHue(double legacyHue)
         {
-            modernHue = ((modernHue % 360) + 360) % 360; // normalize 360 > modernHue >= 0
-            double ret = 0;
-            if (modernHue < 60)
+            legacyHue = legacyHue % 360;
+
+            if(legacyHue <= 60)
             {
-                ret = modernHue * 2;
+                return (legacyHue / 60) * 30;
             }
-            else if (modernHue < 120)
+            else if (legacyHue <= 120)
+            {                
+                return 30 + (65 - 30) * (double)((legacyHue - 60) / 60);
+            }
+            else if (legacyHue <= 180)
             {
-                ret = modernHue + 60;
+                return 65 + (120 - 65) * (double)((legacyHue - 120) / 60);
+            }
+            else if (legacyHue <= 240)
+            {
+                return 120 + (225 - 120) * (double)((legacyHue - 180) / 60);
+            }
+            else if (legacyHue <= 300)
+            {
+                return 225 + (285 - 225) * (double)((legacyHue - 240) / 60);
             }
             else
             {
-                ret = (modernHue - 120) * 0.75 + 180;
+                return 285 + (360 - 285) * (double)((legacyHue - 300) / 60);
             }
-            return ret;
-        }
-
-        static double FromLegacyHue(double legacyHue)
-        {
-            legacyHue = ((legacyHue % 360) + 360) % 360; // normalize 360 > legacyHue >= 0
-            double ret = 0;
-            if (legacyHue < 120)
-            {
-                ret = legacyHue / 2;
-            }
-            else if (legacyHue < 180)
-            {
-                ret = legacyHue - 60;
-            }
-            else
-            {
-                ret = (legacyHue - 180) / 0.75 + 120;
-            }
-            return ret;
         }
     }
 }
